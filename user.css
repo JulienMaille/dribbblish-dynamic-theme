@@ -222,7 +222,7 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 
 /* Full window artist background */
 .main-entityHeader-background.main-entityHeader-gradient {
-    opacity: 0.3;
+    opacity: calc(0.3 + 0.3 * var(--is_light, 0));
 }
 
 .main-entityHeader-container.main-entityHeader-withBackgroundImage,
