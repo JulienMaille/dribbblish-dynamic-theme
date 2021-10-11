@@ -837,7 +837,7 @@ li.GlueDropTarget {
     z-index: 1;
     position: relative;
     min-width: 400px;
-    max-width: 30%;
+    max-width: 50%;
     background-color: rgba(var(--spice-rgb-main), 0.9);
     backdrop-filter: blur(3px);
     padding: 20px 15px;
