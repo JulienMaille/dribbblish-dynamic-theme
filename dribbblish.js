@@ -329,13 +329,16 @@ DribbblishShared.config.register({
     name: "Round Sidebar Icons",
     description: "If the Sidebar Icons should be round instead of square",
     defaultValue: false,
-    onChange: (val) => {
-        if (val) {
-            document.documentElement.style.setProperty("--sidebar-icons-border-radius", "50%");
-        } else {
-            document.documentElement.style.setProperty("--sidebar-icons-border-radius", "var(--image-radius)");
-        }
-    }
+    onChange: (val) => document.documentElement.style.setProperty("--sidebar-icons-border-radius", val ? "50%" : "var(--image-radius)")
+});
+
+DribbblishShared.config.register({
+    type: "checkbox",
+    key: "sidebarHoverAnimation",
+    name: "Sidebar Hover Animation",
+    description: "If the Sidebar Icons should have an animated background on hover",
+    defaultValue: true,
+    onChange: (val) => document.documentElement.style.setProperty("--sidebar-icons-hover-animation", val ? "1" : "0")
 });
 
 DribbblishShared.config.register({
@@ -365,9 +368,7 @@ DribbblishShared.config.register({
             }
         `);
     },
-    onChange: (val) => {
-        document.body.setAttribute("hide-ads", val ? "" : null);
-    }
+    onChange: (val) => document.body.setAttribute("hide-ads", val ? "" : null)
 });
 
 waitForElement(["#main"], () => {
