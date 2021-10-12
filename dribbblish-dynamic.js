@@ -299,7 +299,8 @@ async function songchange() {
         updateColors(textColor, textColor)
         coverListenerInstalled = false
     }
-    hookCoverChange(true)
+    if (!coverListenerInstalled)
+        hookCoverChange(true)
 
     if (album_uri !== undefined && !album_uri.includes('spotify:show')) {
         const albumInfo = await getAlbumInfo(album_uri.replace("spotify:album:", ""))
@@ -341,7 +342,6 @@ async function songchange() {
 Spicetify.Player.addEventListener("songchange", songchange)
 
 function pickCoverColor(img) {
-    //img.setAttribute('crossOrigin', '')
     var swatches = new Vibrant(img, 5).swatches()
     lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]
     darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"]
@@ -363,16 +363,26 @@ function pickCoverColor(img) {
     updateColors(textColor, sidebarColor, true)
 }
 
+waitForElement([".main-nowPlayingBar-left"], (queries) => {
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.removedNodes.length>0)
+                coverListenerInstalled = false
+        });
+    });
+    observer.observe(queries[0], { childList: true })
+});
+
 function hookCoverChange(pick) {
     waitForElement([".cover-art-image"], (queries) => {
-        coverListenerInstalled = true;
+        coverListenerInstalled = true
         if (pick && queries[0].complete && queries[0].naturalHeight !== 0) pickCoverColor(queries[0]);
         queries[0].addEventListener("load", function () {
             try {
-                pickCoverColor(queries[0]);
+                pickCoverColor(queries[0])
             } catch (error) {
-                console.error(error);
-                setTimeout(pickCoverColor, 300, queries[0]);
+                console.error(error)
+                setTimeout(pickCoverColor, 300, queries[0])
             }
         });
     });
