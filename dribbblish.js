@@ -128,7 +128,7 @@ class ConfigMenu {
         options.onChange = (val) => {
             options._onChange(val);
             const show = options.showChildren(val);
-            options.children.forEach((child) => this.setHidden(child.key, !show));
+            options.children.forEach((child) => this.setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
         };
         options.children = options.children.map((child) => {
             return { ...defaultOptions, ...child, area: options.area, childOf: options.key };
