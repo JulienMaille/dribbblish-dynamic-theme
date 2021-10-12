@@ -333,6 +333,7 @@ DribbblishShared.config.register({
 });
 
 DribbblishShared.config.register({
+    area: "Animations & Transitions",
     type: "checkbox",
     key: "sidebarHoverAnimation",
     name: "Sidebar Hover Animation",

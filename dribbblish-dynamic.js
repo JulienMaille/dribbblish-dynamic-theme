@@ -74,20 +74,19 @@ document.styleSheets[0].insertRule(`
 /* Config settings */
 
 DribbblishShared.config.register({
+    area: "Animations & Transitions",
     type: "slider",
-    data: {
-        "min": 0,
-        "max": 10,
-        "step": 0.1,
-        "suffix": "s"
-    },
     key: "fadeDuration",
     name: "Color Fade Duration",
     description: "Select the duration of the color fading transition",
     defaultValue: 0.5,
-    onChange: (val) => {
-        document.documentElement.style.setProperty("--song-transition-speed", val+"s");
-    }
+    data: {
+        min: 0,
+        max: 10,
+        step: 0.1,
+        suffix: "s"
+    },
+    onChange: (val) => document.documentElement.style.setProperty("--song-transition-speed", val + "s")
 });
 
 /* js */
