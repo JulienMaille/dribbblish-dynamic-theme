@@ -41,7 +41,7 @@ class ConfigMenu {
 
     constructor() {
         this.#config = {};
-        this.configButton = new Spicetify.Menu.Item("Dribbblish config", false, () => DribbblishShared.config.open());
+        this.configButton = new Spicetify.Menu.Item("Dribbblish Settings", false, () => DribbblishShared.config.open());
         this.configButton.register();
 
         const container = document.createElement("div");
