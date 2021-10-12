@@ -342,7 +342,7 @@ async function songchange() {
 Spicetify.Player.addEventListener("songchange", songchange)
 
 function pickCoverColor(img) {
-    img.setAttribute('crossOrigin', '')
+    //img.setAttribute('crossOrigin', '')
     var swatches = new Vibrant(img, 5).swatches()
     lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]
     darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"]
