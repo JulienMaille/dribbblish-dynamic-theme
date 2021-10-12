@@ -1115,30 +1115,35 @@ span.main-userWidget-displayName,
     position: relative;
 }
 
-.main-navBar-navBarItem::before,
-.main-rootlist-rootlistItem::before,
-.main-rootlist-rootlistItemLinkActive::before,
+.main-navBar-navBarLink::before,
 .main-collectionLinkButton-collectionLinkButton::before,
-.main-collectionLinkButton-selected::before,
-.main-createPlaylistButton-button::before {
+.main-createPlaylistButton-button::before,
+.main-rootlist-rootlistItemLink::before {
     content: "";
     position: absolute;
     width: 100%;
     inset: 0px;
     left: -200%;
-    background-color: rgba(var(--spice-rgb-main), 0.4);
+    opacity: 0.4;
+    background-color: black;
     border-radius: var(--image-radius);
     pointer-events: none;
-    transition: left calc(var(--sidebar-icons-hover-animation) * 0.2s) ease;
+    transition: all calc(var(--sidebar-icons-hover-animation) * 0.2s) ease;
+    transition-property: left, opacity;
 }
 
-.main-navBar-navBarItem:hover::before,
-.main-rootlist-rootlistItem:hover::before,
-.main-rootlist-rootlistItemLinkActive::before,
+.main-navBar-navBarLink:hover::before,
 .main-collectionLinkButton-collectionLinkButton:hover::before,
-.main-collectionLinkButton-selected::before,
-.main-createPlaylistButton-button:hover::before {
+.main-createPlaylistButton-button:hover::before,
+.main-rootlist-rootlistItemLink:hover::before,
+.main-navBar-navBarLinkActive::before,
+.main-collectionLinkButton-selected::before {
     left: 0px;
+}
+
+.main-navBar-navBarLinkActive:hover::before,
+.main-collectionLinkButton-selected:hover::before {
+    opacity: 0.6;
 }
 
 .main-rootlist-rootlist .main-navBar-navBarItem:hover::before {
@@ -1147,8 +1152,7 @@ span.main-userWidget-displayName,
 
 .main-navBar-navBarLinkActive,
 .main-collectionLinkButton-selected {
-    border-radius: var(--image-radius);
-    background-color: rgba(var(--spice-rgb-main), 0.4);
+    background-color: transparent;
 }
 
 .main-navBar-navBar a:hover, .main-navBar-navBar a:hover span {
