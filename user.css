@@ -851,6 +851,7 @@ li.GlueDropTarget {
 
 #dribbblish-config .dribbblish-config-areas {
     display: flex;
+    width: 100%;
     flex-direction: column;
     gap: 16px;
     max-height: 60vh;
@@ -862,6 +863,10 @@ li.GlueDropTarget {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+#dribbblish-config .dribbblish-config-area:empty {
+    display: none
 }
 
 .dribbblish-config-area > h2 {
@@ -880,6 +885,10 @@ li.GlueDropTarget {
     grid-template-areas:
         "header input"
         "description input";
+}
+
+#dribbblish-config .dribbblish-config-item[hidden=true] {
+    display: none;
 }
 
 #dribbblish-config .dribbblish-config-item > .x-settings-title {
