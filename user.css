@@ -911,6 +911,10 @@ li.GlueDropTarget {
         "description input";
 }
 
+.dribbblish-config-item[parent] {
+    padding-left: 16px;
+}
+
 .dribbblish-config-item[hidden=true] {
     display: none;
 }
