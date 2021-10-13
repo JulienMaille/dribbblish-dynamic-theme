@@ -637,6 +637,7 @@ input:hover:not([disabled]):not(:active)~.x-toggle-indicatorWrapper {
     text-align: center;
     color: var(--spice-text);
     background-color: var(--spice-button);
+    pointer-events: none;
 }
 
 .playback-bar:not(:active) .prog-tooltip {
