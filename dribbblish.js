@@ -78,9 +78,26 @@ class ConfigMenu {
         if (!document.querySelector(`.dribbblish-config-area[name="${options.area}"]`)) {
             const areaElem = document.createElement("div");
             areaElem.classList.add("dribbblish-config-area");
+            const uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
+            if (!uncollapsedAreas.includes(options.area)) areaElem.toggleAttribute("collapsed");
             areaElem.setAttribute("name", options.area);
-            areaElem.innerHTML = `<h2>${options.area}</h2>`;
+            areaElem.innerHTML = /* html */ `
+                <h2>
+                    ${options.area}
+                    <svg height="24" width="24" viewBox="0 0 24 24" class="main-topBar-icon"><polyline points="16 4 7 12 16 20" fill="none" stroke="currentColor"></polyline></svg>
+                </h2>
+            `;
             document.querySelector(".dribbblish-config-areas").appendChild(areaElem);
+            areaElem.querySelector("h2").addEventListener("click", () => {
+                areaElem.toggleAttribute("collapsed");
+                let uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
+                if (areaElem.hasAttribute("collapsed")) {
+                    uncollapsedAreas = uncollapsedAreas.filter((area) => area != options.area);
+                } else {
+                    uncollapsedAreas.push(options.area);
+                }
+                localStorage.setItem("dribbblish:config-areas:uncollapsed", JSON.stringify(uncollapsedAreas));
+            });
         }
         const parent = document.querySelector(`.dribbblish-config-area[name="${options.area}"]`);
 
@@ -307,6 +324,15 @@ class _DribbblishShared {
     }
 }
 const DribbblishShared = new _DribbblishShared();
+
+for (let i = 0; i < 10; i++) {
+    DribbblishShared.config.register({
+        area: `Test ${i}`,
+        type: "button",
+        name: "Test",
+        key: `test${i}`
+    });
+}
 
 DribbblishShared.config.register({
     type: "checkbox",

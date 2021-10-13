@@ -834,7 +834,7 @@ li.GlueDropTarget {
     display: flex;
 }
 
-#dribbblish-config .dribbblish-config-container {
+.dribbblish-config-container {
     z-index: 1;
     position: relative;
     width: clamp(500px, 50%, 650px);
@@ -850,7 +850,7 @@ li.GlueDropTarget {
     justify-content: center;
 }
 
-#dribbblish-config .dribbblish-config-areas {
+.dribbblish-config-areas {
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -860,22 +860,44 @@ li.GlueDropTarget {
     padding: 0px 50px;
 }
 
-#dribbblish-config .dribbblish-config-area {
+.dribbblish-config-area {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-#dribbblish-config .dribbblish-config-area:empty {
+.dribbblish-config-area[collapsed] {
+    overflow: hidden;
+    min-height: 38px; /* for some reason height alone isn't enough */
+    height: 38px;
+}
+
+.dribbblish-config-area:empty {
     display: none
 }
 
 .dribbblish-config-area > h2 {
+    position: relative;
     text-align: center;
-    height: 0.8em;
+    height: 38px;
 }
 
-#dribbblish-config .dribbblish-config-item {
+.dribbblish-config-area > h2 svg {
+    position: absolute;
+    margin-left: 10px;
+    bottom: -2px;
+    color: var(--spice-text);
+    padding: 0px;
+    height: 100%;
+    stroke-width: 2px;
+    transform: rotate(90deg);
+}
+
+.dribbblish-config-area[collapsed] > h2 svg {
+    transform: rotate(270deg);
+}
+
+.dribbblish-config-item {
     position: relative;
     width: 100%;
     height: min-content;
@@ -888,11 +910,11 @@ li.GlueDropTarget {
         "description input";
 }
 
-#dribbblish-config .dribbblish-config-item[hidden=true] {
+.dribbblish-config-item[hidden=true] {
     display: none;
 }
 
-#dribbblish-config .dribbblish-config-item > .x-settings-title {
+.dribbblish-config-item > .x-settings-title {
     grid-area: header;
     margin: 0px;
     height: min-content;
@@ -900,28 +922,28 @@ li.GlueDropTarget {
     bottom: 0px;
 }
 
-#dribbblish-config .dribbblish-config-item > .x-settings-title.no-desc {
+.dribbblish-config-item > .x-settings-title.no-desc {
     bottom: -10px;
 }
 
-#dribbblish-config .dribbblish-config-item > .main-type-mesto {
+.dribbblish-config-item > .main-type-mesto {
     grid-area: description;
     height: min-content;
     color: var(--spice-subtext);
     pointer-events: none;
 }
 
-#dribbblish-config .dribbblish-config-item > .x-settings-secondColumn {
+.dribbblish-config-item > .x-settings-secondColumn {
     grid-area: input;
 }
 
-#dribbblish-config .dribbblish-config-close {
+.dribbblish-config-close {
     position: absolute;
     top: 15px;
     right: 15px;
 }
 
-#dribbblish-config .dribbblish-config-backdrop {
+.dribbblish-config-backdrop {
     position: absolute;
     content: "";
     inset: 0px;
