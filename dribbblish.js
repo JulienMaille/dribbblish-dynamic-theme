@@ -325,15 +325,6 @@ class _DribbblishShared {
 }
 const DribbblishShared = new _DribbblishShared();
 
-for (let i = 0; i < 10; i++) {
-    DribbblishShared.config.register({
-        area: `Test ${i}`,
-        type: "button",
-        name: "Test",
-        key: `test${i}`
-    });
-}
-
 DribbblishShared.config.register({
     type: "checkbox",
     key: "rightBigCover",
