@@ -109,7 +109,7 @@ class ConfigMenu {
         if (options.childOf) elem.setAttribute("parent", options.childOf);
         elem.innerHTML = /* html */ `
             <h2 class="x-settings-title main-type-cello${!options.description ? " no-desc" : ""}" as="h2">${options.name}</h2>
-            <label class="main-type-mesto" as="label" for="dribbblish-config-input-${options.key}">${options.description}</label>
+            <label class="main-type-mesto">${options.description}</label>
             <label class="x-toggle-wrapper x-settings-secondColumn">
                 ${options.input}
             </label>

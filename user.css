@@ -935,7 +935,6 @@ li.GlueDropTarget {
     grid-area: description;
     height: min-content;
     color: var(--spice-subtext);
-    pointer-events: none;
 }
 
 .dribbblish-config-item > .x-settings-secondColumn {
