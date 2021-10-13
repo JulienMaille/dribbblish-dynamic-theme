@@ -1178,8 +1178,9 @@ span.main-userWidget-displayName,
     background-color: transparent;
 }
 
-.main-navBar-navBar a:hover, .main-navBar-navBar a:hover span {
-    color: unset !important;
+.main-navBar-navBar a:hover,
+.main-navBar-navBar a:hover span {
+    color: var(--spice-sidebar-text) !important;
 }
 
 div.GlueDropTarget.personal-library  {
