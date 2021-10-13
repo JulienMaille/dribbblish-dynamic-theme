@@ -362,6 +362,11 @@ async function songchange() {
     } else if (Spicetify.Player.data.track.metadata.is_local=="true") {
         // local file
         nearArtistSpanText = Spicetify.Player.data.track.metadata.album_title
+    } else if (Spicetify.Player.data.track.provider=="ad") {
+        // ad
+        nearArtistSpanText = "advertisement"
+        coverListenerInstalled = false
+        return
     } else {
         // When clicking a song from the homepage, songChange is fired with half empty metadata
         // todo: retry only once?
@@ -385,6 +390,8 @@ async function songchange() {
 Spicetify.Player.addEventListener("songchange", songchange)
 
 function pickCoverColor(img) {
+    if (!img.currentSrc.startsWith('spotify:'))
+        return
     var swatches = new Vibrant(img, 5).swatches()
     lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]
     darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"]
