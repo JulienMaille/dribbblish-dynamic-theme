@@ -191,29 +191,72 @@ function toggleDark(setDark) {
     updateColors(textColor, sidebarColor, false)
 }
 
-/* Init with current system light/dark mode */
-let systemDark = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--system_is_dark")) == 1;
+function checkDarkLightMode() {
+    if (DribbblishShared.config.get("theme") != 2) return;
+
+    const start = new Date();
+    start.setHours(DribbblishShared.config.get("darkModeOnTime").split(":")[0]);
+    start.setMinutes(DribbblishShared.config.get("darkModeOnTime").split(":")[1]);
+    start.setSeconds(0);
+
+    const end = new Date();
+    end.setHours(DribbblishShared.config.get("darkModeOffTime").split(":")[0]);
+    end.setMinutes(DribbblishShared.config.get("darkModeOffTime").split(":")[1]);
+    end.setSeconds(0);
+    if (end < start) end.setTime(end.getTime() + 24 * 60 * 60 * 1000);
+
+    const now = new Date();
+
+    const dark = start <= now && now < end;
+    toggleDark(dark);
+}
+// Run every Minute to check time and set dark / light mode
+setInterval(checkDarkLightMode, 60000);
 
 DribbblishShared.config.register({
+    area: "Theme",
     type: "select",
-    data: ["System", "Dark", "Light"],
+    data: ["Dark", "Light", "Based on Time"],
     key: "theme",
     name: "Theme",
     description: "Select Dark / Bright mode",
     defaultValue: 0,
+    showChildren: (val) => {
+        return val == 2;
+    },
     onChange: (val) => {
         switch (val) {
             case 0:
-                toggleDark(systemDark);
-                break;
-            case 1:
                 toggleDark(true);
                 break;
-            case 2:
+            case 1:
                 toggleDark(false);
                 break;
+            case 2:
+                checkDarkLightMode();
+                break;
         }
-    }
+    },
+    children: [
+        {
+            type: "time",
+            key: "darkModeOnTime",
+            name: "Dark Mode On Time",
+            description: "Beginning of Dark mode time",
+            defaultValue: "20:00",
+            fireInitialChange: false,
+            onChange: checkDarkLightMode
+        },
+        {
+            type: "time",
+            key: "darkModeOffTime",
+            name: "Dark Mode Off Time",
+            description: "End of Dark mode time",
+            defaultValue: "06:00",
+            fireInitialChange: false,
+            onChange: checkDarkLightMode
+        }
+    ]
 });
 
 var currentColor;
