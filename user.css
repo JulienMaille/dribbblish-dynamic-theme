@@ -1325,3 +1325,8 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 .main-actionBar-ActionBarRow button:not(.main-playButton-primary) {
   color: var(--spice-subtext);
 }
+
+/* explicit icon */
+.main-tag-container {
+    background-color: var(--spice-text);
+}
