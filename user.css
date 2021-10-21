@@ -904,8 +904,8 @@ li.GlueDropTarget {
     height: min-content;
     display: grid;
     grid-template-columns: 1fr auto;
-    grid-template-rows: 1fr 1fr;
-    gap: 0px 10px;
+    grid-template-rows: auto auto;
+    gap: 5px 10px;
     grid-template-areas:
         "header input"
         "description input";

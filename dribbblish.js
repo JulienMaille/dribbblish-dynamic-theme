@@ -4,7 +4,7 @@ class ConfigMenu {
     /**
      * @typedef {Object} DribbblishConfigOptions
      * @property {"checkbox" | "select" | "button" | "slider" | "number" | "text" | "time"} type
-     * @property {String} [area="Main Settings"]
+     * @property {String|DribbblishConfigArea} [area={name: "Main Settings", order: 0}]
      * @property {any} [data={}]
      * @property {String} key
      * @property {String} name
@@ -17,6 +17,12 @@ class ConfigMenu {
      * @property {onAppended} [onAppended]
      * @property {onChange} [onChange]
      * @property {DribbblishConfigOptions[]} [children=[]]
+     */
+
+    /**
+     * @typedef DribbblishConfigArea
+     * @property {String} name
+     * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
      */
 
     /**
@@ -75,31 +81,8 @@ class ConfigMenu {
      * @param {DribbblishConfigOptions} options
      */
     addInputHTML(options) {
-        if (!document.querySelector(`.dribbblish-config-area[name="${options.area}"]`)) {
-            const areaElem = document.createElement("div");
-            areaElem.classList.add("dribbblish-config-area");
-            const uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
-            if (!uncollapsedAreas.includes(options.area)) areaElem.toggleAttribute("collapsed");
-            areaElem.setAttribute("name", options.area);
-            areaElem.innerHTML = /* html */ `
-                <h2>
-                    ${options.area}
-                    <svg height="24" width="24" viewBox="0 0 24 24" class="main-topBar-icon"><polyline points="16 4 7 12 16 20" fill="none" stroke="currentColor"></polyline></svg>
-                </h2>
-            `;
-            document.querySelector(".dribbblish-config-areas").appendChild(areaElem);
-            areaElem.querySelector("h2").addEventListener("click", () => {
-                areaElem.toggleAttribute("collapsed");
-                let uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
-                if (areaElem.hasAttribute("collapsed")) {
-                    uncollapsedAreas = uncollapsedAreas.filter((area) => area != options.area);
-                } else {
-                    uncollapsedAreas.push(options.area);
-                }
-                localStorage.setItem("dribbblish:config-areas:uncollapsed", JSON.stringify(uncollapsedAreas));
-            });
-        }
-        const parent = document.querySelector(`.dribbblish-config-area[name="${options.area}"]`);
+        this.registerArea(options.area);
+        const parent = document.querySelector(`.dribbblish-config-area[name="${options.area.name}"]`);
 
         const elem = document.createElement("div");
         elem.classList.add("dribbblish-config-item");
@@ -109,7 +92,7 @@ class ConfigMenu {
         if (options.childOf) elem.setAttribute("parent", options.childOf);
         elem.innerHTML = /* html */ `
             <h2 class="x-settings-title main-type-cello${!options.description ? " no-desc" : ""}" as="h2">${options.name}</h2>
-            <label class="main-type-mesto">${options.description}</label>
+            <label class="main-type-mesto">${options.description.replace(/\n/g, "<br>")}</label>
             <label class="x-toggle-wrapper x-settings-secondColumn">
                 ${options.input}
             </label>
@@ -141,6 +124,12 @@ class ConfigMenu {
         };
         // Set Defaults
         options = { ...defaultOptions, ...options };
+        if (typeof options.area == "string") options.area = { name: options.area, order: 0 };
+        options.description = options.description
+            .split("\n")
+            .filter((line) => line.trim() != "")
+            .map((line) => line.trim())
+            .join("\n");
         options._onChange = options.onChange;
         options.onChange = (val) => {
             options._onChange(val);
@@ -148,7 +137,7 @@ class ConfigMenu {
             options.children.forEach((child) => this.setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
         };
         options.children = options.children.map((child) => {
-            return { ...defaultOptions, ...child, area: options.area, childOf: options.key };
+            return { ...child, area: options.area, childOf: options.key };
         });
 
         this.#config[options.key] = options;
@@ -185,11 +174,12 @@ class ConfigMenu {
             });
         } else if (options.type == "button") {
             options.fireInitialChange = false;
+            if (typeof options.data != "string") options.data = options.name;
 
             const input = /* html */ `
                 <button class="main-buttons-button main-button-primary" type="button" id="dribbblish-config-input-${options.key}">
                     <div class="x-settings-buttonContainer">
-                        <span>${options.name}</span>
+                        <span>${options.data}</span>
                     </div>
                 </button>
             `;
@@ -286,6 +276,37 @@ class ConfigMenu {
     }
 
     /**
+     * @param {DribbblishConfigArea} area
+     */
+    registerArea(area) {
+        if (!document.querySelector(`.dribbblish-config-area[name="${area.name}"]`)) {
+            const areaElem = document.createElement("div");
+            areaElem.classList.add("dribbblish-config-area");
+            areaElem.style.order = area.order;
+            const uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
+            if (!uncollapsedAreas.includes(area.name)) areaElem.toggleAttribute("collapsed");
+            areaElem.setAttribute("name", area.name);
+            areaElem.innerHTML = /* html */ `
+                <h2>
+                    ${area.name}
+                    <svg height="24" width="24" viewBox="0 0 24 24" class="main-topBar-icon"><polyline points="16 4 7 12 16 20" fill="none" stroke="currentColor"></polyline></svg>
+                </h2>
+            `;
+            document.querySelector(".dribbblish-config-areas").appendChild(areaElem);
+            areaElem.querySelector("h2").addEventListener("click", () => {
+                areaElem.toggleAttribute("collapsed");
+                let uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
+                if (areaElem.hasAttribute("collapsed")) {
+                    uncollapsedAreas = uncollapsedAreas.filter((areaName) => areaName != area.name);
+                } else {
+                    uncollapsedAreas.push(area.name);
+                }
+                localStorage.setItem("dribbblish:config-areas:uncollapsed", JSON.stringify(uncollapsedAreas));
+            });
+        }
+    }
+
+    /**
      *
      * @param {String} key
      * @param {any} defaultValueOverride
@@ -315,6 +336,10 @@ class ConfigMenu {
     setHidden(key, hidden) {
         this.#config[key].hidden = hidden;
         document.querySelector(`.dribbblish-config-item[key="${key}"]`).setAttribute("hidden", hidden);
+    }
+
+    getOptions(key) {
+        return this.#config[key];
     }
 }
 
