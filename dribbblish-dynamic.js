@@ -76,6 +76,43 @@ DribbblishShared.config.register({
     onChange: (val) => document.documentElement.style.setProperty("--song-transition-speed", val + "s")
 });
 
+// waitForElement because Spicetify is not initialized at startup
+waitForElement(["#main"], () => {
+    DribbblishShared.config.registerArea({name: "About", order: 999});
+    
+    DribbblishShared.config.register({
+        area: "About",
+        type: "button",
+        key: "aboutDribbblish",
+        name: "Info",
+        description: `
+            OS: ${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}
+            Spotify: v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}
+            Dribbblish: v${current}
+        `,
+        data: "Copy",
+        onChange: (val) => {
+            copyToClipboard(DribbblishShared.config.getOptions("aboutDribbblish").description);
+            Spicetify.showNotification("Copied Versions");
+        }
+    });
+});
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+function copyToClipboard(text) {
+    var input = document.createElement('textarea');
+    input.style.display = "fixed";
+    input.innerHTML = text;
+    document.body.appendChild(input);
+    input.select();
+    var result = document.execCommand('copy');
+    document.body.removeChild(input);
+    return result;
+}
+
 /* js */
 function getAlbumInfo(uri) {
     return Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`)
