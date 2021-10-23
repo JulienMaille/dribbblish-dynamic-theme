@@ -210,7 +210,7 @@ function toggleDark(setDark) {
     setRootColor('subtext', setDark ? "#EAEAEA" : "#3D3D3D")
     setRootColor('notification', setDark ? "#303030" : "#DDDDDD")
 
-    updateColors(textColor, sidebarColor, false)
+    updateColors(textColor, sidebarColor)
 }
 
 function checkDarkLightMode() {
@@ -285,7 +285,7 @@ var currentColor;
 var currentSideColor;
 var colorFadeInterval = false;
 
-function updateColors(textColHex, sideColHex, animate=false) {
+function updateColors(textColHex, sideColHex) {
     let update = (textColHex, sideColHex) => {
         currentColor = textColHex;
         currentSideColor = sideColHex;
@@ -307,43 +307,7 @@ function updateColors(textColHex, sideColHex, animate=false) {
 
     clearInterval(colorFadeInterval); // clear any interval that might be running
 
-    if(!animate) {
-        update(textColHex, sideColHex);
-        return;
-    }
-
-    let clamp = (num,min,max) => Math.min(Math.max(num, min), max);
-    let lerp = (a,b,u) => (1-u) * a + u * b;
-    let toMS = s => parseFloat(s) * (/\ds$/.test(s) ? 1000 : 1);
-
-    let interval = 10; // 10 ms between each call
-    var duration = toMS(getComputedStyle(document.documentElement).getPropertyValue("--song-transition-speed"));
-    if(duration < 1) duration = 1;
-    let startC1 = hexToRgb(currentColor);
-    let startC2 = hexToRgb(currentSideColor);
-
-    let endC1 = hexToRgb(textColHex);
-    let endC2 = hexToRgb(sideColHex);
-
-    var start;
-
-    colorFadeInterval = setInterval(function(){
-        if(!start) { start = performance.now() }
-        let elapsed = performance.now()-start;
-        let ratio = clamp(elapsed/duration, 0, 1)
-
-        let currentC1 = [];
-        let currentC2 = [];
-        for(var i = 0; i < 3; i++){
-            currentC1[i] = lerp(startC1[i], endC1[i], ratio);
-            currentC2[i] = lerp(startC2[i], endC2[i], ratio);
-        }
-
-        update(rgbToHex(currentC1), rgbToHex(currentC2));
-
-        if (elapsed>duration){ clearInterval(colorFadeInterval) }
-
-    }, interval);
+    update(textColHex, sideColHex);
 }
 
 let nearArtistSpanText = ""
@@ -432,7 +396,7 @@ function pickCoverColor(img) {
             sidebarColor = swatches[lightCols[col]].getHex()
             break
         }
-    updateColors(textColor, sidebarColor, true)
+    updateColors(textColor, sidebarColor)
 }
 
 waitForElement([".main-nowPlayingBar-left"], (queries) => {
