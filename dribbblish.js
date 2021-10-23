@@ -3,7 +3,7 @@
 class ConfigMenu {
     /**
      * @typedef {Object} DribbblishConfigItem
-     * @property {"checkbox" | "select" | "button" | "slider" | "number" | "text" | "time"} type
+     * @property {"checkbox" | "select" | "button" | "slider" | "number" | "text" | "time" | "color"} type
      * @property {String|DribbblishConfigArea} [area={name: "Main Settings", order: 0}]
      * @property {any} [data={}]
      * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
@@ -265,6 +265,18 @@ class ConfigMenu {
 
             document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("input", (e) => {
                 document.getElementById(`dribbblish-config-input-${options.key}`).setAttribute("value", e.target.value);
+                this.set(options.key, e.target.value);
+                options.onChange(this.get(options.key));
+            });
+        } else if (options.type == "color") {
+            // Validate
+            if (options.defaultValue == null) options.defaultValue = "#000000";
+            const input = /* html */ `
+                <input type="color" id="dribbblish-config-input-${options.key}" name="${options.name}" value="${this.get(options.key)}">
+            `;
+            this.addInputHTML({ ...options, input });
+
+            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("input", (e) => {
                 this.set(options.key, e.target.value);
                 options.onChange(this.get(options.key));
             });
