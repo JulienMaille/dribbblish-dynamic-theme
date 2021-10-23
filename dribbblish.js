@@ -2,7 +2,7 @@
 // document.getElementById("popover-container").style.height = 0;
 class ConfigMenu {
     /**
-     * @typedef {Object} DribbblishConfigOptions
+     * @typedef {Object} DribbblishConfigItem
      * @property {"checkbox" | "select" | "button" | "slider" | "number" | "text" | "time"} type
      * @property {String|DribbblishConfigArea} [area={name: "Main Settings", order: 0}]
      * @property {any} [data={}]
@@ -16,7 +16,7 @@ class ConfigMenu {
      * @property {showChildren} [showChildren]
      * @property {onAppended} [onAppended]
      * @property {onChange} [onChange]
-     * @property {DribbblishConfigOptions[]} [children=[]]
+     * @property {DribbblishConfigItem[]} [children=[]]
      */
 
     /**
@@ -42,7 +42,7 @@ class ConfigMenu {
      * @returns {void}
      */
 
-    /** @type {Object.<string, DribbblishConfigOptions>} */
+    /** @type {Object.<string, DribbblishConfigItem>} */
     #config;
 
     constructor() {
@@ -78,7 +78,7 @@ class ConfigMenu {
 
     /**
      * @private
-     * @param {DribbblishConfigOptions} options
+     * @param {DribbblishConfigItem} options
      */
     addInputHTML(options) {
         this.registerArea(options.area);
@@ -106,7 +106,7 @@ class ConfigMenu {
     }
 
     /**
-     * @param {DribbblishConfigOptions} options
+     * @param {DribbblishConfigItem} options
      */
     register(options) {
         const defaultOptions = {
