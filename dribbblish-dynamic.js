@@ -78,10 +78,8 @@ DribbblishShared.config.register({
 
 // waitForElement because Spicetify is not initialized at startup
 waitForElement(["#main"], () => {
-    DribbblishShared.config.registerArea({name: "About", order: 999});
-    
     DribbblishShared.config.register({
-        area: "About",
+        area: { name: "About", order: 999 },
         type: "button",
         key: "aboutDribbblish",
         name: "Info",
