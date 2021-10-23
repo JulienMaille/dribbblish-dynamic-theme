@@ -6,6 +6,7 @@ class ConfigMenu {
      * @property {"checkbox" | "select" | "button" | "slider" | "number" | "text" | "time"} type
      * @property {String|DribbblishConfigArea} [area={name: "Main Settings", order: 0}]
      * @property {any} [data={}]
+     * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
      * @property {String} key
      * @property {String} name
      * @property {String} [description=""]
@@ -82,9 +83,10 @@ class ConfigMenu {
      */
     addInputHTML(options) {
         this.registerArea(options.area);
-        const parent = document.querySelector(`.dribbblish-config-area[name="${options.area.name}"]`);
+        const parent = document.querySelector(`.dribbblish-config-area[name="${options.area.name}"] .dribbblish-config-area-items`);
 
         const elem = document.createElement("div");
+        elem.style.order = options.order;
         elem.classList.add("dribbblish-config-item");
         elem.setAttribute("key", options.key);
         elem.setAttribute("type", options.type);
@@ -112,6 +114,7 @@ class ConfigMenu {
         const defaultOptions = {
             hidden: false,
             area: "Main Settings",
+            order: 0,
             data: {},
             name: "",
             description: "",
@@ -287,10 +290,11 @@ class ConfigMenu {
             if (!uncollapsedAreas.includes(area.name)) areaElem.toggleAttribute("collapsed");
             areaElem.setAttribute("name", area.name);
             areaElem.innerHTML = /* html */ `
-                <h2>
+                <h2 class="dribbblish-config-area-header">
                     ${area.name}
                     <svg height="24" width="24" viewBox="0 0 24 24" class="main-topBar-icon"><polyline points="16 4 7 12 16 20" fill="none" stroke="currentColor"></polyline></svg>
                 </h2>
+                <div class="dribbblish-config-area-items"></div>
             `;
             document.querySelector(".dribbblish-config-areas").appendChild(areaElem);
             areaElem.querySelector("h2").addEventListener("click", () => {

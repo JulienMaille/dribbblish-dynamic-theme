@@ -861,7 +861,8 @@ li.GlueDropTarget {
     padding: 0px 50px;
 }
 
-.dribbblish-config-area {
+.dribbblish-config-area,
+.dribbblish-config-area-items {
     display: flex;
     flex-direction: column;
     gap: 16px;
