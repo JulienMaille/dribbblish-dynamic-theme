@@ -39,30 +39,29 @@
     font-weight: 500;
 }
 
-
 /* smooth color transitions */
 @property --spice-sidebar {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
+    syntax: "<color>";
+    initial-value: magenta;
+    inherits: true;
 }
 
 @property --spice-main {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
+    syntax: "<color>";
+    initial-value: magenta;
+    inherits: true;
 }
 
 @property --spice-text {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
+    syntax: "<color>";
+    initial-value: magenta;
+    inherits: true;
 }
 
 @property --spice-button {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
+    syntax: "<color>";
+    initial-value: magenta;
+    inherits: true;
 }
 
 :root {
@@ -71,8 +70,8 @@
 }
 
 body {
-    --glue-font-family: "Google Sans Display","Roboto",spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,helvetica,arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
-    --info-font-family: "Roboto",spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,helvetica,arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
+    --glue-font-family: "Google Sans Display", "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
+    --info-font-family: "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
     font-family: var(--glue-font-family);
     letter-spacing: normal;
 }
@@ -114,7 +113,7 @@ body {
 
 .lyrics-lyricsContainer-LyricsLine {
     font-family: var(--glue-font-family);
-    letter-spacing: -.03em !important;
+    letter-spacing: -0.03em !important;
 }
 
 .main-rootlist-rootlistDivider {
@@ -128,13 +127,13 @@ input {
     color: var(--spice-text) !important;
 }
 
-input[type=range] {
+input[type="range"] {
     -webkit-appearance: none;
     background: transparent;
     padding: 0px;
 }
 
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 16px;
     height: 16px;
@@ -143,12 +142,12 @@ input[type=range]::-webkit-slider-thumb {
     background-color: var(--spice-text);
 }
 
-input[type=range]::-webkit-slider-thumb:hover,
-input[type=range]::-webkit-slider-thumb:active {
+input[type="range"]::-webkit-slider-thumb:hover,
+input[type="range"]::-webkit-slider-thumb:active {
     filter: brightness(80%);
 }
 
-input[type=range]::after {
+input[type="range"]::after {
     z-index: 9999;
     content: attr(tooltip);
     position: absolute;
@@ -165,64 +164,64 @@ input[type=range]::after {
     opacity: 0;
 }
 
-input[type=range]:hover::after,
-input[type=range]:active::after {
+input[type="range"]:hover::after,
+input[type="range"]:active::after {
     opacity: 1;
 }
 
-input[type=range]:focus {
+input[type="range"]:focus {
     outline: none;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
     height: 8px;
-    background-color: rgba(var(--spice-rgb-text), .2);
+    background-color: rgba(var(--spice-rgb-text), 0.2);
     border-radius: 50vw;
 }
 
-input[type=number],
-input[type=text],
-input[type=time] {
+input[type="number"],
+input[type="text"],
+input[type="time"] {
     height: 32px;
     border: none;
     border-radius: 4px !important;
     padding: 0px 10px;
-    background-color: rgba(var(--spice-rgb-selected-row), .4) !important;
+    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
     color: var(--spice-subtext) !important;
 }
 
-input[type=number]:hover,
-input[type=number]:active,
-input[type=text]:hover,
-input[type=text]:active,
-input[type=time]:hover,
-input[type=time]:active {
-    background-color: rgba(var(--spice-rgb-selected-row), .6) !important;
+input[type="number"]:hover,
+input[type="number"]:active,
+input[type="text"]:hover,
+input[type="text"]:active,
+input[type="time"]:hover,
+input[type="time"]:active {
+    background-color: rgba(var(--spice-rgb-selected-row), 0.6) !important;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(calc(1 - var(--is_light)));
 }
 
-input[type=color] {
+input[type="color"] {
     position: relative;
     padding: 0px;
     border: none;
 }
 
-input[type=color]::before {
+input[type="color"]::before {
     z-index: -1;
     content: "";
     position: absolute;
     inset: -5px;
     border-radius: 4px;
-    background-color: rgba(var(--spice-rgb-selected-row), .4);
+    background-color: rgba(var(--spice-rgb-selected-row), 0.4);
 }
 
-input[type=color]:hover::before,
-input[type=color]:active::before {
-    background-color: rgba(var(--spice-rgb-selected-row), .6);
+input[type="color"]:hover::before,
+input[type="color"]:active::before {
+    background-color: rgba(var(--spice-rgb-selected-row), 0.6);
 }
 
 .x-searchInput-searchInputSearchIcon,
@@ -235,8 +234,7 @@ input[type=color]:active::before {
 .x-actionBarBackground-background,
 .main-actionBarBackground-background,
 .main-entityHeader-overlay,
-.main-entityHeader-backgroundColor
-{
+.main-entityHeader-backgroundColor {
     background-color: unset !important;
     background-image: unset !important;
 }
@@ -245,7 +243,8 @@ input[type=color]:active::before {
     color: white;
 }
 
-.connect-title, .connect-header {
+.connect-title,
+.connect-header {
     display: none;
 }
 
@@ -298,7 +297,7 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .main-entityHeader-background.main-entityHeader-overlay:after {
-    background-image: linear-gradient(transparent,transparent),linear-gradient(var(--spice-main), var(--spice-main));
+    background-image: linear-gradient(transparent, transparent), linear-gradient(var(--spice-main), var(--spice-main));
 }
 
 .artist-artistOverview-overview .main-entityHeader-withBackgroundImage h1 {
@@ -347,7 +346,8 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
     -webkit-box-shadow: unset;
 }
 
-.main-cardImage-imagePlaceholder, .main-cardImage-image {
+.main-cardImage-imagePlaceholder,
+.main-cardImage-image {
     border-radius: var(--cover-border-radius);
 }
 
@@ -491,7 +491,7 @@ html {
 .main-rootlist-rootlistContent span,
 .main-navBar-entryPoints span {
     z-index: 999;
-    color: var(--spice-sidebar-text)
+    color: var(--spice-sidebar-text);
 }
 
 .main-navBar-navBarItem svg {
@@ -504,7 +504,7 @@ html {
     padding: 0px;
 }
 
-#spicetify-show-list >* {
+#spicetify-show-list > * {
     padding: 0 8px;
 }
 
@@ -600,15 +600,15 @@ html.sidebar-hide-text .GlueDropTarget span {
     backdrop-filter: invert(0.25);
 }
 
-input:checked~.x-toggle-indicatorWrapper {
+input:checked ~ .x-toggle-indicatorWrapper {
     background-color: rgba(var(--spice-rgb-button), 0.4);
 }
 
-input:hover:checked~.x-toggle-indicatorWrapper {
+input:hover:checked ~ .x-toggle-indicatorWrapper {
     background-color: rgba(var(--spice-rgb-button), 0.5) !important;
 }
 
-input:hover:not([disabled]):not(:active)~.x-toggle-indicatorWrapper {
+input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
     background-color: transparent;
     backdrop-filter: invert(0.4);
 }
@@ -655,7 +655,7 @@ input:hover:not([disabled]):not(:active)~.x-toggle-indicatorWrapper {
 .progress-bar {
     --progress-bar-height: 2px;
     --fg-color: var(--spice-button);
-    --bg-color: rgba(var(--spice-rgb-text), .2);
+    --bg-color: rgba(var(--spice-rgb-text), 0.2);
 }
 
 .progress-bar__slider {
@@ -674,7 +674,7 @@ input:hover:not([disabled]):not(:active)~.x-toggle-indicatorWrapper {
 }
 
 .progress-bar:not(:active) .progress-bar__slider {
-    transition-property: left,opacity;
+    transition-property: left, opacity;
 }
 
 .playback-bar .prog-tooltip {
@@ -770,9 +770,9 @@ img.playlist-picture {
 }
 
 .main-rootlist-rootlistItem {
-    padding-left: calc(var(--indentation)*var(--left-sidebar-item-indentation-width));
+    padding-left: calc(var(--indentation) * var(--left-sidebar-item-indentation-width));
     padding-right: 0;
-    transition: padding-left .5s ease;
+    transition: padding-left 0.5s ease;
 }
 
 html.sidebar-hide-text .main-rootlist-rootlistItem {
@@ -849,7 +849,7 @@ li.GlueDropTarget {
     padding-top: 32px;
 }
 
-#main[top-bar="none-padding"] .spotify__container--is-desktop.spotify__os--is-windows[dir=ltr] .Root__top-bar + .main-buddyFeed-buddyFeedRoot .main-topBar-container {
+#main[top-bar="none-padding"] .spotify__container--is-desktop.spotify__os--is-windows[dir="ltr"] .Root__top-bar + .main-buddyFeed-buddyFeedRoot .main-topBar-container {
     padding-right: 167px;
 }
 
@@ -926,7 +926,7 @@ li.GlueDropTarget {
 }
 
 .dribbblish-config-area:empty {
-    display: none
+    display: none;
 }
 
 .dribbblish-config-area > h2 {
@@ -967,7 +967,7 @@ li.GlueDropTarget {
     padding-left: 16px;
 }
 
-.dribbblish-config-item[hidden=true] {
+.dribbblish-config-item[hidden="true"] {
     display: none;
 }
 
@@ -1048,19 +1048,19 @@ li.GlueDropTarget {
 }
 
 /* Spotify style player bar */
-#main[player-controls=spotify] .main-nowPlayingBar-left {
+#main[player-controls="spotify"] .main-nowPlayingBar-left {
     order: 0;
 }
 
-#main[player-controls=spotify] .main-nowPlayingBar-center {
+#main[player-controls="spotify"] .main-nowPlayingBar-center {
     order: 1;
 }
 
-#main[player-controls=spotify] .main-nowPlayingWidget-nowPlaying {
+#main[player-controls="spotify"] .main-nowPlayingWidget-nowPlaying {
     justify-content: left;
 }
 
-#main[player-controls=spotify] .player-controls {
+#main[player-controls="spotify"] .player-controls {
     justify-content: center;
 }
 
@@ -1138,7 +1138,7 @@ span.main-userWidget-displayName,
 
 /** Sidebar config */
 #dribs-hidden-list {
-    background-color: rgba(var(--spice-rgb-main), .3);
+    background-color: rgba(var(--spice-rgb-main), 0.3);
 }
 
 #dribs-sidebar-config {
@@ -1238,16 +1238,16 @@ span.main-userWidget-displayName,
     color: var(--spice-sidebar-text) !important;
 }
 
-div.GlueDropTarget.personal-library  {
+div.GlueDropTarget.personal-library {
     padding: 0px;
 }
-div.GlueDropTarget.personal-library >* {
+div.GlueDropTarget.personal-library > * {
     padding: 0 16px;
     height: 56px;
     border-radius: 4px;
 }
 
-div.GlueDropTarget.personal-library >*.active {
+div.GlueDropTarget.personal-library > *.active {
     background: transparent;
 }
 
@@ -1319,18 +1319,18 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 
 .main-dropDown-dropDown,
 .x-sortBox-sortDropdown {
-    background-color: rgba(var(--spice-rgb-selected-row), .4) !important;
+    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
     color: var(--spice-subtext);
 }
 
 .main-dropDown-dropDown:hover,
 .x-sortBox-sortDropdown:hover {
-    background-color: rgba(var(--spice-rgb-selected-row), .6) !important;
+    background-color: rgba(var(--spice-rgb-selected-row), 0.6) !important;
 }
 
 .connect-device-list-item:focus,
 .connect-device-list-item:hover {
-    background-color: rgba(var(--spice-rgb-selected-row), .3);
+    background-color: rgba(var(--spice-rgb-selected-row), 0.3);
 }
 
 .bookmark-filter {
@@ -1355,7 +1355,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 }
 
 .main-userWidget-dropDownMenu > li > button {
-    color: rgba(var(--spice-rgb-selected-row), .7);
+    color: rgba(var(--spice-rgb-selected-row), 0.7);
     padding-left: 8px;
     text-decoration: none;
 }
@@ -1375,7 +1375,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 }
 
 .main-actionBar-ActionBarRow button:not(.main-playButton-primary) {
-  color: var(--spice-subtext);
+    color: var(--spice-subtext);
 }
 
 /* explicit icon */
