@@ -216,20 +216,18 @@ function toggleDark(setDark) {
 function checkDarkLightMode() {
     if (DribbblishShared.config.get("theme") != 2) return;
 
-    const start = new Date();
-    start.setHours(DribbblishShared.config.get("darkModeOnTime").split(":")[0]);
-    start.setMinutes(DribbblishShared.config.get("darkModeOnTime").split(":")[1]);
-    start.setSeconds(0);
+    const start = 60 * parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[0])
+                     + parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[1])
+    const end =   60 * parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[0])
+                     + parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[1])
 
-    const end = new Date();
-    end.setHours(DribbblishShared.config.get("darkModeOffTime").split(":")[0]);
-    end.setMinutes(DribbblishShared.config.get("darkModeOffTime").split(":")[1]);
-    end.setSeconds(0);
-    if (end < start) end.setTime(end.getTime() + 24 * 60 * 60 * 1000);
+    const now = new Date()
+    const time = 60 * now.getHours() + now.getMinutes()
 
-    const now = new Date();
-
-    const dark = start <= now && now < end;
+    if (end < start)
+        dark = start <= time || time < end
+    else
+        dark = start <= time && time < end
     toggleDark(dark);
 }
 // Run every Minute to check time and set dark / light mode
