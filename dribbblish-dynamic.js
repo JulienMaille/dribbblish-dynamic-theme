@@ -1,11 +1,11 @@
-let current = '2.6.0'
+let current = "2.6.0";
 
 /* css is injected so this works with untouched user.css from Dribbblish */
 /* progressbar tooltip text color */
 document.styleSheets[0].insertRule(`
     .playback-bar .prog-tooltip {
         color: var(--spice-sidebar-text) !important;
-    }`)
+    }`);
 
 /* edit button of CustomApps */
 document.styleSheets[0].insertRule(`
@@ -14,33 +14,33 @@ document.styleSheets[0].insertRule(`
     .lyrics-tabBar-header button.switch {
         background-color: rgba(var(--spice-rgb-subtext), 0.15) !important;
         color: var(--spice-text);
-    }`)
+    }`);
 
 document.styleSheets[0].insertRule(`
     .reddit-sort-container button.switch:hover,
     .new-releases-header button.switch:hover,
     .lyrics-tabBar-header button.switch:hover {
         background-color: rgba(var(--spice-rgb-subtext), 0.3) !important;
-    }`)
+    }`);
 
 document.styleSheets[0].insertRule(`
     .lyrics-lyricsContainer-LyricsBackground {
         background: linear-gradient(180deg, transparent 0px, transparent 60px, var(--lyrics-color-background) 61px) !important;
-    }`)
+    }`);
 
 /* big cover opacity on hover */
 document.styleSheets[0].insertRule(`
     .main-coverSlotExpanded-container:hover .cover-art,
     .main-coverSlotExpanded-container:hover img {
         opacity: 0.5;
-    }`)
+    }`);
 
 document.styleSheets[0].insertRule(`
     .main-navBar-navBar a:hover,
     .main-navBar-navBar a:hover span,
     .main-buddyFeed-activityMetadata a:hover {
         color: var(--spice-shadow) !important;
-    }`)
+    }`);
 
 document.styleSheets[0].insertRule(`
     .collection-collectionEntityHeroCard-likedSongs,
@@ -56,7 +56,7 @@ document.styleSheets[0].insertRule(`
     .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):focus,
     .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):hover {
         color: var(--spice-sidebar-text) !important;
-    }`)
+    }`);
 
 /* Config settings */
 
@@ -98,136 +98,145 @@ waitForElement(["#main"], () => {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+}
 
 function copyToClipboard(text) {
-    var input = document.createElement('textarea');
+    var input = document.createElement("textarea");
     input.style.display = "fixed";
     input.innerHTML = text;
     document.body.appendChild(input);
     input.select();
-    var result = document.execCommand('copy');
+    var result = document.execCommand("copy");
     document.body.removeChild(input);
     return result;
 }
 
 /* js */
 function getAlbumInfo(uri) {
-    return Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`)
+    return Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
 }
 
 function isLight(hex) {
-    var [r,g,b] = hexToRgb(hex).map(Number)
-    const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000
-    return brightness > 128
+    var [r, g, b] = hexToRgb(hex).map(Number);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 128;
 }
 
 function hexToRgb(hex) {
-    var bigint = parseInt(hex.replace("#",""), 16)
-    var r = (bigint >> 16) & 255
-    var g = (bigint >> 8) & 255
-    var b = bigint & 255
-    return [r, g, b]
+    var bigint = parseInt(hex.replace("#", ""), 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+    return [r, g, b];
 }
 
 function rgbToHex([r, g, b]) {
-    const rgb = (r << 16) | (g << 8) | (b << 0)
-    return '#' + (0x1000000 + rgb).toString(16).slice(1)
+    const rgb = (r << 16) | (g << 8) | (b << 0);
+    return "#" + (0x1000000 + rgb).toString(16).slice(1);
 }
 
-const LightenDarkenColor = (h, p) => '#' + [1, 3, 5].map(s => parseInt(h.substr(s, 2), 16)).map(c => parseInt((c * (100 + p)) / 100)).map(c => (c < 255 ? c : 255)).map(c => c.toString(16).padStart(2, '0')).join('')
+const LightenDarkenColor = (h, p) =>
+    "#" +
+    [1, 3, 5]
+        .map((s) => parseInt(h.substr(s, 2), 16))
+        .map((c) => parseInt((c * (100 + p)) / 100))
+        .map((c) => (c < 255 ? c : 255))
+        .map((c) => c.toString(16).padStart(2, "0"))
+        .join("");
 
 function rgbToHsl([r, g, b]) {
-    r /= 255, g /= 255, b /= 255
-    var max = Math.max(r, g, b), min = Math.min(r, g, b)
-    var h, s, l = (max + min) / 2
+    (r /= 255), (g /= 255), (b /= 255);
+    var max = Math.max(r, g, b),
+        min = Math.min(r, g, b);
+    var h,
+        s,
+        l = (max + min) / 2;
     if (max == min) {
-        h = s = 0 // achromatic
+        h = s = 0; // achromatic
     } else {
-        var d = max - min
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0)
-                    break
-            case g: h = (b - r) / d + 2
-                    break
-            case b: h = (r - g) / d + 4
-                    break
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
         }
-        h /= 6
+        h /= 6;
     }
-    return [h, s, l]
+    return [h, s, l];
 }
 
 function hslToRgb([h, s, l]) {
-    var r, g, b
+    var r, g, b;
     if (s == 0) {
-        r = g = b = l // achromatic
+        r = g = b = l; // achromatic
     } else {
         function hue2rgb(p, q, t) {
-            if (t < 0) t += 1
-            if (t > 1) t -= 1
-            if (t < 1/6) return p + (q - p) * 6 * t
-            if (t < 1/2) return q
-            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
-            return p
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1 / 6) return p + (q - p) * 6 * t;
+            if (t < 1 / 2) return q;
+            if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+            return p;
         }
-        var q = l < 0.5 ? l * (1 + s) : l + s - l * s
-        var p = 2 * l - q
-        r = hue2rgb(p, q, h + 1/3)
-        g = hue2rgb(p, q, h)
-        b = hue2rgb(p, q, h - 1/3)
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1 / 3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1 / 3);
     }
-    return [r * 255, g * 255, b * 255]
+    return [r * 255, g * 255, b * 255];
 }
 
 function setLightness(hex, lightness) {
-    hsl = rgbToHsl(hexToRgb(hex))
-    hsl[2] = lightness
-    return rgbToHex(hslToRgb(hsl))
+    hsl = rgbToHsl(hexToRgb(hex));
+    hsl[2] = lightness;
+    return rgbToHex(hslToRgb(hsl));
 }
 
-let textColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-text')
-let textColorBg = getComputedStyle(document.documentElement).getPropertyValue('--spice-main')
-let sidebarColor = getComputedStyle(document.documentElement).getPropertyValue('--spice-sidebar')
+let textColor = getComputedStyle(document.documentElement).getPropertyValue("--spice-text");
+let textColorBg = getComputedStyle(document.documentElement).getPropertyValue("--spice-main");
+let sidebarColor = getComputedStyle(document.documentElement).getPropertyValue("--spice-sidebar");
 
 function setRootColor(name, colHex) {
-    let root = document.documentElement
-    if (root===null) return
-    root.style.setProperty('--spice-' + name, colHex)
-    root.style.setProperty('--spice-rgb-' + name, hexToRgb(colHex).join(','))
+    let root = document.documentElement;
+    if (root === null) return;
+    root.style.setProperty("--spice-" + name, colHex);
+    root.style.setProperty("--spice-rgb-" + name, hexToRgb(colHex).join(","));
 }
 
 function toggleDark(setDark) {
-    if (setDark===undefined) setDark = isLight(textColorBg)
+    if (setDark === undefined) setDark = isLight(textColorBg);
 
-    document.documentElement.style.setProperty('--is_light', setDark ? 0 : 1)
-    textColorBg = setDark ? "#0A0A0A" : "#FAFAFA"
+    document.documentElement.style.setProperty("--is_light", setDark ? 0 : 1);
+    textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
 
-    setRootColor('main', textColorBg)
-    setRootColor('player', textColorBg)
-    setRootColor('card', setDark ? "#040404" : "#ECECEC")
-    setRootColor('subtext', setDark ? "#EAEAEA" : "#3D3D3D")
-    setRootColor('notification', setDark ? "#303030" : "#DDDDDD")
+    setRootColor("main", textColorBg);
+    setRootColor("player", textColorBg);
+    setRootColor("card", setDark ? "#040404" : "#ECECEC");
+    setRootColor("subtext", setDark ? "#EAEAEA" : "#3D3D3D");
+    setRootColor("notification", setDark ? "#303030" : "#DDDDDD");
 
-    updateColors(textColor, sidebarColor)
+    updateColors(textColor, sidebarColor);
 }
 
 function checkDarkLightMode() {
     if (DribbblishShared.config.get("theme") != 2) return;
 
-    const start = 60 * parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[0])
-                     + parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[1])
-    const end =   60 * parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[0])
-                     + parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[1])
+    const start = 60 * parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[1]);
+    const end = 60 * parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[1]);
 
-    const now = new Date()
-    const time = 60 * now.getHours() + now.getMinutes()
+    const now = new Date();
+    const time = 60 * now.getHours() + now.getMinutes();
 
-    if (end < start)
-        dark = start <= time || time < end
-    else
-        dark = start <= time && time < end
+    if (end < start) dark = start <= time || time < end;
+    else dark = start <= time && time < end;
     toggleDark(dark);
 }
 // Run every Minute to check time and set dark / light mode
@@ -284,23 +293,23 @@ var currentSideColor;
 var colorFadeInterval = false;
 
 function updateColors(textColHex, sideColHex) {
-    let isLightBg = isLight(textColorBg)
-    if (isLightBg) textColHex = LightenDarkenColor(textColHex, -15) // vibrant color is always too bright for white bg mode
+    let isLightBg = isLight(textColorBg);
+    if (isLightBg) textColHex = LightenDarkenColor(textColHex, -15); // vibrant color is always too bright for white bg mode
 
-    let darkColHex = LightenDarkenColor(textColHex, isLightBg ? 12 : -20)
-    let darkerColHex = LightenDarkenColor(textColHex, isLightBg ? 30 : -40)
-    let buttonBgColHex = setLightness(textColHex, isLightBg ? 0.90 : 0.14)
-    setRootColor('text', textColHex)
-    setRootColor('button', darkerColHex)
-    setRootColor('button-active', darkColHex)
-    setRootColor('selected-row', darkerColHex)
-    setRootColor('tab-active', buttonBgColHex)
-    setRootColor('button-disabled', buttonBgColHex)
-    setRootColor('sidebar', sideColHex)
+    let darkColHex = LightenDarkenColor(textColHex, isLightBg ? 12 : -20);
+    let darkerColHex = LightenDarkenColor(textColHex, isLightBg ? 30 : -40);
+    let buttonBgColHex = setLightness(textColHex, isLightBg ? 0.9 : 0.14);
+    setRootColor("text", textColHex);
+    setRootColor("button", darkerColHex);
+    setRootColor("button-active", darkColHex);
+    setRootColor("selected-row", darkerColHex);
+    setRootColor("tab-active", buttonBgColHex);
+    setRootColor("button-disabled", buttonBgColHex);
+    setRootColor("sidebar", sideColHex);
 }
 
-let nearArtistSpanText = ""
-let coverListenerInstalled = true
+let nearArtistSpanText = "";
+let coverListenerInstalled = true;
 async function songchange() {
     try {
         // warning popup
@@ -309,105 +318,102 @@ async function songchange() {
         console.error(err);
     }
 
-    let album_uri = Spicetify.Player.data.track.metadata.album_uri
-    let bgImage = Spicetify.Player.data.track.metadata.image_url
+    let album_uri = Spicetify.Player.data.track.metadata.album_uri;
+    let bgImage = Spicetify.Player.data.track.metadata.image_url;
     if (bgImage === undefined) {
-        bgImage = "/images/tracklist-row-song-fallback.svg"
-        textColor = "#509bf5"
-        updateColors(textColor, textColor)
-        coverListenerInstalled = false
+        bgImage = "/images/tracklist-row-song-fallback.svg";
+        textColor = "#509bf5";
+        updateColors(textColor, textColor);
+        coverListenerInstalled = false;
     }
-    if (!coverListenerInstalled)
-        hookCoverChange(true)
+    if (!coverListenerInstalled) hookCoverChange(true);
 
-    if (album_uri !== undefined && !album_uri.includes('spotify:show')) {
-        const albumInfo = await getAlbumInfo(album_uri.replace("spotify:album:", ""))
+    if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
+        const albumInfo = await getAlbumInfo(album_uri.replace("spotify:album:", ""));
 
-        let album_date = new Date(albumInfo.year, (albumInfo.month || 1)-1, albumInfo.day|| 0)
-        let recent_date = new Date()
-        recent_date.setMonth(recent_date.getMonth() - 6)
-        album_date = album_date.toLocaleString('default', album_date>recent_date ? { year: 'numeric', month: 'short' } : { year: 'numeric' })
-        album_link = "<a title=\""+Spicetify.Player.data.track.metadata.album_title+"\" href=\""+album_uri+"\" data-uri=\""+album_uri+"\" data-interaction-target=\"album-name\" class=\"tl-cell__content\">"+Spicetify.Player.data.track.metadata.album_title+"</a>"
+        let album_date = new Date(albumInfo.year, (albumInfo.month || 1) - 1, albumInfo.day || 0);
+        let recent_date = new Date();
+        recent_date.setMonth(recent_date.getMonth() - 6);
+        album_date = album_date.toLocaleString("default", album_date > recent_date ? { year: "numeric", month: "short" } : { year: "numeric" });
+        album_link = '<a title="' + Spicetify.Player.data.track.metadata.album_title + '" href="' + album_uri + '" data-uri="' + album_uri + '" data-interaction-target="album-name" class="tl-cell__content">' + Spicetify.Player.data.track.metadata.album_title + "</a>";
 
-        nearArtistSpanText = album_link + " • " + album_date
-    } else if (Spicetify.Player.data.track.uri.includes('spotify:episode')) {
+        nearArtistSpanText = album_link + " • " + album_date;
+    } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
         // podcast
-        bgImage = bgImage.replace('spotify:image:', 'https://i.scdn.co/image/')
-        nearArtistSpanText = Spicetify.Player.data.track.metadata.album_title
-    } else if (Spicetify.Player.data.track.metadata.is_local=="true") {
+        bgImage = bgImage.replace("spotify:image:", "https://i.scdn.co/image/");
+        nearArtistSpanText = Spicetify.Player.data.track.metadata.album_title;
+    } else if (Spicetify.Player.data.track.metadata.is_local == "true") {
         // local file
-        nearArtistSpanText = Spicetify.Player.data.track.metadata.album_title
-    } else if (Spicetify.Player.data.track.provider=="ad") {
+        nearArtistSpanText = Spicetify.Player.data.track.metadata.album_title;
+    } else if (Spicetify.Player.data.track.provider == "ad") {
         // ad
-        nearArtistSpanText = "advertisement"
-        coverListenerInstalled = false
-        return
+        nearArtistSpanText = "advertisement";
+        coverListenerInstalled = false;
+        return;
     } else {
         // When clicking a song from the homepage, songChange is fired with half empty metadata
         // todo: retry only once?
-        setTimeout(songchange, 200)
+        setTimeout(songchange, 200);
     }
 
-    if( document.querySelector("#main-trackInfo-year")===null ) {
+    if (document.querySelector("#main-trackInfo-year") === null) {
         waitForElement([".main-trackInfo-container"], (queries) => {
-            nearArtistSpan = document.createElement("div")
-            nearArtistSpan.id = 'main-trackInfo-year'
-            nearArtistSpan.classList.add("main-trackInfo-artists", "ellipsis-one-line", "main-type-finale")
-            nearArtistSpan.innerHTML = nearArtistSpanText
-            queries[0].append(nearArtistSpan)
-        })
+            nearArtistSpan = document.createElement("div");
+            nearArtistSpan.id = "main-trackInfo-year";
+            nearArtistSpan.classList.add("main-trackInfo-artists", "ellipsis-one-line", "main-type-finale");
+            nearArtistSpan.innerHTML = nearArtistSpanText;
+            queries[0].append(nearArtistSpan);
+        });
     } else {
-        nearArtistSpan.innerHTML = nearArtistSpanText
+        nearArtistSpan.innerHTML = nearArtistSpanText;
     }
-    document.documentElement.style.setProperty('--image_url', 'url("' + bgImage + '")')
+    document.documentElement.style.setProperty("--image_url", 'url("' + bgImage + '")');
 }
 
-Spicetify.Player.addEventListener("songchange", songchange)
+Spicetify.Player.addEventListener("songchange", songchange);
 
 function pickCoverColor(img) {
-    if (!img.currentSrc.startsWith('spotify:'))
-        return
-    var swatches = new Vibrant(img, 5).swatches()
-    lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]
-    darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"]
+    if (!img.currentSrc.startsWith("spotify:")) return;
+    var swatches = new Vibrant(img, 5).swatches();
+    lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"];
+    darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
 
-    mainCols = isLight(textColorBg) ? lightCols : darkCols
-    textColor = "#509bf5"
+    mainCols = isLight(textColorBg) ? lightCols : darkCols;
+    textColor = "#509bf5";
     for (var col in mainCols)
         if (swatches[mainCols[col]]) {
-            textColor = swatches[mainCols[col]].getHex()
-            break
+            textColor = swatches[mainCols[col]].getHex();
+            break;
         }
 
-    sidebarColor = "#509bf5"
+    sidebarColor = "#509bf5";
     for (var col in lightCols)
         if (swatches[lightCols[col]]) {
-            sidebarColor = swatches[lightCols[col]].getHex()
-            break
+            sidebarColor = swatches[lightCols[col]].getHex();
+            break;
         }
-    updateColors(textColor, sidebarColor)
+    updateColors(textColor, sidebarColor);
 }
 
 waitForElement([".main-nowPlayingBar-left"], (queries) => {
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.removedNodes.length>0)
-                coverListenerInstalled = false
+    var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.removedNodes.length > 0) coverListenerInstalled = false;
         });
     });
-    observer.observe(queries[0], { childList: true })
+    observer.observe(queries[0], { childList: true });
 });
 
 function hookCoverChange(pick) {
     waitForElement([".cover-art-image"], (queries) => {
-        coverListenerInstalled = true
+        coverListenerInstalled = true;
         if (pick && queries[0].complete && queries[0].naturalHeight !== 0) pickCoverColor(queries[0]);
         queries[0].addEventListener("load", function () {
             try {
-                pickCoverColor(queries[0])
+                pickCoverColor(queries[0]);
             } catch (error) {
-                console.error(error)
-                setTimeout(pickCoverColor, 300, queries[0])
+                console.error(error);
+                setTimeout(pickCoverColor, 300, queries[0]);
             }
         });
     });
@@ -464,6 +470,6 @@ document.styleSheets[0].insertRule(`
         opacity: calc(0.07 + 0.03 * var(--is_light, 0));
         z-index: +3;
         transition: background-image var(--song-transition-speed) linear;
-    }`)
+    }`);
 
-document.documentElement.style.setProperty('--warning_message', ' ');
+document.documentElement.style.setProperty("--warning_message", " ");

@@ -567,11 +567,9 @@ waitForElement([".Root__main-view"], ([mainView]) => {
     mainView.prepend(shadow);
 });
 
-waitForElement([
-    ".Root__nav-bar .LayoutResizer__input, .Root__nav-bar .LayoutResizer__resize-bar input"
-], ([resizer]) => {
+waitForElement([".Root__nav-bar .LayoutResizer__input, .Root__nav-bar .LayoutResizer__resize-bar input"], ([resizer]) => {
     const observer = new MutationObserver(updateVariable);
-    observer.observe(resizer, { attributes: true, attributeFilter: ["value"]});
+    observer.observe(resizer, { attributes: true, attributeFilter: ["value"] });
     function updateVariable() {
         let value = resizer.value;
         if (value < 121) {
@@ -580,8 +578,7 @@ waitForElement([
         } else {
             document.documentElement.classList.remove("sidebar-hide-text");
         }
-        document.documentElement.style.setProperty(
-            "--sidebar-width", value + "px");
+        document.documentElement.style.setProperty("--sidebar-width", value + "px");
     }
     updateVariable();
 });
@@ -589,11 +586,9 @@ waitForElement([
 waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => {
     const observer = new ResizeObserver(updateVariable);
     observer.observe(resizeHost);
-    function updateVariable([ event ]) {
-        document.documentElement.style.setProperty(
-            "--main-view-width", event.contentRect.width + "px");
-        document.documentElement.style.setProperty(
-            "--main-view-height", event.contentRect.height + "px");
+    function updateVariable([event]) {
+        document.documentElement.style.setProperty("--main-view-width", event.contentRect.width + "px");
+        document.documentElement.style.setProperty("--main-view-height", event.contentRect.height + "px");
         if (event.contentRect.width < 700) {
             document.documentElement.classList.add("minimal-player");
         } else {
@@ -639,7 +634,7 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
     updateProgTime();
 
     Spicetify.CosmosAsync.sub("sp://connect/v1", (state) => {
-        const isExternal = state.devices.some(a => a.is_active);
+        const isExternal = state.devices.some((a) => a.is_active);
         if (isExternal) {
             root.classList.add("is-connectBarVisible");
         } else {
@@ -653,53 +648,44 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
     document.body.appendChild(filePickerForm);
     /** @type {HTMLInputElement} */
     const filePickerInput = filePickerForm.childNodes[0];
-    filePickerInput.accept = [
-        "image/jpeg",
-        "image/apng",
-        "image/avif",
-        "image/gif",
-        "image/png",
-        "image/svg+xml",
-        "image/webp"
-    ].join(",");
+    filePickerInput.accept = ["image/jpeg", "image/apng", "image/avif", "image/gif", "image/png", "image/svg+xml", "image/webp"].join(",");
 
     filePickerInput.onchange = () => {
         if (!filePickerInput.files.length) return;
 
         const file = filePickerInput.files[0];
-        const reader = new FileReader;
+        const reader = new FileReader();
         reader.onload = (event) => {
             const result = event.target.result;
             const id = Spicetify.URI.from(filePickerInput.uri).id;
             try {
-                localStorage.setItem(
-                    "dribbblish:folder-image:" + id,
-                    result
-                );
+                localStorage.setItem("dribbblish:folder-image:" + id, result);
             } catch {
                 Spicetify.showNotification("File too large");
             }
             DribbblishShared.loadPlaylistImage?.call();
-        }
+        };
         reader.readAsDataURL(file);
-    }
+    };
 
-    new Spicetify.ContextMenu.Item("Remove folder image",
+    new Spicetify.ContextMenu.Item(
+        "Remove folder image",
         ([uri]) => {
             const id = Spicetify.URI.from(uri).id;
             localStorage.removeItem("dribbblish:folder-image:" + id);
             DribbblishShared.loadPlaylistImage?.call();
         },
         ([uri]) => Spicetify.URI.isFolder(uri),
-        "x",
+        "x"
     ).register();
-    new Spicetify.ContextMenu.Item("Choose folder image",
+    new Spicetify.ContextMenu.Item(
+        "Choose folder image",
         ([uri]) => {
             filePickerInput.uri = uri;
             filePickerForm.reset();
             filePickerInput.click();
         },
         ([uri]) => Spicetify.URI.isFolder(uri),
-        "edit",
+        "edit"
     ).register();
 })();
