@@ -39,6 +39,37 @@
     font-weight: 500;
 }
 
+
+/* smooth color transitions */
+@property --spice-sidebar {
+  syntax: '<color>';
+  initial-value: magenta;
+  inherits: true;
+}
+
+@property --spice-main {
+  syntax: '<color>';
+  initial-value: magenta;
+  inherits: true;
+}
+
+@property --spice-text {
+  syntax: '<color>';
+  initial-value: magenta;
+  inherits: true;
+}
+
+@property --spice-button {
+  syntax: '<color>';
+  initial-value: magenta;
+  inherits: true;
+}
+
+:root {
+    transition: all var(--song-transition-speed) linear;
+    transition-property: --spice-sidebar, --spice-main, --spice-text, --spice-button;
+}
+
 body {
     --glue-font-family: "Google Sans Display","Roboto",spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,helvetica,arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
     --info-font-family: "Roboto",spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,helvetica,arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
@@ -1350,36 +1381,4 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 /* explicit icon */
 .main-tag-container {
     background-color: var(--spice-text);
-}
-
-/* smooth color transitions */
-@property --spice-sidebar {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
-}
-
-@property --spice-main {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
-}
-
-@property --spice-text {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
-}
-
-@property --spice-button {
-  syntax: '<color>';
-  initial-value: magenta;
-  inherits: true;
-}
-
-html {
-    transition: --spice-sidebar var(--song-transition-speed),
-                --spice-main var(--song-transition-speed),
-                --spice-text var(--song-transition-speed),
-                --spice-button var(--song-transition-speed);
 }

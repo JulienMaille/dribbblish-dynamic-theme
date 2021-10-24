@@ -286,28 +286,19 @@ var currentSideColor;
 var colorFadeInterval = false;
 
 function updateColors(textColHex, sideColHex) {
-    let update = (textColHex, sideColHex) => {
-        currentColor = textColHex;
-        currentSideColor = sideColHex;
+    let isLightBg = isLight(textColorBg)
+    if (isLightBg) textColHex = LightenDarkenColor(textColHex, -15) // vibrant color is always too bright for white bg mode
 
-        let isLightBg = isLight(textColorBg)
-        if (isLightBg) textColHex = LightenDarkenColor(textColHex, -15) // vibrant color is always too bright for white bg mode
-
-        let darkColHex = LightenDarkenColor(textColHex, isLightBg ? 12 : -20)
-        let darkerColHex = LightenDarkenColor(textColHex, isLightBg ? 30 : -40)
-        let buttonBgColHex = setLightness(textColHex, isLightBg ? 0.90 : 0.14)
-        setRootColor('text', textColHex)
-        setRootColor('button', darkerColHex)
-        setRootColor('button-active', darkColHex)
-        setRootColor('selected-row', darkerColHex)
-        setRootColor('tab-active', buttonBgColHex)
-        setRootColor('button-disabled', buttonBgColHex)
-        setRootColor('sidebar', sideColHex)
-    };
-
-    clearInterval(colorFadeInterval); // clear any interval that might be running
-
-    update(textColHex, sideColHex);
+    let darkColHex = LightenDarkenColor(textColHex, isLightBg ? 12 : -20)
+    let darkerColHex = LightenDarkenColor(textColHex, isLightBg ? 30 : -40)
+    let buttonBgColHex = setLightness(textColHex, isLightBg ? 0.90 : 0.14)
+    setRootColor('text', textColHex)
+    setRootColor('button', darkerColHex)
+    setRootColor('button-active', darkColHex)
+    setRootColor('selected-row', darkerColHex)
+    setRootColor('tab-active', buttonBgColHex)
+    setRootColor('button-disabled', buttonBgColHex)
+    setRootColor('sidebar', sideColHex)
 }
 
 let nearArtistSpanText = ""
