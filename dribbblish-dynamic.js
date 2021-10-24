@@ -200,9 +200,21 @@ function setLightness(hex, lightness) {
     return rgbToHex(hslToRgb(hsl));
 }
 
-let textColor = getComputedStyle(document.documentElement).getPropertyValue("--spice-text");
-let textColorBg = getComputedStyle(document.documentElement).getPropertyValue("--spice-main");
-let sidebarColor = getComputedStyle(document.documentElement).getPropertyValue("--spice-sidebar");
+function parseComputedStyleColor(col) {
+    if (col.startsWith("#")) return col;
+    if (col.startsWith("rgb("))
+        return rgbToHex(
+            col
+                .replace(/rgb|(|)/g, "")
+                .split(",")
+                .map((part) => Number(part.trim()))
+        );
+}
+
+// `parseComputedStyleColor()` beacuse "--spice-sidebar" is `rgb()`
+let textColor = parseComputedStyleColor(getComputedStyle(document.documentElement).getPropertyValue("--spice-text"));
+let textColorBg = parseComputedStyleColor(getComputedStyle(document.documentElement).getPropertyValue("--spice-main"));
+let sidebarColor = parseComputedStyleColor(getComputedStyle(document.documentElement).getPropertyValue("--spice-sidebar"));
 
 function setRootColor(name, colHex) {
     let root = document.documentElement;

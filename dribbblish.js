@@ -18,6 +18,7 @@ class ConfigMenu {
      * @property {onAppended} [onAppended]
      * @property {onChange} [onChange]
      * @property {DribbblishConfigItem[]} [children=[]]
+     * @property {String} [childOf=null] key of parent
      */
 
     /**
@@ -111,6 +112,7 @@ class ConfigMenu {
      * @param {DribbblishConfigItem} options
      */
     register(options) {
+        /** @type {DribbblishConfigItem} */
         const defaultOptions = {
             hidden: false,
             area: "Main Settings",
@@ -123,7 +125,8 @@ class ConfigMenu {
             showChildren: () => true,
             onAppended: () => {},
             onChange: () => {},
-            children: []
+            children: [],
+            childOf: null
         };
         // Set Defaults
         options = { ...defaultOptions, ...options };
