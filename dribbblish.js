@@ -18,7 +18,7 @@ class ConfigMenu {
      * @property {onAppended} [onAppended]
      * @property {onChange} [onChange]
      * @property {DribbblishConfigItem[]} [children=[]]
-     * @property {String} [childOf=null] key of parent
+     * @property {String} [childOf=null] key of parent (set automatically)
      */
 
     /**

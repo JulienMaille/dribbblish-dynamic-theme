@@ -256,6 +256,28 @@ setInterval(checkDarkLightMode, 60000);
 
 DribbblishShared.config.register({
     area: "Theme",
+    type: "checkbox",
+    key: "dynamicColors",
+    name: "Dynamic",
+    description: "If the Theme's Color should be extracted from Albumart",
+    defaultValue: true,
+    onChange: (val) => updateColors(),
+    showChildren: (val) => !val,
+    children: [
+        {
+            type: "color",
+            key: "colorOverride",
+            name: "Color",
+            description: "The Color of the Theme",
+            defaultValue: "#1ed760",
+            fireInitialChange: false,
+            onChange: (val) => updateColors()
+        }
+    ]
+});
+
+DribbblishShared.config.register({
+    area: "Theme",
     type: "select",
     data: ["Dark", "Light", "Based on Time"],
     key: "theme",
@@ -302,9 +324,23 @@ DribbblishShared.config.register({
 
 var currentColor;
 var currentSideColor;
-var colorFadeInterval = false;
 
 function updateColors(textColHex, sideColHex) {
+    if (textColHex && sideColHex) {
+        currentColor = textColHex;
+        currentSideColor = sideColHex;
+    } else {
+        if (!(currentColor && currentSideColor)) return; // If `updateColors()` is called early these vars are undefined and would break
+        textColHex = currentColor;
+        sideColHex = currentSideColor;
+    }
+
+    if (!DribbblishShared.config.get("dynamicColors")) {
+        const col = DribbblishShared.config.get("colorOverride");
+        textColHex = col;
+        sideColHex = col;
+    }
+
     let isLightBg = isLight(textColorBg);
     if (isLightBg) textColHex = LightenDarkenColor(textColHex, -15); // vibrant color is always too bright for white bg mode
 
