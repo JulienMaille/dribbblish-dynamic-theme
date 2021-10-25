@@ -1,63 +1,5 @@
 let current = "2.6.0";
 
-/* css is injected so this works with untouched user.css from Dribbblish */
-/* progressbar tooltip text color */
-document.styleSheets[0].insertRule(`
-    .playback-bar .prog-tooltip {
-        color: var(--spice-sidebar-text) !important;
-    }`);
-
-/* edit button of CustomApps */
-document.styleSheets[0].insertRule(`
-    .reddit-sort-container button.switch,
-    .new-releases-header button.switch,
-    .lyrics-tabBar-header button.switch {
-        background-color: rgba(var(--spice-rgb-subtext), 0.15) !important;
-        color: var(--spice-text);
-    }`);
-
-document.styleSheets[0].insertRule(`
-    .reddit-sort-container button.switch:hover,
-    .new-releases-header button.switch:hover,
-    .lyrics-tabBar-header button.switch:hover {
-        background-color: rgba(var(--spice-rgb-subtext), 0.3) !important;
-    }`);
-
-document.styleSheets[0].insertRule(`
-    .lyrics-lyricsContainer-LyricsBackground {
-        background: linear-gradient(180deg, transparent 0px, transparent 60px, var(--lyrics-color-background) 61px) !important;
-    }`);
-
-/* big cover opacity on hover */
-document.styleSheets[0].insertRule(`
-    .main-coverSlotExpanded-container:hover .cover-art,
-    .main-coverSlotExpanded-container:hover img {
-        opacity: 0.5;
-    }`);
-
-document.styleSheets[0].insertRule(`
-    .main-navBar-navBar a:hover,
-    .main-navBar-navBar a:hover span,
-    .main-buddyFeed-activityMetadata a:hover {
-        color: var(--spice-shadow) !important;
-    }`);
-
-document.styleSheets[0].insertRule(`
-    .collection-collectionEntityHeroCard-likedSongs,
-    .collection-collectionEntityHeroCard-likedSongs .main-cardHeader-link,
-    .collection-collectionEntityHeroCard-likedSongs .collection-collectionEntityHeroCard-descriptionContainer,
-    .x-heroCategoryCard-heroTitle,
-    .main-rootlist-expandArrow:focus,
-    .main-rootlist-expandArrow:hover,
-    .main-rootlist-textWrapper:focus,
-    .main-rootlist-textWrapper:hover,
-    .main-contextMenu-menuHeading,
-    .main-contextMenu-menuItemButton,
-    .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):focus,
-    .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):hover {
-        color: var(--spice-sidebar-text) !important;
-    }`);
-
 /* Config settings */
 
 DribbblishShared.config.register({
@@ -508,28 +450,5 @@ hookCoverChange(false);
             console.error(err);
         });
 })();
-
-/* translucid background cover */
-document.styleSheets[0].insertRule(`
-    .Root__top-container::before {
-        content: '';
-        background-image: var(--image_url);
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
-        position: fixed;
-        display: block;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        filter: blur(15px);
-        pointer-events: none;
-        backface-visibility: hidden;
-        will-change: transform;
-        opacity: calc(0.07 + 0.03 * var(--is_light, 0));
-        z-index: +3;
-        transition: background-image var(--song-transition-speed) linear;
-    }`);
 
 document.documentElement.style.setProperty("--warning_message", " ");
