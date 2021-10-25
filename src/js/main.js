@@ -648,7 +648,7 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
 
 let nearArtistSpan;
 let nearArtistSpanText = "";
-let coverListenerInstalled = true;
+let coverListenerInstalled = false;
 async function songchange() {
     try {
         // warning popup
@@ -746,13 +746,14 @@ waitForElement([".main-nowPlayingBar-left"], (queries) => {
 function hookCoverChange(pick) {
     waitForElement([".cover-art-image"], (queries) => {
         coverListenerInstalled = true;
-        if (pick && queries[0].complete && queries[0].naturalHeight !== 0) pickCoverColor(queries[0]);
-        queries[0].addEventListener("load", function () {
+        var elem = queries.slice(-1)[0];
+        if (pick && elem.complete && elem.naturalHeight !== 0) pickCoverColor(elem);
+        elem.addEventListener("load", function () {
             try {
-                pickCoverColor(queries[0]);
+                pickCoverColor(elem);
             } catch (error) {
                 console.error(error);
-                setTimeout(pickCoverColor, 300, queries[0]);
+                setTimeout(pickCoverColor, 300, elem);
             }
         });
     });
