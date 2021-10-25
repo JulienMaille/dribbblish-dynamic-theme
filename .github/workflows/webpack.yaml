@@ -16,8 +16,6 @@ jobs:
       with:
         # Make sure the actual branch is checked out when running on pull requests
         ref: ${{ github.head_ref }}
-        # This is important to fetch the changes to the previous commit
-        fetch-depth: 0
 
     - uses: actions/setup-node@v2
       with:
@@ -25,7 +23,6 @@ jobs:
     - run: npm install
     - run: npm run build
     - run: |
-        echo "Amending the current commit..."
         cd "$GITHUB_ACTION_PATH"
 
         git config --global user.email "actions@github.com"
@@ -33,5 +30,5 @@ jobs:
 
         git pull
         git add -f dist
-        git commit --amend --no-edit
+        git commit -m "Compile Webpack"
         git push origin -f

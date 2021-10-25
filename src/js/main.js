@@ -1075,10 +1075,7 @@ Spicetify.Player.addEventListener("songchange", songchange);
 
 async function pickCoverColor(img) {
     if (!img.currentSrc.startsWith("spotify:")) return;
-    console.log(img);
-    console.log(new Vibrant(img, 5));
     var swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
-    console.log(swatches);
     var lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"];
     var darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
 
