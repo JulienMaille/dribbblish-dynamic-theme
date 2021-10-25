@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
@@ -25,5 +26,7 @@ module.exports = {
                 ]
             }
         ]
-    }
+    },
+    devtool: false,
+    plugins: [new webpack.SourceMapDevToolPlugin({})]
 };
