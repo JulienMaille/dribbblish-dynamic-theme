@@ -1,4 +1,5 @@
 import * as Vibrant from "node-vibrant";
+import chroma from "chroma-js";
 
 import ConfigMenu from "./ConfigMenu";
 
@@ -394,110 +395,21 @@ function getAlbumInfo(uri) {
 }
 
 function isLight(hex) {
-    var [r, g, b] = hexToRgb(hex).map(Number);
+    var [r, g, b] = chroma(hex).rgb().map(Number);
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
     return brightness > 128;
 }
 
-function hexToRgb(hex) {
-    var bigint = parseInt(hex.replace("#", ""), 16);
-    var r = (bigint >> 16) & 255;
-    var g = (bigint >> 8) & 255;
-    var b = bigint & 255;
-    return [r, g, b];
-}
-
-function rgbToHex([r, g, b]) {
-    const rgb = (r << 16) | (g << 8) | (b << 0);
-    return "#" + (0x1000000 + rgb).toString(16).slice(1);
-}
-
-const LightenDarkenColor = (h, p) =>
-    "#" +
-    [1, 3, 5]
-        .map((s) => parseInt(h.substr(s, 2), 16))
-        .map((c) => parseInt((c * (100 + p)) / 100))
-        .map((c) => (c < 255 ? c : 255))
-        .map((c) => c.toString(16).padStart(2, "0"))
-        .join("");
-
-function rgbToHsl([r, g, b]) {
-    (r /= 255), (g /= 255), (b /= 255);
-    var max = Math.max(r, g, b),
-        min = Math.min(r, g, b);
-    var h,
-        s,
-        l = (max + min) / 2;
-    if (max == min) {
-        h = s = 0; // achromatic
-    } else {
-        var d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-            case r:
-                h = (g - b) / d + (g < b ? 6 : 0);
-                break;
-            case g:
-                h = (b - r) / d + 2;
-                break;
-            case b:
-                h = (r - g) / d + 4;
-                break;
-        }
-        h /= 6;
-    }
-    return [h, s, l];
-}
-
-function hslToRgb([h, s, l]) {
-    var r, g, b;
-    if (s == 0) {
-        r = g = b = l; // achromatic
-    } else {
-        function hue2rgb(p, q, t) {
-            if (t < 0) t += 1;
-            if (t > 1) t -= 1;
-            if (t < 1 / 6) return p + (q - p) * 6 * t;
-            if (t < 1 / 2) return q;
-            if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-            return p;
-        }
-        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        var p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1 / 3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1 / 3);
-    }
-    return [r * 255, g * 255, b * 255];
-}
-
-function setLightness(hex, lightness) {
-    let hsl = rgbToHsl(hexToRgb(hex));
-    hsl[2] = lightness;
-    return rgbToHex(hslToRgb(hsl));
-}
-
-function parseComputedStyleColor(col) {
-    if (col.startsWith("#")) return col;
-    if (col.startsWith("rgb("))
-        return rgbToHex(
-            col
-                .replace(/rgb|(|)/g, "")
-                .split(",")
-                .map((part) => Number(part.trim()))
-        );
-}
-
-// `parseComputedStyleColor()` beacuse "--spice-sidebar" is `rgb()`
-let textColor = parseComputedStyleColor(getComputedStyle(document.documentElement).getPropertyValue("--spice-text"));
-let textColorBg = parseComputedStyleColor(getComputedStyle(document.documentElement).getPropertyValue("--spice-main"));
-let sidebarColor = parseComputedStyleColor(getComputedStyle(document.documentElement).getPropertyValue("--spice-sidebar"));
+// parse to hex beacuse "--spice-sidebar" is `rgb()`
+let textColor = chroma(getComputedStyle(document.documentElement).getPropertyValue("--spice-text")).hex();
+let textColorBg = chroma(getComputedStyle(document.documentElement).getPropertyValue("--spice-main")).hex();
+let sidebarColor = chroma(getComputedStyle(document.documentElement).getPropertyValue("--spice-sidebar")).hex();
 
 function setRootColor(name, colHex) {
     let root = document.documentElement;
     if (root === null) return;
     root.style.setProperty("--spice-" + name, colHex);
-    root.style.setProperty("--spice-rgb-" + name, hexToRgb(colHex).join(","));
+    root.style.setProperty("--spice-rgb-" + name, chroma(colHex).rgb().join(","));
 }
 
 function toggleDark(setDark) {
@@ -630,11 +542,17 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
     }
 
     let isLightBg = isLight(textColorBg);
-    if (isLightBg) textColHex = LightenDarkenColor(textColHex, -15); // vibrant color is always too bright for white bg mode
+    if (isLightBg) textColHex = chroma(textColHex).darken(0.15).hex(); // vibrant color is always too bright for white bg mode
 
-    let darkColHex = LightenDarkenColor(textColHex, isLightBg ? 12 : -20);
-    let darkerColHex = LightenDarkenColor(textColHex, isLightBg ? 30 : -40);
-    let buttonBgColHex = setLightness(textColHex, isLightBg ? 0.9 : 0.14);
+    let darkColHex = chroma(textColHex)
+        .brighten(isLightBg ? 0.12 : -0.2)
+        .hex();
+    let darkerColHex = chroma(textColHex)
+        .brighten(isLightBg ? 0.3 : -0.4)
+        .hex();
+    let buttonBgColHex = chroma(textColHex)
+        .set("hsl.l", isLightBg ? 0.9 : 0.14)
+        .hex();
     setRootColor("text", textColHex);
     setRootColor("button", darkerColHex);
     setRootColor("button-active", darkColHex);

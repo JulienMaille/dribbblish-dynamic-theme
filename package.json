@@ -10,6 +10,7 @@
         "build": "webpack --mode=development"
     },
     "dependencies": {
+        "chroma-js": "^2.1.2",
         "node-vibrant": "3.1.4"
     }
 }
