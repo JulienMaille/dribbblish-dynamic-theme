@@ -1,3 +1,5 @@
+import * as Vibrant from "node-vibrant";
+
 // Hide popover message
 // document.getElementById("popover-container").style.height = 0;
 class ConfigMenu {
@@ -832,7 +834,7 @@ function hslToRgb([h, s, l]) {
 }
 
 function setLightness(hex, lightness) {
-    hsl = rgbToHsl(hexToRgb(hex));
+    let hsl = rgbToHsl(hexToRgb(hex));
     hsl[2] = lightness;
     return rgbToHex(hslToRgb(hsl));
 }
@@ -885,6 +887,7 @@ function checkDarkLightMode(colors) {
         const now = new Date();
         const time = 60 * now.getHours() + now.getMinutes();
 
+        let dark;
         if (end < start) dark = start <= time || time < end;
         else dark = start <= time && time < end;
         toggleDark(dark);
@@ -1005,6 +1008,7 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
     if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
 }
 
+let nearArtistSpan;
 let nearArtistSpanText = "";
 let coverListenerInstalled = true;
 async function songchange() {
@@ -1032,7 +1036,7 @@ async function songchange() {
         let recent_date = new Date();
         recent_date.setMonth(recent_date.getMonth() - 6);
         album_date = album_date.toLocaleString("default", album_date > recent_date ? { year: "numeric", month: "short" } : { year: "numeric" });
-        album_link = '<a title="' + Spicetify.Player.data.track.metadata.album_title + '" href="' + album_uri + '" data-uri="' + album_uri + '" data-interaction-target="album-name" class="tl-cell__content">' + Spicetify.Player.data.track.metadata.album_title + "</a>";
+        let album_link = '<a title="' + Spicetify.Player.data.track.metadata.album_title + '" href="' + album_uri + '" data-uri="' + album_uri + '" data-interaction-target="album-name" class="tl-cell__content">' + Spicetify.Player.data.track.metadata.album_title + "</a>";
 
         nearArtistSpanText = album_link + " • " + album_date;
     } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
@@ -1069,13 +1073,16 @@ async function songchange() {
 
 Spicetify.Player.addEventListener("songchange", songchange);
 
-function pickCoverColor(img) {
+async function pickCoverColor(img) {
     if (!img.currentSrc.startsWith("spotify:")) return;
-    var swatches = new Vibrant(img, 5).swatches();
-    lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"];
-    darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
+    console.log(img);
+    console.log(new Vibrant(img, 5));
+    var swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
+    console.log(swatches);
+    var lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"];
+    var darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
 
-    mainCols = isLight(textColorBg) ? lightCols : darkCols;
+    var mainCols = isLight(textColorBg) ? lightCols : darkCols;
     textColor = "#509bf5";
     for (var col in mainCols)
         if (swatches[mainCols[col]]) {
@@ -1130,7 +1137,7 @@ hookCoverChange(false);
         })
         .then((data) => {
             if (data.tag_name > current) {
-                upd = document.createElement("div");
+                const upd = document.createElement("div");
                 upd.innerText = `Theme UPD v${data.tag_name} avail.`;
                 upd.classList.add("ellipsis-one-line", "main-type-finale");
                 upd.setAttribute("title", `Changes: ${data.name}`);
