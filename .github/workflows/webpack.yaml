@@ -31,4 +31,4 @@ jobs:
         git pull
         git add -f dist
         git commit -m "Compile Webpack"
-        git push origin -f
+        git push
