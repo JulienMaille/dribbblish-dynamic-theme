@@ -1,0 +1,37 @@
+name: Webpack
+
+on: 
+  pull_request:
+  push:
+    branches:
+    - main
+
+jobs:
+  webpack:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        # Make sure the actual branch is checked out when running on pull requests
+        ref: ${{ github.head_ref }}
+        # This is important to fetch the changes to the previous commit
+        fetch-depth: 0
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: npm install
+    - run: npm run build
+    - run: |
+        echo "Amending the current commit..."
+        cd "$GITHUB_ACTION_PATH"
+
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Action"
+
+        git pull
+        git add -f dist
+        git commit --amend --no-edit
+        git push origin -f
