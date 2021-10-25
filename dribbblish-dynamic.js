@@ -235,21 +235,26 @@ function toggleDark(setDark) {
     setRootColor("subtext", setDark ? "#EAEAEA" : "#3D3D3D");
     setRootColor("notification", setDark ? "#303030" : "#DDDDDD");
 
-    updateColors(textColor, sidebarColor);
+    updateColors(textColor, sidebarColor, false);
 }
 
-function checkDarkLightMode() {
-    if (DribbblishShared.config.get("theme") != 2) return;
+function checkDarkLightMode(colors) {
+    const theme = DribbblishShared.config.get("theme");
+    if (theme == 2) {
+        // Based on Time
+        const start = 60 * parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[1]);
+        const end = 60 * parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[1]);
 
-    const start = 60 * parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[1]);
-    const end = 60 * parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[1]);
+        const now = new Date();
+        const time = 60 * now.getHours() + now.getMinutes();
 
-    const now = new Date();
-    const time = 60 * now.getHours() + now.getMinutes();
-
-    if (end < start) dark = start <= time || time < end;
-    else dark = start <= time && time < end;
-    toggleDark(dark);
+        if (end < start) dark = start <= time || time < end;
+        else dark = start <= time && time < end;
+        toggleDark(dark);
+    } else if (theme == 3) {
+        // Based on Color
+        if (colors && colors.length > 0) toggleDark(isLight(colors[0]));
+    }
 }
 // Run every Minute to check time and set dark / light mode
 setInterval(checkDarkLightMode, 60000);
@@ -279,13 +284,15 @@ DribbblishShared.config.register({
 DribbblishShared.config.register({
     area: "Theme",
     type: "select",
-    data: ["Dark", "Light", "Based on Time"],
+    data: ["Dark", "Light", "Based on Time", "Based on Color"],
     key: "theme",
     name: "Theme",
     description: "Select Dark / Bright mode",
     defaultValue: 0,
     showChildren: (val) => {
-        return val == 2;
+        if (val == 2) return ["darkModeOnTime", "darkModeOffTime"];
+        //if (val == 3) return [""];
+        return false;
     },
     onChange: (val) => {
         switch (val) {
@@ -296,6 +303,9 @@ DribbblishShared.config.register({
                 toggleDark(false);
                 break;
             case 2:
+                checkDarkLightMode();
+                break;
+            case 3:
                 checkDarkLightMode();
                 break;
         }
@@ -325,7 +335,7 @@ DribbblishShared.config.register({
 var currentColor;
 var currentSideColor;
 
-function updateColors(textColHex, sideColHex) {
+function updateColors(textColHex, sideColHex, checkDarkMode = true) {
     if (textColHex && sideColHex) {
         currentColor = textColHex;
         currentSideColor = sideColHex;
@@ -354,6 +364,8 @@ function updateColors(textColHex, sideColHex) {
     setRootColor("tab-active", buttonBgColHex);
     setRootColor("button-disabled", buttonBgColHex);
     setRootColor("sidebar", sideColHex);
+
+    if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
 }
 
 let nearArtistSpanText = "";
