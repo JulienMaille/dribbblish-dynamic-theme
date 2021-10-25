@@ -267,7 +267,17 @@ input[type="color"]:active::before {
 }
 
 .main-trackList-playingIcon {
+    image-rendering: pixelated;
     filter: grayscale(1);
+}
+
+.main-trackList-trackListRow:hover {
+    background-color: rgba(var(--spice-rgb-selected-row), 0.2) !important;
+}
+
+.main-trackList-trackListRow:focus-within,
+[aria-selected="true"] > .main-trackList-trackListRow {
+    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
 }
 
 span.artist-artistVerifiedBadge-badge svg > path:first-of-type {
