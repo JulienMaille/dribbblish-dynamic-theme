@@ -398,6 +398,11 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
     border-radius: var(--sidebar-icons-border-radius);
 }
 
+.main-avatar-avatar > div {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 .view-homeShortcutsGrid-shortcut {
     overflow: hidden;
     background-color: rgba(var(--spice-rgb-selected-row), 0.4);
