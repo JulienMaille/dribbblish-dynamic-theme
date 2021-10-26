@@ -454,7 +454,8 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 .main-userWidget-box.update-avail,
 .view-homeShortcutsGrid-shortcut,
 :not(.view-homeShortcutsGrid-imageWrapper) > .main-image-image:not(.main-avatar-image) {
-  border-radius: var(--image-radius) !important; }
+  border-radius: var(--image-radius) !important;
+  padding-right: 10px; }
 
 .main-avatar-image,
 .main-userWidget-box:not(.update-avail),
@@ -928,7 +929,7 @@ li.GlueDropTarget {
 
 /** Grid */
 .Root__top-container {
-  grid-template-areas: "nav-bar main-view buddy-feed" "nav-bar now-playing-bar buddy-feed";
+  grid-template-areas: "nav-bar main-view buddy-feed" "nav-bar now-playing-bar buddy-feed";
   padding: var(--main-gap) 0; }
 
 html:not(.buddyfeed-visible) .Root__top-container {

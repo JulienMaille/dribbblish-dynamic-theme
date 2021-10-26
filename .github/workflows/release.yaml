@@ -1,0 +1,45 @@
+name: Release
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of Release'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        # Make sure the actual branch is checked out when running on pull requests
+        ref: ${{ github.head_ref }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build Webpack
+      run: npm run build
+      env:
+        DRIBBBLISH_VERSION: ${{ github.event.inputs.version }}
+
+    - name: Install zip
+      uses: montudor/action-zip@v1
+
+    - name: Zip Files
+      run: zip -r DribbblishDynamic_${{ github.event.inputs.version }}.zip *
+      working-directory: dist
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.event.inputs.version }}
+        files: dist/DribbblishDynamic_${{ github.event.inputs.version }}.zip

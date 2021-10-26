@@ -434,6 +434,7 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 .view-homeShortcutsGrid-shortcut,
 :not(.view-homeShortcutsGrid-imageWrapper) > .main-image-image:not(.main-avatar-image) {
     border-radius: var(--image-radius) !important;
+    padding-right: 10px;
 }
 
 .main-avatar-image,

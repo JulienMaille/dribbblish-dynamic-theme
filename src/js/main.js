@@ -3,7 +3,7 @@ import chroma from "chroma-js";
 
 import ConfigMenu from "./ConfigMenu";
 
-const CURRENT_VERSION = "2.6.0";
+const CURRENT_VERSION = process.env.DRIBBBLISH_VERSION;
 
 class _DribbblishShared {
     constructor() {
@@ -690,16 +690,18 @@ hookCoverChange(false);
             return response.json();
         })
         .then((data) => {
-            if (data.tag_name > CURRENT_VERSION) {
-                const upd = document.createElement("div");
+            const upd = document.createElement("div");
+            upd.classList.add("ellipsis-one-line", "main-type-finale");
+            upd.setAttribute("title", `Changes: ${data.name}`);
+            upd.style.setProperty("color", "var(--spice-button-active)");
+            if (CURRENT_VERSION == "Dev") {
+                upd.innerText = "Dev version!";
+            } else if (data.tag_name > CURRENT_VERSION) {
                 upd.innerText = `Theme UPD v${data.tag_name} avail.`;
-                upd.classList.add("ellipsis-one-line", "main-type-finale");
-                upd.setAttribute("title", `Changes: ${data.name}`);
-                upd.style.setProperty("color", "var(--spice-button-active)");
-                document.querySelector(".main-userWidget-box").append(upd);
-                document.querySelector(".main-userWidget-box").classList.add("update-avail");
                 new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/blob/main/README.md#install--update", "_blank")).register();
             }
+            document.querySelector(".main-userWidget-box").append(upd);
+            document.querySelector(".main-userWidget-box").classList.add("update-avail");
         })
         .catch((err) => {
             // Do something for an error here
