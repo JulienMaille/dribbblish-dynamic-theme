@@ -1336,3 +1336,11 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     z-index: +3;
     transition: background-image var(--song-transition-speed) linear;
 }
+
+// Fix lyrics-plus having a scrollbar when top-bar is `solid` or `transparent`
+.lyrics-lyricsContainer-LyricsContainer {
+    height: 100% !important;
+}
+.main-view-container__scroll-node-child {
+    height: 100%;
+}
