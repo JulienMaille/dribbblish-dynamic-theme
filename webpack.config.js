@@ -1,8 +1,10 @@
 const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("path");
 
+/** @type {import('webpack').Configuration} */
 module.exports = {
     entry: [path.resolve(__dirname, "./src/js/main.js"), path.resolve(__dirname, "./src/styles/main.scss")],
     output: {
@@ -19,25 +21,36 @@ module.exports = {
             {
                 test: /\.scss$/,
                 exclude: /node_modules/,
+                type: "asset/resource",
+                generator: {
+                    filename: "user.css"
+                },
                 use: [
                     {
-                        loader: "file-loader",
-                        options: { name: "user.css" }
-                    },
-                    "sass-loader"
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: true
+                        }
+                    }
                 ]
             }
         ]
     },
-    devtool: false,
+    devtool: "inline-source-map",
     plugins: [
-        new CleanWebpackPlugin(),
+        new CleanWebpackPlugin({
+            protectWebpackAssets: false,
+            cleanAfterEveryBuildPatterns: ["*.LICENSE.txt"]
+        }),
         new webpack.DefinePlugin({
             "process.env.DRIBBBLISH_VERSION": JSON.stringify((process.env.DRIBBBLISH_VERSION || "vDev").substring(1)) // Substring because the script expects the version to be `X.X.X` and not `vX.X.X`
         }),
-        new webpack.SourceMapDevToolPlugin({}),
         new CopyPlugin({
             patterns: [{ from: "src/assets", to: "assets" }, { from: "src/color.ini" }]
         })
-    ]
+    ],
+    optimization: {
+        minimize: true,
+        minimizer: [`...`, new CssMinimizerPlugin()]
+    }
 };
