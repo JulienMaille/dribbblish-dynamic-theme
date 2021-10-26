@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version of Release'
+        description: 'Version of Release (format: X.X.X)'
         required: true
 
 jobs:
@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Verify Input
+      run: |
+        [[ "${{ github.event.inputs.version }}" =~ ^[0-9]\.[0-9]\.[0-9]$ ]] && echo "Matches" && exit 0 || echo "Use versions like '1.2.3'" && exit 1
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -38,11 +42,13 @@ jobs:
       uses: montudor/action-zip@v1
 
     - name: Zip Files
-      run: zip -r DribbblishDynamic_${{ github.event.inputs.version }}.zip *
+      run: zip -r DribbblishDynamic_v${{ github.event.inputs.version }}.zip *
       working-directory: dist
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
+        name: v${{ github.event.inputs.version }}
         tag_name: ${{ github.event.inputs.version }}
-        files: dist/DribbblishDynamic_${{ github.event.inputs.version }}.zip
+        files: dist/DribbblishDynamic_v${{ github.event.inputs.version }}.zip
+        fail_on_unmatched_files	: true
