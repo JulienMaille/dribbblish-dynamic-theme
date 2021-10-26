@@ -3,6 +3,8 @@ import chroma from "chroma-js";
 
 import ConfigMenu from "./ConfigMenu";
 
+const CURRENT_VERSION = "2.6.0";
+
 class _DribbblishShared {
     constructor() {
         this.config = new ConfigMenu();
@@ -334,8 +336,6 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
     ).register();
 })();
 
-let current = "2.6.0";
-
 /* Config settings */
 
 DribbblishShared.config.register({
@@ -364,7 +364,7 @@ waitForElement(["#main"], () => {
         description: `
             OS: ${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}
             Spotify: v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}
-            Dribbblish: v${current}
+            Dribbblish: v${CURRENT_VERSION}
         `,
         data: "Copy",
         onChange: (val) => {
@@ -690,7 +690,7 @@ hookCoverChange(false);
             return response.json();
         })
         .then((data) => {
-            if (data.tag_name > current) {
+            if (data.tag_name > CURRENT_VERSION) {
                 const upd = document.createElement("div");
                 upd.innerText = `Theme UPD v${data.tag_name} avail.`;
                 upd.classList.add("ellipsis-one-line", "main-type-finale");
