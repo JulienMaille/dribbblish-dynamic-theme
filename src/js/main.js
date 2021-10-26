@@ -3,8 +3,6 @@ import chroma from "chroma-js";
 
 import ConfigMenu from "./ConfigMenu";
 
-const CURRENT_VERSION = process.env.DRIBBBLISH_VERSION;
-
 class _DribbblishShared {
     constructor() {
         this.config = new ConfigMenu();
@@ -364,7 +362,7 @@ waitForElement(["#main"], () => {
         description: `
             OS: ${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}
             Spotify: v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}
-            Dribbblish: v${CURRENT_VERSION}
+            Dribbblish: v${process.env.DRIBBBLISH_VERSION}
         `,
         data: "Copy",
         onChange: (val) => {
@@ -694,9 +692,9 @@ hookCoverChange(false);
             upd.classList.add("ellipsis-one-line", "main-type-finale");
             upd.setAttribute("title", `Changes: ${data.name}`);
             upd.style.setProperty("color", "var(--spice-button-active)");
-            if (CURRENT_VERSION == "Dev") {
+            if (process.env.DRIBBBLISH_VERSION == "Dev") {
                 upd.innerText = "Dev version!";
-            } else if (data.tag_name > CURRENT_VERSION) {
+            } else if (data.tag_name > process.env.DRIBBBLISH_VERSION) {
                 upd.innerText = `Theme UPD v${data.tag_name} avail.`;
                 new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/blob/main/README.md#install--update", "_blank")).register();
             }
