@@ -31,6 +31,9 @@ jobs:
       env:
         DRIBBBLISH_VERSION: ${{ github.event.inputs.version }}
 
+    - name: Add Version File
+      run: echo "${{ github.event.inputs.version }}" > dist/VERSION
+
     - name: Install zip
       uses: montudor/action-zip@v1
 
