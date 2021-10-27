@@ -662,7 +662,7 @@ hookCoverChange(false);
                 upd.innerText = "Dev version!";
             } else if (data.tag_name > process.env.DRIBBBLISH_VERSION) {
                 upd.innerText = `Theme UPD v${data.tag_name} avail.`;
-                new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/blob/main/README.md#install--update", "_blank")).register();
+                new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank")).register();
             }
             document.querySelector(".main-userWidget-box").append(upd);
             document.querySelector(".main-userWidget-box").classList.add("update-avail");
