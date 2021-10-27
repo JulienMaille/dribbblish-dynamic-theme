@@ -3,7 +3,9 @@
     @return #{"invert("}$v#{")"};
 }
 
+@import "Inputs";
 @import "ConfigMenu";
+@import "NoAds";
 
 :root {
     --bar-height: 70px;
@@ -125,110 +127,6 @@ body {
 
 .main-rootlist-rootlistDivider {
     display: none;
-}
-
-input {
-    background-color: unset !important;
-    border-radius: 0 !important;
-    padding: 6px 10px 6px 48px;
-    color: var(--spice-text) !important;
-}
-
-input[type="range"] {
-    -webkit-appearance: none;
-    background: transparent;
-    padding: 0px;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    margin-top: -4px;
-    border-radius: 50%;
-    background-color: var(--spice-text);
-}
-
-input[type="range"]::-webkit-slider-thumb:hover,
-input[type="range"]::-webkit-slider-thumb:active {
-    filter: brightness(80%);
-}
-
-input[type="range"]::after {
-    z-index: 9999;
-    content: attr(tooltip);
-    position: absolute;
-    min-width: 50px;
-    top: -10px;
-    left: 50%;
-    transform: translateX(calc(-50%));
-    padding: 0 5px;
-    border-radius: 4px;
-    text-align: center;
-    color: var(--spice-sidebar-text);
-    background-color: var(--spice-button);
-    transition: opacity 0.25s ease;
-    opacity: 0;
-}
-
-input[type="range"]:hover::after,
-input[type="range"]:active::after {
-    opacity: 1;
-}
-
-input[type="range"]:focus {
-    outline: none;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 8px;
-    background-color: rgba(var(--spice-rgb-text), 0.2);
-    border-radius: 50vw;
-}
-
-input[type="number"],
-input[type="text"],
-input[type="time"] {
-    height: 32px;
-    border: none;
-    border-radius: 4px !important;
-    padding: 0px 10px;
-    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
-    color: var(--spice-subtext) !important;
-}
-
-input[type="number"]:hover,
-input[type="number"]:active,
-input[type="text"]:hover,
-input[type="text"]:active,
-input[type="time"]:hover,
-input[type="time"]:active {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.6) !important;
-}
-
-input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(calc(1 - var(--is_light)));
-}
-
-input[type="color"] {
-    position: relative;
-    padding: 0px;
-    border: none;
-}
-
-input[type="color"]::before {
-    z-index: -1;
-    content: "";
-    position: absolute;
-    inset: -5px;
-    border-radius: 4px;
-    background-color: rgba(var(--spice-rgb-selected-row), 0.4);
-}
-
-input[type="color"]:hover::before,
-input[type="color"]:active::before {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.6);
 }
 
 .x-searchInput-searchInputSearchIcon,
@@ -357,6 +255,10 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 /** Cards */
+.main-card-card {
+    border-radius: var(--main-corner-radius) !important;
+}
+
 .main-cardImage-imageWrapper {
     background-color: transparent;
     box-shadow: unset;
@@ -513,7 +415,7 @@ html {
 .main-rootlist-rootlistItemLink:visited,
 .main-rootlist-rootlistContent span,
 .main-navBar-entryPoints span {
-    z-index: 999;
+    z-index: 1;
     color: var(--spice-sidebar-text);
 }
 
@@ -532,12 +434,23 @@ html {
 }
 
 .main-rootlist-statusIcons {
-    color: var(--spice-sidebar-text);
-    padding-right: 16px;
+    z-index: 1;
+    inset: 0;
+    position: absolute;
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
 }
 
 .main-rootlist-statusIcons .main-playButton-button {
-    color: var(--spice-sidebar-text);
+    width: 32px;
+    height: 32px;
+    margin: 0px;
+    color: var(--spice-sidebar);
+    background-color: rgba(var(--spice-rgb-main), 0.7);
+    border-radius: var(--sidebar-icons-border-radius);
 }
 
 .main-rootlist-expandArrow {
@@ -573,7 +486,6 @@ html.sidebar-hide-text .main-rootlist-expandArrow {
 html.sidebar-hide-text .main-navBar-navBarItem span,
 html.sidebar-hide-text .main-rootlist-rootlistContent span,
 html.sidebar-hide-text .main-rootlist-rootlistItem span,
-html.sidebar-hide-text .main-rootlist-statusIcons,
 html.sidebar-hide-text .GlueDropTarget span {
     display: none;
 }
@@ -828,14 +740,19 @@ li.GlueDropTarget {
 }
 
 /** OS-specific window controls dodge */
-#main:not([top-bar^="none"]) .main-topBar-background {
-    -webkit-app-region: no-drag;
+#main:not([top-bar^="none"]) {
+    .main-topBar-background,
+    .main-topBar-topbarContent {
+        -webkit-app-region: no-drag;
+    }
 }
 
-#main:not([top-bar="none-padding"]) .main-navBar-navBar,
-#main:not([top-bar="none-padding"]) .main-buddyFeed-header,
-#main:not([top-bar="none-padding"]) .main-navBar-entryPoints {
-    padding-top: 8px !important;
+#main:not([top-bar="none-padding"]) {
+    .main-navBar-navBar,
+    .main-buddyFeed-header,
+    .main-navBar-entryPoints {
+        padding-top: 8px !important;
+    }
 }
 
 #main:not([top-bar^="none"]) {
@@ -1074,7 +991,7 @@ span.main-userWidget-displayName,
 
 .main-rootlist-wrapper > div:nth-child(2) > li img,
 .main-navBar-navBarLink > .icon {
-    z-index: 100;
+    z-index: 1;
 }
 
 .main-collectionLinkButton-collectionLinkButton,
@@ -1174,6 +1091,8 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 
 .main-nowPlayingWidget-coverExpanded .main-coverSlotCollapsed-container {
     opacity: 0;
+    width: 10px;
+    pointer-events: none;
 }
 
 .main-nowPlayingWidget-coverExpanded {
@@ -1318,7 +1237,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 /* translucent background cover */
 .Root__top-container::before {
     content: "";
-    background-image: var(--image_url);
+    background-image: var(--image-url);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
