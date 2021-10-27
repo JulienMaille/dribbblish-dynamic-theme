@@ -27,17 +27,20 @@ export default class ConfigMenu {
 
     /**
      * @callback showChildren
+     * @this {DribbblishConfigItem}
      * @param {any} value
      * @returns {Boolean | String[]}
      */
 
     /**
      * @callback onAppended
+     * @this {DribbblishConfigItem}
      * @returns {void}
      */
 
     /**
      * @callback onChange
+     * @this {DribbblishConfigItem}
      * @param {any} value
      * @returns {void}
      */
@@ -136,8 +139,8 @@ export default class ConfigMenu {
             .join("\n");
         options._onChange = options.onChange;
         options.onChange = (val) => {
-            options._onChange(val);
-            const show = options.showChildren(val);
+            options._onChange.call(options, val);
+            const show = options.showChildren.call(options, val);
             options.children.forEach((child) => this.setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
         };
         options.children = options.children.map((child) => {
@@ -287,7 +290,7 @@ export default class ConfigMenu {
 
         options.children.forEach((child) => this.register(child));
 
-        options.onAppended();
+        options.onAppended.call(options);
         if (options.fireInitialChange) options.onChange(this.get(options.key));
     }
 

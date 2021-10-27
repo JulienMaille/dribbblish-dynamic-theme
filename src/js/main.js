@@ -1,5 +1,6 @@
 import * as Vibrant from "node-vibrant";
 import chroma from "chroma-js";
+import $ from "jquery";
 
 import ConfigMenu from "./ConfigMenu";
 
@@ -16,13 +17,7 @@ DribbblishShared.config.register({
     name: "Right expanded cover",
     description: "Have the expanded cover Image on the right instead of on the left",
     defaultValue: true,
-    onChange: (val) => {
-        if (val) {
-            document.documentElement.classList.add("right-expanded-cover");
-        } else {
-            document.documentElement.classList.remove("right-expanded-cover");
-        }
-    }
+    onChange: (val) => $("html").toggleClass("right-expanded-cover", val)
 });
 
 DribbblishShared.config.register({
@@ -31,7 +26,7 @@ DribbblishShared.config.register({
     name: "Round Sidebar Icons",
     description: "If the Sidebar Icons should be round instead of square",
     defaultValue: false,
-    onChange: (val) => document.documentElement.style.setProperty("--sidebar-icons-border-radius", val ? "50%" : "var(--image-radius)")
+    onChange: (val) => $("html").css("--sidebar-icons-border-radius", val ? "50%" : "var(--image-radius)")
 });
 
 DribbblishShared.config.register({
@@ -41,7 +36,7 @@ DribbblishShared.config.register({
     name: "Sidebar Hover Animation",
     description: "If the Sidebar Icons should have an animated background on hover",
     defaultValue: true,
-    onChange: (val) => document.documentElement.style.setProperty("--sidebar-icons-hover-animation", val ? "1" : "0")
+    onChange: (val) => $("html").css("--sidebar-icons-hover-animation", val ? "1" : "0")
 });
 
 waitForElement(["#main"], () => {
@@ -53,20 +48,8 @@ waitForElement(["#main"], () => {
         description: "Have different top Bars (or none at all)",
         defaultValue: 0,
         onChange: (val) => {
-            switch (val) {
-                case 0:
-                    document.getElementById("main").setAttribute("top-bar", "none");
-                    break;
-                case 1:
-                    document.getElementById("main").setAttribute("top-bar", "none-padding");
-                    break;
-                case 2:
-                    document.getElementById("main").setAttribute("top-bar", "solid");
-                    break;
-                case 3:
-                    document.getElementById("main").setAttribute("top-bar", "transparent");
-                    break;
-            }
+            const vals = ["none", "none-padding", "solid", "transparent"];
+            $("#main").attr("top-bar", vals[val]);
         }
     });
 
@@ -78,14 +61,8 @@ waitForElement(["#main"], () => {
         description: "Style of the Player Controls. Selecting Spotify basically changes Play / Pause back to the center",
         defaultValue: 0,
         onChange: (val) => {
-            switch (val) {
-                case 0:
-                    document.getElementById("main").setAttribute("player-controls", "dribbblish");
-                    break;
-                case 1:
-                    document.getElementById("main").setAttribute("player-controls", "spotify");
-                    break;
-            }
+            const vals = ["dribbblish", "spotify"];
+            $("#main").attr("player-controls", vals[val]);
         }
     });
 
@@ -96,27 +73,7 @@ waitForElement(["#main"], () => {
         name: "Hide Ads",
         description: `Hide ads / premium features (see: <a href="https://github.com/Daksh777/SpotifyNoPremium">SpotifyNoPremium</a>)`,
         defaultValue: false,
-        onAppended: () => {
-            document.styleSheets[0].insertRule(/* css */ `
-                /* Remove upgrade button*/
-                #main[hide-ads] .main-topBar-UpgradeButton {
-                    display: none
-                }
-            `);
-            document.styleSheets[0].insertRule(/* css */ `
-                /* Remove upgrade to premium button in user menu */
-                #main[hide-ads] .main-contextMenu-menuItemButton[href="https://www.spotify.com/premium/"] {
-                    display: none
-                }
-            `);
-            document.styleSheets[0].insertRule(/* css */ `
-                /* Remove ad placeholder in main screen */
-                #main[hide-ads] .main-leaderboardComponent-container {
-                    display: none
-                }
-            `);
-        },
-        onChange: (val) => document.getElementById("main").toggleAttribute("hide-ads", val)
+        onChange: (val) => $("#main").attr("hide-ads", val)
     });
 });
 
@@ -216,13 +173,9 @@ waitForElement([".Root__nav-bar .LayoutResizer__input, .Root__nav-bar .LayoutRes
     observer.observe(resizer, { attributes: true, attributeFilter: ["value"] });
     function updateVariable() {
         let value = resizer.value;
-        if (value < 121) {
-            value = 72;
-            document.documentElement.classList.add("sidebar-hide-text");
-        } else {
-            document.documentElement.classList.remove("sidebar-hide-text");
-        }
-        document.documentElement.style.setProperty("--sidebar-width", value + "px");
+        if (value < 121) value = 72;
+        $("html").toggleClass("sidebar-hide-text", value < 121);
+        $("html").css("--sidebar-width", `${value}px`);
     }
     updateVariable();
 });
@@ -231,18 +184,10 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
     const observer = new ResizeObserver(updateVariable);
     observer.observe(resizeHost);
     function updateVariable([event]) {
-        document.documentElement.style.setProperty("--main-view-width", event.contentRect.width + "px");
-        document.documentElement.style.setProperty("--main-view-height", event.contentRect.height + "px");
-        if (event.contentRect.width < 700) {
-            document.documentElement.classList.add("minimal-player");
-        } else {
-            document.documentElement.classList.remove("minimal-player");
-        }
-        if (event.contentRect.width < 550) {
-            document.documentElement.classList.add("extra-minimal-player");
-        } else {
-            document.documentElement.classList.remove("extra-minimal-player");
-        }
+        $("html").css("--main-view-width", event.contentRect.width + "px");
+        $("html").css("--main-view-height", event.contentRect.height + "px");
+        $("html").toggleClass("minimal-player", event.contentRect.width < 700);
+        $("html").toggleClass("extra-minimal-player", event.contentRect.width < 550);
     }
 });
 
@@ -267,7 +212,7 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
         if (tooltip.innerText != newText) tooltip.innerText = newText;
     }
     const knobPosObserver = new MutationObserver((muts) => {
-        const progressPercentage = Number(getComputedStyle(document.querySelector(".progress-bar")).getPropertyValue("--progress-bar-transform").replace("%", "")) / 100;
+        const progressPercentage = Number($(".progress-bar").css("--progress-bar-transform").replace("%", "")) / 100;
         updateProgTime(Spicetify.Player.getDuration() * progressPercentage);
     });
     knobPosObserver.observe(document.querySelector(".progress-bar"), {
@@ -349,7 +294,7 @@ DribbblishShared.config.register({
         step: 0.1,
         suffix: "s"
     },
-    onChange: (val) => document.documentElement.style.setProperty("--song-transition-speed", val + "s")
+    onChange: (val) => $("html").css("--song-transition-speed", `${val}s`)
 });
 
 // waitForElement because Spicetify is not initialized at startup
@@ -398,22 +343,47 @@ function isLight(hex) {
     return brightness > 128;
 }
 
+// From: https://stackoverflow.com/a/13763063/12126879
+function getImageLightness(img) {
+    var colorSum = 0;
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var data = imageData.data;
+    var r, g, b, avg;
+
+    for (var x = 0, len = data.length; x < len; x += 4) {
+        r = data[x];
+        g = data[x + 1];
+        b = data[x + 2];
+
+        avg = Math.floor((r + g + b) / 3);
+        colorSum += avg;
+    }
+
+    var brightness = Math.floor(colorSum / (img.width * img.height));
+    return brightness;
+}
+
 // parse to hex beacuse "--spice-sidebar" is `rgb()`
-let textColor = chroma(getComputedStyle(document.documentElement).getPropertyValue("--spice-text")).hex();
-let textColorBg = chroma(getComputedStyle(document.documentElement).getPropertyValue("--spice-main")).hex();
-let sidebarColor = chroma(getComputedStyle(document.documentElement).getPropertyValue("--spice-sidebar")).hex();
+let textColor = chroma($("html").css("--spice-text")).hex();
+let textColorBg = chroma($("html").css("--spice-main")).hex();
+let sidebarColor = chroma($("html").css("--spice-sidebar")).hex();
 
 function setRootColor(name, colHex) {
-    let root = document.documentElement;
-    if (root === null) return;
-    root.style.setProperty("--spice-" + name, colHex);
-    root.style.setProperty("--spice-rgb-" + name, chroma(colHex).rgb().join(","));
+    $("html").css(`--spice-${name}`, colHex);
+    $("html").css(`--spice-rgb-${name}`, chroma(colHex).rgb().join(","));
 }
 
 function toggleDark(setDark) {
     if (setDark === undefined) setDark = isLight(textColorBg);
 
-    document.documentElement.style.setProperty("--is_light", setDark ? 0 : 1);
+    $("html").css("--is_light", setDark ? 0 : 1);
     textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
 
     setRootColor("main", textColorBg);
@@ -622,13 +592,17 @@ async function songchange() {
     } else {
         nearArtistSpan.innerHTML = nearArtistSpanText;
     }
-    document.documentElement.style.setProperty("--image_url", 'url("' + bgImage + '")');
+
+    $("html").css("--image-url", `url("${bgImage}")`);
 }
 
 Spicetify.Player.addEventListener("songchange", songchange);
 
 async function pickCoverColor(img) {
     if (!img.currentSrc.startsWith("spotify:")) return;
+
+    $("html").css("--image-brightness", getImageLightness(img) / 255);
+
     var swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
     var lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"];
     var darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
@@ -707,4 +681,4 @@ hookCoverChange(false);
         });
 })();
 
-document.documentElement.style.setProperty("--warning_message", " ");
+$("html").css("--warning_message", " ");

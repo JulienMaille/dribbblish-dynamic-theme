@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "chroma-js": "^2.1.2",
+        "jquery": "^3.6.0",
         "node-vibrant": "3.1.4"
     }
 }
