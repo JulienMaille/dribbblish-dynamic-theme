@@ -68,13 +68,13 @@ In addition to `--transparent-window-controls` you can set `Windows Top Bars` to
 
 <img src="showcase-images/top-bars.png" alt="img" width="500px"> 
 
-## Auto-uninstall 
-### Windows
+## Uninstall
+### Windows (PowerShell)
 ```powershell
 Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/master/uninstall.ps1" | Invoke-Expression
 ```
 
-## Manual uninstall 
+### Manual Uninstall
 1. Remove Patch lines you added in config file earlier.
 2. Run:
     ```
