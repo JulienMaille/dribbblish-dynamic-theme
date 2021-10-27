@@ -19,7 +19,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        # Make sure the actual branch is checked out when running on pull requests
         ref: ${{ github.head_ref }}
 
     - name: Setup Node.js
@@ -35,34 +34,28 @@ jobs:
       env:
         DRIBBBLISH_VERSION: ${{ github.event.inputs.version }}
 
-    - name: Install Zip
-      uses: montudor/action-zip@v1
-
     - name: Zip Release
-      run: zip -r DribbblishDynamic_v${{ github.event.inputs.version }}.zip *
       working-directory: dist
-
-    - name: Read & Reset CHANGELOG.md
       run: |
-        git config --global user.email "action@github.com"
-        git config --global user.name "actions-user"
+        sudo apt-get install zip
+        zip -r DribbblishDynamic_v${{ github.event.inputs.version }}.zip *
+        mv DribbblishDynamic_v${{ github.event.inputs.version }}.zip ..
 
-        CHANGELOG=$(< CHANGELOG.md)
+    - name: Read CHANGELOG.md
+      run: |
+        [ -s CHANGELOG.md ] && CHANGELOG=$(< CHANGELOG.md) || CHANGELOG="CHANGELOG=*Empty.*"
+
         echo "CHANGELOG<<EOF" >> $GITHUB_ENV
         echo "$CHANGELOG" >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
-
-        echo "" > CHANGELOG.md
-        git add CHANGELOG.md
-        git commit -m "Reset CHANGELOG.md"
-        git push
 
     - name: Upload Release
       uses: softprops/action-gh-release@v1
       with:
         fail_on_unmatched_files	: true
-        files: dist/DribbblishDynamic_v${{ github.event.inputs.version }}.zip
+        files: DribbblishDynamic_v${{ github.event.inputs.version }}.zip
         tag_name: ${{ github.event.inputs.version }}
+        draft: true
         name: v${{ github.event.inputs.version }}
         body: |
           ## Changelog
