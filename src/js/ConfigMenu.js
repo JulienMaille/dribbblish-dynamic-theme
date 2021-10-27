@@ -148,7 +148,6 @@ export default class ConfigMenu {
         });
 
         this.#config[options.key] = options;
-        this.#config[options.key].value = localStorage.getItem(`dribbblish:config:${options.key}`) ?? JSON.stringify(options.defaultValue);
 
         if (options.type == "checkbox") {
             const input = /* html */ `
@@ -166,17 +165,19 @@ export default class ConfigMenu {
         } else if (options.type == "select") {
             // Validate
             const val = this.get(options.key);
-            if (val < 0 || val > options.data.length - 1) this.set(options.key);
+            if (!Object.keys(options.data).includes(val)) this.reset(options.key);
 
             const input = /* html */ `
                 <select class="main-dropDown-dropDown" id="dribbblish-config-input-${options.key}">
-                    ${options.data.map((option, i) => `<option value="${i}"${this.get(options.key) == i ? " selected" : ""}>${option}</option>`).join("")}
+                    ${Object.entries(options.data)
+                        .map(([key, name]) => `<option value="${key}"${this.get(options.key) == key ? " selected" : ""}>${name}</option>`)
+                        .join("")}
                 </select>
             `;
             this.addInputHTML({ ...options, input });
 
             document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("change", (e) => {
-                this.set(options.key, Number(e.target.value));
+                this.set(options.key, e.target.value);
                 options.onChange(this.get(options.key));
             });
         } else if (options.type == "button") {
@@ -333,9 +334,12 @@ export default class ConfigMenu {
      * @returns {any}
      */
     get(key, defaultValueOverride) {
-        const val = JSON.parse(this.#config[key].value ?? null); // Turn undefined into null because `JSON.parse()` dosen't like undefined
-        if (val == null) return defaultValueOverride ?? this.#config[key].defaultValue;
-        return val;
+        const val = JSON.parse(this.#config[key]?.storageCache ?? localStorage.getItem(`dribbblish:config:${key}`) ?? null); // Turn undefined into null because `JSON.parse()` dosen't like undefined
+        if (val == null || val?.type != this.#config[key]?.type) {
+            localStorage.removeItem(`dribbblish:config:${key}`);
+            return defaultValueOverride ?? this.#config[key].defaultValue;
+        }
+        return val.value;
     }
 
     /**
@@ -344,8 +348,18 @@ export default class ConfigMenu {
      * @param {any} val
      */
     set(key, val) {
-        this.#config[key].value = JSON.stringify(val);
+        val = { type: this.#config[key].type, value: val ?? this.#config[key].defaultValue };
+        this.#config[key].storageCache = JSON.stringify(val);
         localStorage.setItem(`dribbblish:config:${key}`, JSON.stringify(val));
+    }
+
+    /**
+     *
+     * @param {String} key
+     */
+    reset(key) {
+        delete this.#config[key].storageCache;
+        localStorage.removeItem(`dribbblish:config:${key}`);
     }
 
     /**

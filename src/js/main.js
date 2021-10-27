@@ -42,28 +42,22 @@ DribbblishShared.config.register({
 waitForElement(["#main"], () => {
     DribbblishShared.config.register({
         type: "select",
-        data: ["None", "None (With Top Padding)", "Solid", "Transparent"],
+        data: { none: "None", "none-padding": "None (With Top Padding)", solid: "Solid", transparent: "Transparent" },
         key: "winTopBar",
         name: "Windows Top Bar",
         description: "Have different top Bars (or none at all)",
-        defaultValue: 0,
-        onChange: (val) => {
-            const vals = ["none", "none-padding", "solid", "transparent"];
-            $("#main").attr("top-bar", vals[val]);
-        }
+        defaultValue: "none",
+        onChange: (val) => $("#main").attr("top-bar", val)
     });
 
     DribbblishShared.config.register({
         type: "select",
-        data: ["Dribbblish", "Spotify"],
+        data: { dribbblish: "Dribbblish", spotify: "Spotify" },
         key: "playerControlsStyle",
         name: "Player Controls Style",
         description: "Style of the Player Controls. Selecting Spotify basically changes Play / Pause back to the center",
-        defaultValue: 0,
-        onChange: (val) => {
-            const vals = ["dribbblish", "spotify"];
-            $("#main").attr("player-controls", vals[val]);
-        }
+        defaultValue: "dribbblish",
+        onChange: (val) => $("#main").attr("player-controls", val)
     });
 
     DribbblishShared.config.register({
@@ -397,8 +391,7 @@ function toggleDark(setDark) {
 
 function checkDarkLightMode(colors) {
     const theme = DribbblishShared.config.get("theme");
-    if (theme == 2) {
-        // Based on Time
+    if (theme == "time") {
         const start = 60 * parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[1]);
         const end = 60 * parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[1]);
 
@@ -409,8 +402,7 @@ function checkDarkLightMode(colors) {
         if (end < start) dark = start <= time || time < end;
         else dark = start <= time && time < end;
         toggleDark(dark);
-    } else if (theme == 3) {
-        // Based on Color
+    } else if (theme == "color") {
         if (colors && colors.length > 0) toggleDark(isLight(colors[0]));
     }
 }
@@ -442,11 +434,11 @@ DribbblishShared.config.register({
 DribbblishShared.config.register({
     area: "Theme",
     type: "select",
-    data: ["Dark", "Light", "Based on Time", "Based on Color"],
+    data: { dark: "Dark", light: "Light", time: "Based on Time", color: "Based on Color" },
     key: "theme",
     name: "Theme",
     description: "Select Dark / Bright mode",
-    defaultValue: 0,
+    defaultValue: "dark",
     showChildren: (val) => {
         if (val == 2) return ["darkModeOnTime", "darkModeOffTime"];
         //if (val == 3) return [""];
@@ -454,16 +446,16 @@ DribbblishShared.config.register({
     },
     onChange: (val) => {
         switch (val) {
-            case 0:
+            case "dark":
                 toggleDark(true);
                 break;
-            case 1:
+            case "light":
                 toggleDark(false);
                 break;
-            case 2:
+            case "time":
                 checkDarkLightMode();
                 break;
-            case 3:
+            case "color":
                 checkDarkLightMode();
                 break;
         }
