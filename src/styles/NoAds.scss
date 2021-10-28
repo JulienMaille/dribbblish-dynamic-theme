@@ -1,0 +1,17 @@
+#main[hide-ads="true"] {
+    /* Remove upgrade button*/
+    .main-topBar-UpgradeButton {
+        display: none;
+    }
+
+    /* Remove upgrade to premium button in user menu */
+    .main-contextMenu-menuItemButton[href="https://www.spotify.com/premium/"]
+    {
+        display: none;
+    }
+
+    /* Remove ad placeholder in main screen */
+    .main-leaderboardComponent-container {
+        display: none;
+    }
+}

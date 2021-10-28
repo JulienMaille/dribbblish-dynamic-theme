@@ -1,0 +1,73 @@
+name: Release
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of Release (format: X.X.X)'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Verify Input
+      run: |
+        [[ "${{ github.event.inputs.version }}" =~ ^[0-9]\.[0-9]\.[0-9]$ ]] && echo "Matches" && exit 0 || echo "Use versions like '1.2.3'" && exit 1
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Build Webpack
+      run: |
+        npm install
+        npm run build
+        echo "${{ github.event.inputs.version }}" > dist/VERSION
+      env:
+        DRIBBBLISH_VERSION: ${{ github.event.inputs.version }}
+
+    - name: Zip Release
+      working-directory: dist
+      run: |
+        sudo apt-get install zip
+        zip -r DribbblishDynamic_v${{ github.event.inputs.version }}.zip *
+        mv DribbblishDynamic_v${{ github.event.inputs.version }}.zip ..
+
+    - name: Read CHANGELOG.md
+      run: |
+        [ -s CHANGELOG.md ] && CHANGELOG=$(< CHANGELOG.md) || CHANGELOG="*Empty.*"
+
+        echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+        echo "$CHANGELOG" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
+    - name: Upload Release
+      uses: softprops/action-gh-release@v1
+      with:
+        fail_on_unmatched_files	: true
+        files: DribbblishDynamic_v${{ github.event.inputs.version }}.zip
+        tag_name: ${{ github.event.inputs.version }}
+        draft: true
+        name: v${{ github.event.inputs.version }}
+        body: |
+          ## Changelog
+          ${{ env.CHANGELOG }}
+
+          ---
+          ### Install / Update
+          #### Windows (PowerShell)
+          ```powershell
+          Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/master/install.ps1" | Invoke-Expression
+          ```
+          #### Linux/MacOS (Bash)
+          ```bash
+          curl -fsSL https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/master/install.sh | sh
+          ```

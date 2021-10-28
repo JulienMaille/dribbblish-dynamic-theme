@@ -45,6 +45,7 @@ if ($PSVersionTable.PSVersion.Major -gt $PSMinVersion) {
     Write-Done
 
     $version = ($latest_release_json | ConvertFrom-Json).tag_name -replace "v", ""
+    $download_uri = ($latest_release_json | ConvertFrom-Json).assets[0].browser_download_url
   }
 
   # Check ~\spicetify-cli\Themes directory already exists
@@ -57,7 +58,6 @@ if ($PSVersionTable.PSVersion.Major -gt $PSMinVersion) {
 
   # Download release.
   $zip_file = "${sp_dir}\${version}.zip"
-  $download_uri = "https://github.com/JulienMaille/dribbblish-dynamic-theme/archive/refs/tags/${version}.zip"
   Write-Part "DOWNLOADING    "; Write-Emphasized $download_uri
   Invoke-WebRequest -Uri $download_uri -UseBasicParsing -OutFile $zip_file
   Write-Done
@@ -65,7 +65,7 @@ if ($PSVersionTable.PSVersion.Major -gt $PSMinVersion) {
   # Extract theme from .zip file.
   Write-Part "EXTRACTING     "; Write-Emphasized $zip_file
   Write-Part " into "; Write-Emphasized ${sp_dir};
-  Expand-Archive -Path $zip_file -DestinationPath $sp_dir -Force
+  Expand-Archive -Path $zip_file -DestinationPath "${sp_dir}\dribbblish-dynamic-theme-${version}" -Force
   Write-Done
 
   # Remove .zip file.
@@ -90,11 +90,9 @@ if ($PSVersionTable.PSVersion.Major -gt $PSMinVersion) {
   # Installing.
   Write-Part "INSTALLING";
   cd $sp_dot_dir
-  Copy-Item dribbblish.js ..\..\Extensions
   Copy-Item dribbblish-dynamic.js ..\..\Extensions
-  Copy-Item Vibrant.min.js ..\..\Extensions
-  spicetify config extensions default-dynamic.js-
-  spicetify config extensions dribbblish.js extensions dribbblish-dynamic.js extensions Vibrant.min.js
+  spicetify config extensions default-dynamic.js- extensions dribbblish-dynamic.js- extensions dribbblish.js- extensions Vibrant.min.js-
+  spicetify config extensions dribbblish-dynamic.js
   spicetify config current_theme DribbblishDynamic
   spicetify config color_scheme base
   spicetify config inject_css 1 replace_colors 1 overwrite_assets 1
