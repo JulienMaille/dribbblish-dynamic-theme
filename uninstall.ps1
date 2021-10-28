@@ -1,4 +1,4 @@
-spicetify config current_theme " " extensions dribbblish.js- extensions dribbblish-dynamic.js- extensions Vibrant.min.js-
+spicetify config current_theme " " extensions dribbblish-dynamic.js-
 
 $spicePath = spicetify -c | Split-Path
 $configFile = Get-Content "$spicePath\config-xpui.ini"

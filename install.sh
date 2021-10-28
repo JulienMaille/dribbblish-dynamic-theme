@@ -10,12 +10,13 @@ if [ $# -eq 0 ]; then
     version=$( command curl -sSf "$latest_release_uri" |
         command grep -Eo "tag_name\": .*" |
         command grep -Eo "[0-9.]+" )
+    download_uri=$( command curl -sSf "$latest_release_uri" |
+        command grep -Eo "browser_download_url\": .*" |
+        command grep -Eo "http.*?\.zip" )
     if [ ! "$version" ]; then exit 1; fi
 else
     version="${1}"
 fi
-
-download_uri="https://github.com/JulienMaille/dribbblish-dynamic-theme/archive/refs/tags/${version}.zip"
 
 spicetify_install="${SPICETIFY_INSTALL:-$HOME/spicetify-cli/Themes}"
 
@@ -31,7 +32,7 @@ curl --fail --location --progress-bar --output "$tar_file" "$download_uri"
 cd "$spicetify_install"
 
 echo "EXTRACTING     $tar_file"
-unzip -o "$tar_file"
+unzip -d "$spicetify_install/dribbblish-dynamic-theme-${version}" -o "$tar_file"
 
 echo "REMOVING       $tar_file"
 rm "$tar_file"
@@ -49,10 +50,9 @@ cp -rf "$spicetify_install/dribbblish-dynamic-theme-${version}/." "$sp_dot_dir"
 echo "INSTALLING"
 cd "$(dirname "$(spicetify -c)")/Themes/DribbblishDynamic"
 mkdir -p ../../Extensions
-cp dribbblish.js ../../Extensions/.
 cp dribbblish-dynamic.js ../../Extensions/.
-cp Vibrant.min.js ../../Extensions/.
-spicetify config extensions dribbblish.js extensions dribbblish-dynamic.js extensions Vibrant.min.js
+spicetify config extensions default-dynamic.js- extensions dribbblish-dynamic.js- extensions dribbblish.js- extensions Vibrant.min.js-
+spicetify config extensions dribbblish-dynamic.js
 spicetify config current_theme DribbblishDynamic
 spicetify config color_scheme base
 spicetify config inject_css 1 replace_colors 1 overwrite_assets 1
