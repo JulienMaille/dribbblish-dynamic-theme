@@ -645,7 +645,7 @@ hookCoverChange(false);
 
 // Check latest release every 10m
 waitForElement([".main-userWidget-box"], ([userWidget]) => {
-    setInterval(() => {
+    function checkForUpdate() {
         fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
             .then((response) => {
                 return response.json();
@@ -668,7 +668,10 @@ waitForElement([".main-userWidget-box"], ([userWidget]) => {
                 // Do something for an error here
                 console.error(err);
             });
-    }, 10 * 60 * 1000);
+    }
+
+    setInterval(checkForUpdate(), 10 * 60 * 1000);
+    checkForUpdate();
 });
 
 $("html").css("--warning_message", " ");
