@@ -657,16 +657,20 @@ waitForElement([".main-userWidget-box"], ([userWidget]) => {
                     upd.id = "dribbblish-update";
                     //upd.setAttribute("title", `Changes: ${data.name}`);
                     userWidget.append(upd);
-                    userWidget.classList.add("update-avail");
                 } else {
                     upd = document.getElementById("dribbblish-update");
                 }
 
+                upd.style.display = "block";
+                userWidget.classList.add("update-avail");
                 if (process.env.DRIBBBLISH_VERSION == "Dev") {
                     upd.innerText = "Dev version!";
                 } else if (data.tag_name > process.env.DRIBBBLISH_VERSION) {
                     upd.innerText = `Theme UPD v${data.tag_name} avail.`;
                     new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank")).register();
+                } else {
+                    userWidget.classList.remove("update-avail");
+                    upd.style.display = "none";
                 }
             })
             .catch((err) => {
