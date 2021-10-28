@@ -643,12 +643,8 @@ function hookCoverChange(pick) {
 
 hookCoverChange(false);
 
-(function Startup() {
-    if (!Spicetify.showNotification) {
-        setTimeout(Startup, 300);
-        return;
-    }
-    // Check latest release
+// Check latest release
+waitForElement([".main-userWidget-box"], ([userWidget]) => {
     fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
         .then((response) => {
             return response.json();
@@ -664,13 +660,13 @@ hookCoverChange(false);
                 upd.innerText = `Theme UPD v${data.tag_name} avail.`;
                 new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank")).register();
             }
-            document.querySelector(".main-userWidget-box").append(upd);
-            document.querySelector(".main-userWidget-box").classList.add("update-avail");
+            userWidget.append(upd);
+            userWidget.classList.add("update-avail");
         })
         .catch((err) => {
             // Do something for an error here
             console.error(err);
         });
-})();
+});
 
 $("html").css("--warning_message", " ");
