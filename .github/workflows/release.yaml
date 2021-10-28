@@ -43,7 +43,7 @@ jobs:
 
     - name: Read CHANGELOG.md
       run: |
-        [ -s CHANGELOG.md ] && CHANGELOG=$(< CHANGELOG.md) || CHANGELOG="CHANGELOG=*Empty.*"
+        [ -s CHANGELOG.md ] && CHANGELOG=$(< CHANGELOG.md) || CHANGELOG="*Empty.*"
 
         echo "CHANGELOG<<EOF" >> $GITHUB_ENV
         echo "$CHANGELOG" >> $GITHUB_ENV
