@@ -1,0 +1,2 @@
+Fixed:
+- Update message stacking

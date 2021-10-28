@@ -651,18 +651,23 @@ waitForElement([".main-userWidget-box"], ([userWidget]) => {
                 return response.json();
             })
             .then((data) => {
-                const upd = document.createElement("div");
-                upd.classList.add("ellipsis-one-line", "main-type-finale");
-                upd.setAttribute("title", `Changes: ${data.name}`);
-                upd.style.setProperty("color", "var(--spice-button-active)");
+                let upd;
+                if (!document.getElementById("dribbblish-update")) {
+                    upd = document.createElement("div");
+                    upd.id = "dribbblish-update";
+                    //upd.setAttribute("title", `Changes: ${data.name}`);
+                    userWidget.append(upd);
+                    userWidget.classList.add("update-avail");
+                } else {
+                    upd = document.getElementById("dribbblish-update");
+                }
+
                 if (process.env.DRIBBBLISH_VERSION == "Dev") {
                     upd.innerText = "Dev version!";
                 } else if (data.tag_name > process.env.DRIBBBLISH_VERSION) {
                     upd.innerText = `Theme UPD v${data.tag_name} avail.`;
                     new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank")).register();
                 }
-                userWidget.append(upd);
-                userWidget.classList.add("update-avail");
             })
             .catch((err) => {
                 // Do something for an error here

@@ -812,6 +812,18 @@ li.GlueDropTarget {
     pointer-events: none;
 }
 
+#dribbblish-update {
+    color: var(--spice-button-active);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 16px;
+    text-transform: none;
+}
+
 /** Rearrange player bar */
 .main-nowPlayingBar-left {
     order: 1;
