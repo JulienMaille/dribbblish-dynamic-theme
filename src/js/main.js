@@ -643,30 +643,32 @@ function hookCoverChange(pick) {
 
 hookCoverChange(false);
 
-// Check latest release
+// Check latest release every 10m
 waitForElement([".main-userWidget-box"], ([userWidget]) => {
-    fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            const upd = document.createElement("div");
-            upd.classList.add("ellipsis-one-line", "main-type-finale");
-            upd.setAttribute("title", `Changes: ${data.name}`);
-            upd.style.setProperty("color", "var(--spice-button-active)");
-            if (process.env.DRIBBBLISH_VERSION == "Dev") {
-                upd.innerText = "Dev version!";
-            } else if (data.tag_name > process.env.DRIBBBLISH_VERSION) {
-                upd.innerText = `Theme UPD v${data.tag_name} avail.`;
-                new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank")).register();
-            }
-            userWidget.append(upd);
-            userWidget.classList.add("update-avail");
-        })
-        .catch((err) => {
-            // Do something for an error here
-            console.error(err);
-        });
+    setInterval(() => {
+        fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                const upd = document.createElement("div");
+                upd.classList.add("ellipsis-one-line", "main-type-finale");
+                upd.setAttribute("title", `Changes: ${data.name}`);
+                upd.style.setProperty("color", "var(--spice-button-active)");
+                if (process.env.DRIBBBLISH_VERSION == "Dev") {
+                    upd.innerText = "Dev version!";
+                } else if (data.tag_name > process.env.DRIBBBLISH_VERSION) {
+                    upd.innerText = `Theme UPD v${data.tag_name} avail.`;
+                    new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank")).register();
+                }
+                userWidget.append(upd);
+                userWidget.classList.add("update-avail");
+            })
+            .catch((err) => {
+                // Do something for an error here
+                console.error(err);
+            });
+    }, 10 * 60 * 1000);
 });
 
 $("html").css("--warning_message", " ");
