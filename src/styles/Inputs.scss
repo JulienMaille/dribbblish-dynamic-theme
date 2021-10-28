@@ -1,3 +1,16 @@
+button.main-button-primary {
+    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
+
+    &:hover,
+    &:active {
+        background-color: rgba(var(--spice-rgb-selected-row), 0.6) !important;
+    }
+
+    span {
+        color: var(--spice-subtext) !important;
+    }
+}
+
 input,
 textarea {
     background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
