@@ -661,6 +661,17 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
     flex: 0 0 32px;
 }
 
+.main-trackInfo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &.left {
+        align-items: flex-start;
+    }
+}
+
 .main-trackInfo-name {
     font-weight: 500;
 }

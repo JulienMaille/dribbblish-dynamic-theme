@@ -51,13 +51,27 @@ waitForElement(["#main"], () => {
     });
 
     DribbblishShared.config.register({
+        area: "Consistency",
         type: "select",
         data: { dribbblish: "Dribbblish", spotify: "Spotify" },
         key: "playerControlsStyle",
         name: "Player Controls Style",
         description: "Style of the Player Controls. Selecting Spotify basically changes Play / Pause back to the center",
         defaultValue: "dribbblish",
-        onChange: (val) => $("#main").attr("player-controls", val)
+        onChange: (val) => {
+            $("#main").attr("player-controls", val);
+            $(".main-trackInfo-container").toggleClass("left", val == "spotify");
+        }
+    });
+
+    DribbblishShared.config.register({
+        area: "Consistency",
+        type: "checkbox",
+        key: "showAlbumInfoInPlaybar",
+        name: "Show Album Info in Playbar",
+        description: "Show Album Name and Year in the Playbar",
+        defaultValue: true,
+        onChange: (val) => $("#main-trackInfo-year").css("display", val ? "block" : "none")
     });
 
     DribbblishShared.config.register({
