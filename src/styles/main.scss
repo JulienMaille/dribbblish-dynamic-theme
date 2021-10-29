@@ -442,15 +442,19 @@ html {
     align-items: center;
     justify-content: flex-start;
     pointer-events: none;
-}
 
-.main-rootlist-statusIcons .main-playButton-button {
-    width: 32px;
-    height: 32px;
-    margin: 0px;
-    color: var(--spice-sidebar);
-    background-color: rgba(var(--spice-rgb-main), 0.7);
-    border-radius: var(--sidebar-icons-border-radius);
+    [href="/collection/tracks"] > & {
+        display: none;
+    }
+
+    .main-playButton-button {
+        width: 32px;
+        height: 32px;
+        margin: 0px;
+        color: var(--spice-sidebar);
+        background-color: rgba(var(--spice-rgb-main), 0.7);
+        border-radius: var(--sidebar-icons-border-radius);
+    }
 }
 
 .main-rootlist-expandArrow {
