@@ -676,6 +676,10 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
     font-weight: 500;
 }
 
+.main-trackInfo-release > a {
+    color: var(--spice-subtext);
+}
+
 .main-topBar-topbarContent .main-playButton-PlayButton {
     --size: 35px !important;
 }
@@ -859,10 +863,24 @@ li.GlueDropTarget {
     flex: 1;
     width: auto;
     min-width: unset !important;
+
+    & span {
+        display: block !important;
+        color: var(--spice-subtext);
+    }
 }
 
 .main-nowPlayingWidget-nowPlaying {
     justify-content: center;
+
+    // Workaround for #73 (https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/73)
+    & button {
+        color: var(--spice-subtext);
+
+        &:hover {
+            color: var(--spice-text);
+        }
+    }
 }
 
 .player-controls {

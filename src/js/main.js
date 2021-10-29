@@ -1,6 +1,7 @@
 import * as Vibrant from "node-vibrant";
 import chroma from "chroma-js";
 import $ from "jquery";
+import moment from "moment";
 
 import ConfigMenu from "./ConfigMenu";
 
@@ -341,8 +342,9 @@ function copyToClipboard(text) {
 }
 
 /* js */
-function getAlbumInfo(uri) {
-    return Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
+async function getAlbumRelease(uri) {
+    const info = await Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
+    return { year: info.year, month: (info.month ?? 1) - 1, day: info.day ?? 0 };
 }
 
 function isLight(hex) {
@@ -538,16 +540,24 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
     if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
 }
 
-let nearArtistSpan;
-let nearArtistSpanText = "";
 let coverListenerInstalled = false;
 async function songchange() {
+    if (!document.querySelector(".main-trackInfo-container")) return setTimeout(songchange, 300);
+
     try {
         // warning popup
         if (Spicetify.Platform.PlatformData.client_version_triple < "1.1.68") Spicetify.showNotification(`Your version of Spotify ${Spicetify.Platform.PlatformData.client_version_triple}) is un-supported`);
     } catch (err) {
         console.error(err);
     }
+
+    if (!document.getElementById("main-trackInfo-year")) {
+        const el = document.createElement("div");
+        el.id = "main-trackInfo-year";
+        el.classList.add("main-trackInfo-release", "ellipsis-one-line", "main-type-finale");
+        document.querySelector(".main-trackInfo-container").append(el);
+    }
+    const albumInfoSpan = document.getElementById("main-trackInfo-year");
 
     let album_uri = Spicetify.Player.data.track.metadata.album_uri;
     let bgImage = Spicetify.Player.data.track.metadata.image_url;
@@ -560,43 +570,26 @@ async function songchange() {
     if (!coverListenerInstalled) hookCoverChange(true);
 
     if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
-        const albumInfo = await getAlbumInfo(album_uri.replace("spotify:album:", ""));
-
-        let album_date = new Date(albumInfo.year, (albumInfo.month || 1) - 1, albumInfo.day || 0);
-        let recent_date = new Date();
-        recent_date.setMonth(recent_date.getMonth() - 6);
-        album_date = album_date.toLocaleString("default", album_date > recent_date ? { year: "numeric", month: "short" } : { year: "numeric" });
-        let album_link = '<a title="' + Spicetify.Player.data.track.metadata.album_title + '" href="' + album_uri + '" data-uri="' + album_uri + '" data-interaction-target="album-name" class="tl-cell__content">' + Spicetify.Player.data.track.metadata.album_title + "</a>";
-
-        nearArtistSpanText = album_link + " • " + album_date;
+        moment.locale(Spicetify.Locale.getLocale());
+        const albumDate = moment(await getAlbumRelease(album_uri.replace("spotify:album:", "")));
+        const albumLink = `<a title="${Spicetify.Player.data.track.metadata.album_title}" href="${album_uri}" data-uri="${album_uri}" data-interaction-target="album-name" class="tl-cell__content">${Spicetify.Player.data.track.metadata.album_title}</a>`;
+        albumInfoSpan.innerHTML = `${albumLink} • ${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}`;
     } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
         // podcast
         bgImage = bgImage.replace("spotify:image:", "https://i.scdn.co/image/");
-        nearArtistSpanText = Spicetify.Player.data.track.metadata.album_title;
+        albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
     } else if (Spicetify.Player.data.track.metadata.is_local == "true") {
         // local file
-        nearArtistSpanText = Spicetify.Player.data.track.metadata.album_title;
+        albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
     } else if (Spicetify.Player.data.track.provider == "ad") {
         // ad
-        nearArtistSpanText = "advertisement";
+        albumInfoSpan.innerHTML = "Advertisement";
         coverListenerInstalled = false;
         return;
     } else {
         // When clicking a song from the homepage, songChange is fired with half empty metadata
         // todo: retry only once?
         setTimeout(songchange, 200);
-    }
-
-    if (document.querySelector("#main-trackInfo-year") === null) {
-        waitForElement([".main-trackInfo-container"], (queries) => {
-            nearArtistSpan = document.createElement("div");
-            nearArtistSpan.id = "main-trackInfo-year";
-            nearArtistSpan.classList.add("main-trackInfo-artists", "ellipsis-one-line", "main-type-finale");
-            nearArtistSpan.innerHTML = nearArtistSpanText;
-            queries[0].append(nearArtistSpan);
-        });
-    } else {
-        nearArtistSpan.innerHTML = nearArtistSpanText;
     }
 
     $("html").css("--image-url", `url("${bgImage}")`);
