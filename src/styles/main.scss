@@ -1263,23 +1263,18 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 
 /* translucent background cover */
 .Root__top-container::before {
+    z-index: 3;
     content: "";
+    position: absolute;
+    inset: var(--main-gap) var(--buddy-feed-width) var(--main-gap) var(--sidebar-width);
+    pointer-events: none;
     background-image: var(--image-url);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
-    position: fixed;
-    display: block;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     filter: blur(15px);
-    pointer-events: none;
-    backface-visibility: hidden;
-    will-change: transform;
+    border-radius: var(--main-corner-radius);
     opacity: calc(0.07 + 0.03 * var(--is_light, 0));
-    z-index: +3;
     transition: background-image var(--song-transition-speed) linear;
 }
 
