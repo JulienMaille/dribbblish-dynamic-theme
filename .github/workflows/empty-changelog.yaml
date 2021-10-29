@@ -1,6 +1,6 @@
 name: Empty CHANGELOG.md
 
-on: 
+on:
   release:
     types: [published]
 
@@ -9,26 +9,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.event.repository.default_branch }}
-        
-    - name: Empty CHANGELOG.md
-      run: |
-        git config --global user.email "action@github.com"
-        git config --global user.name "github-actions"
-        
-        if [ -s CHANGELOG.md ]; then
-          echo "Comitting emptied CHANGELOG.md"
-        else
-          echo "CHANGELOG.md is already empty. skipping comitting"
-          exit 0
-        fi
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
 
-        rm CHANGELOG.md
-        touch CHANGELOG.md
+      - name: Empty CHANGELOG.md
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "github-actions"
 
-        git add CHANGELOG.md
-        git commit -m "Empty CHANGELOG.md"
-        git push
+          rm CHANGELOG.md
+          touch CHANGELOG.md
+
+          git add CHANGELOG.md
+          git commit --allow-empty -m "Empty CHANGELOG.md after v$(git describe --tags --abbrev=0)"
+          git push

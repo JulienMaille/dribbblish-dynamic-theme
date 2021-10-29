@@ -1,26 +1,24 @@
 name: Prettier
 
-on: 
+on:
   pull_request:
   push:
     branches:
-    - main
+      - main
 
 jobs:
   prettier:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        # Make sure the actual branch is checked out when running on pull requests
-        ref: ${{ github.head_ref }}
-        # This is important to fetch the changes to the previous commit
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
-    - name: Prettify code
-      uses: creyD/prettier_action@v4.0
-      with:
-        prettier_options: --write **/*.{js,css}
-        same_commit: True
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.0
+        with:
+          prettier_options: --write **/*.{js,css}
+          same_commit: True
