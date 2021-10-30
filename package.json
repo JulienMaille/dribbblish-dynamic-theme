@@ -1,4 +1,10 @@
 {
+    "name": "dribbblish-dynamic-theme",
+    "version": "3.0.1",
+    "homepage": "https://github.com/JulienMaille/dribbblish-dynamic-theme",
+    "bugs": {
+        "url": "https://github.com/JulienMaille/dribbblish-dynamic-theme/issues"
+    },
     "devDependencies": {
         "clean-webpack-plugin": "^4.0.0",
         "copy-webpack-plugin": "^9.0.1",

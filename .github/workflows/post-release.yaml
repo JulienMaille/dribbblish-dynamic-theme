@@ -1,0 +1,37 @@
+name: Post-Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  post-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Put version in env
+        run: echo "DRIBBBLISH_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Set package.json version
+        run: |
+          sed -i 's/"version":.*",/"version": "${{ env.DRIBBBLISH_VERSION }}",/' package.json
+
+      - name: Empty CHANGELOG.md
+        run: |
+          rm CHANGELOG.md
+          touch CHANGELOG.md
+
+      - name: Commit
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "github-actions"
+
+          git add .
+          git commit --allow-empty -m "Release v${{ env.DRIBBBLISH_VERSION }}"
+          git push
