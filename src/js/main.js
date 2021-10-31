@@ -22,6 +22,7 @@ DribbblishShared.config.register({
 });
 
 DribbblishShared.config.register({
+    area: "Sidebar",
     type: "checkbox",
     key: "roundSidebarIcons",
     name: "Round Sidebar Icons",
@@ -40,6 +41,50 @@ DribbblishShared.config.register({
     onChange: (val) => $("html").css("--sidebar-icons-hover-animation", val ? "1" : "0")
 });
 
+DribbblishShared.config.register({
+    area: "Sidebar",
+    type: "slider",
+    key: "sidebarGapLeft",
+    name: "Left Sidebar Gap Size",
+    description: "Set gap size between sidebar icons (in pixels).",
+    defaultValue: 5,
+    data: {
+        min: 0,
+        max: 100,
+        step: 1,
+        suffix: "px"
+    },
+    onChange: (val) => $("html").css("--sidebar-gap-left", `${val}px`)
+});
+
+DribbblishShared.config.register({
+    area: "Sidebar",
+    type: "slider",
+    key: "sidebarGapRight",
+    name: "Right Sidebar Gap Size",
+    description: "Set gap size between sidebar icons (in pixels).",
+    defaultValue: 32,
+    data: {
+        min: 0,
+        max: 100,
+        step: 1,
+        suffix: "px"
+    },
+    onChange: (val) => $("html").css("--sidebar-gap-right", `${val}px`)
+});
+
+waitForElement([".main-nowPlayingBar-container"], ([container]) => {
+    DribbblishShared.config.register({
+        area: "Playbar",
+        type: "checkbox",
+        key: "playbarShadow",
+        name: "Playbar Shadow",
+        description: "Add a shadow effect underneath the playbar",
+        defaultValue: true,
+        onChange: (val) => $(container).toggleClass("with-shadow", val)
+    });
+});
+
 waitForElement(["#main"], () => {
     DribbblishShared.config.register({
         type: "select",
@@ -52,7 +97,7 @@ waitForElement(["#main"], () => {
     });
 
     DribbblishShared.config.register({
-        area: "Consistency",
+        area: "Playbar",
         type: "select",
         data: { dribbblish: "Dribbblish", spotify: "Spotify" },
         key: "playerControlsStyle",
@@ -66,7 +111,7 @@ waitForElement(["#main"], () => {
     });
 
     DribbblishShared.config.register({
-        area: "Consistency",
+        area: "Playbar",
         type: "checkbox",
         key: "showAlbumInfoInPlaybar",
         name: "Show Album Info in Playbar",
@@ -619,13 +664,13 @@ async function pickCoverColor(img) {
     updateColors(textColor, sidebarColor);
 }
 
-function registerCoverListenner() {
-    if (!document.querySelector(".main-image-image.cover-art-image")) return setTimeout(registerCoverListenner, 250);
+function registerCoverListener() {
+    if (!document.querySelector(".main-image-image.cover-art-image")) return setTimeout(registerCoverListener, 250);
     pickCoverColor(document.querySelector(".main-image-image.cover-art-image"));
 
     const observer = new MutationObserver((muts) => {
         const img = document.querySelector(".main-image-image.cover-art-image");
-        if (!img) return registerCoverListenner();
+        if (!img) return registerCoverListener();
         pickCoverColor(img);
     });
     observer.observe(document.querySelector(".main-image-image.cover-art-image"), {
@@ -633,7 +678,7 @@ function registerCoverListenner() {
         attributeFilter: ["src"]
     });
 }
-registerCoverListenner();
+registerCoverListener();
 
 // Check latest release every 10m
 waitForElement([".main-userWidget-box"], ([userWidget]) => {
