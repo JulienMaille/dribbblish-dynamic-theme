@@ -22,6 +22,7 @@ DribbblishShared.config.register({
 });
 
 DribbblishShared.config.register({
+    area: "Sidebar",
     type: "checkbox",
     key: "roundSidebarIcons",
     name: "Round Sidebar Icons",
@@ -40,6 +41,50 @@ DribbblishShared.config.register({
     onChange: (val) => $("html").css("--sidebar-icons-hover-animation", val ? "1" : "0")
 });
 
+DribbblishShared.config.register({
+    area: "Sidebar",
+    type: "slider",
+    key: "sidebarGapLeft",
+    name: "Left Sidebar Gap Size",
+    description: "Set gap size between sidebar icons (in pixels).",
+    defaultValue: 5,
+    data: {
+        min: 0,
+        max: 100,
+        step: 1,
+        suffix: "px"
+    },
+    onChange: (val) => $("html").css("--sidebar-gap-left", `${val}px`)
+});
+
+DribbblishShared.config.register({
+    area: "Sidebar",
+    type: "slider",
+    key: "sidebarGapRight",
+    name: "Right Sidebar Gap Size",
+    description: "Set gap size between sidebar icons (in pixels).",
+    defaultValue: 32,
+    data: {
+        min: 0,
+        max: 100,
+        step: 1,
+        suffix: "px"
+    },
+    onChange: (val) => $("html").css("--sidebar-gap-right", `${val}px`)
+});
+
+waitForElement([".main-nowPlayingBar-container"], ([container]) => {
+    DribbblishShared.config.register({
+        area: "Playbar",
+        type: "checkbox",
+        key: "playbarShadow",
+        name: "Playbar Shadow",
+        description: "Add a shadow effect underneath the playbar",
+        defaultValue: true,
+        onChange: (val) => $(container).toggleClass("with-shadow", val)
+    });
+});
+
 waitForElement(["#main"], () => {
     DribbblishShared.config.register({
         type: "select",
@@ -52,7 +97,7 @@ waitForElement(["#main"], () => {
     });
 
     DribbblishShared.config.register({
-        area: "Consistency",
+        area: "Playbar",
         type: "select",
         data: { dribbblish: "Dribbblish", spotify: "Spotify" },
         key: "playerControlsStyle",
@@ -66,7 +111,7 @@ waitForElement(["#main"], () => {
     });
 
     DribbblishShared.config.register({
-        area: "Consistency",
+        area: "Playbar",
         type: "checkbox",
         key: "showAlbumInfoInPlaybar",
         name: "Show Album Info in Playbar",
@@ -540,7 +585,6 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
     if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
 }
 
-let coverListenerInstalled = false;
 async function songchange() {
     if (!document.querySelector(".main-trackInfo-container")) return setTimeout(songchange, 300);
 
@@ -565,9 +609,7 @@ async function songchange() {
         bgImage = "/images/tracklist-row-song-fallback.svg";
         textColor = "#509bf5";
         updateColors(textColor, textColor);
-        coverListenerInstalled = false;
     }
-    if (!coverListenerInstalled) hookCoverChange(true);
 
     if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
         moment.locale(Spicetify.Locale.getLocale());
@@ -584,7 +626,6 @@ async function songchange() {
     } else if (Spicetify.Player.data.track.provider == "ad") {
         // ad
         albumInfoSpan.innerHTML = "Advertisement";
-        coverListenerInstalled = false;
         return;
     } else {
         // When clicking a song from the homepage, songChange is fired with half empty metadata
@@ -623,32 +664,21 @@ async function pickCoverColor(img) {
     updateColors(textColor, sidebarColor);
 }
 
-waitForElement([".main-nowPlayingBar-left"], (queries) => {
-    var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            if (mutation.removedNodes.length > 0) coverListenerInstalled = false;
-        });
-    });
-    observer.observe(queries[0], { childList: true });
-});
+function registerCoverListener() {
+    if (!document.querySelector(".main-image-image.cover-art-image")) return setTimeout(registerCoverListener, 250);
+    pickCoverColor(document.querySelector(".main-image-image.cover-art-image"));
 
-function hookCoverChange(pick) {
-    waitForElement([".cover-art-image"], (queries) => {
-        coverListenerInstalled = true;
-        var elem = queries.slice(-1)[0];
-        if (pick && elem.complete && elem.naturalHeight !== 0) pickCoverColor(elem);
-        elem.addEventListener("load", function () {
-            try {
-                pickCoverColor(elem);
-            } catch (error) {
-                console.error(error);
-                setTimeout(pickCoverColor, 300, elem);
-            }
-        });
+    const observer = new MutationObserver((muts) => {
+        const img = document.querySelector(".main-image-image.cover-art-image");
+        if (!img) return registerCoverListener();
+        pickCoverColor(img);
+    });
+    observer.observe(document.querySelector(".main-image-image.cover-art-image"), {
+        attributes: true,
+        attributeFilter: ["src"]
     });
 }
-
-hookCoverChange(false);
+registerCoverListener();
 
 // Check latest release every 10m
 waitForElement([".main-userWidget-box"], ([userWidget]) => {

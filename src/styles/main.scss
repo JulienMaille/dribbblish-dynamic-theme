@@ -367,10 +367,13 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 
 .main-nowPlayingBar-container {
     border-radius: 0 0 var(--main-corner-radius) var(--main-corner-radius);
-    background-color: unset;
-    background: radial-gradient(ellipse at right 50% bottom -80px, rgba(var(--spice-rgb-sidebar), 0.55), var(--spice-main) 60%);
+    background-color: var(--spice-main);
     border-top: 0;
     min-width: 518px;
+
+    &.with-shadow {
+        background: radial-gradient(ellipse at right 50% bottom -80px, rgba(var(--spice-rgb-sidebar), 0.55), var(--spice-main) 60%);
+    }
 }
 
 .main-buddyFeed-findFriendsButton {
@@ -714,6 +717,7 @@ img.playlist-picture {
     width: 32px;
     height: 32px;
     flex: 0 0 32px;
+    object-fit: cover;
     background-size: cover;
     background-position: center;
     border-radius: var(--sidebar-icons-border-radius);
@@ -1027,7 +1031,17 @@ span.main-userWidget-displayName,
 .main-rootlist-rootlistContent .os-content {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: var(--sidebar-gap-left);
+}
+
+.main-buddyFeed-scrollableArea ol {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sidebar-gap-right);
+}
+
+.main-buddyFeed-friendActivity {
+    padding: 0px 16px;
 }
 
 #spicetify-show-list:empty {
