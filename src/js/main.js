@@ -540,7 +540,6 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
     if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
 }
 
-let coverListenerInstalled = false;
 async function songchange() {
     if (!document.querySelector(".main-trackInfo-container")) return setTimeout(songchange, 300);
 
@@ -565,9 +564,7 @@ async function songchange() {
         bgImage = "/images/tracklist-row-song-fallback.svg";
         textColor = "#509bf5";
         updateColors(textColor, textColor);
-        coverListenerInstalled = false;
     }
-    if (!coverListenerInstalled) hookCoverChange(true);
 
     if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
         moment.locale(Spicetify.Locale.getLocale());
@@ -584,7 +581,6 @@ async function songchange() {
     } else if (Spicetify.Player.data.track.provider == "ad") {
         // ad
         albumInfoSpan.innerHTML = "Advertisement";
-        coverListenerInstalled = false;
         return;
     } else {
         // When clicking a song from the homepage, songChange is fired with half empty metadata
@@ -623,32 +619,21 @@ async function pickCoverColor(img) {
     updateColors(textColor, sidebarColor);
 }
 
-waitForElement([".main-nowPlayingBar-left"], (queries) => {
-    var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            if (mutation.removedNodes.length > 0) coverListenerInstalled = false;
-        });
-    });
-    observer.observe(queries[0], { childList: true });
-});
+function registerCoverListenner() {
+    if (!document.querySelector(".main-image-image.cover-art-image")) return setTimeout(registerCoverListenner, 250);
+    pickCoverColor(document.querySelector(".main-image-image.cover-art-image"));
 
-function hookCoverChange(pick) {
-    waitForElement([".cover-art-image"], (queries) => {
-        coverListenerInstalled = true;
-        var elem = queries.slice(-1)[0];
-        if (pick && elem.complete && elem.naturalHeight !== 0) pickCoverColor(elem);
-        elem.addEventListener("load", function () {
-            try {
-                pickCoverColor(elem);
-            } catch (error) {
-                console.error(error);
-                setTimeout(pickCoverColor, 300, elem);
-            }
-        });
+    const observer = new MutationObserver((muts) => {
+        const img = document.querySelector(".main-image-image.cover-art-image");
+        if (!img) return registerCoverListenner();
+        pickCoverColor(img);
+    });
+    observer.observe(document.querySelector(".main-image-image.cover-art-image"), {
+        attributes: true,
+        attributeFilter: ["src"]
     });
 }
-
-hookCoverChange(false);
+registerCoverListenner();
 
 // Check latest release every 10m
 waitForElement([".main-userWidget-box"], ([userWidget]) => {
