@@ -51,8 +51,7 @@ echo "INSTALLING"
 cd "$(dirname "$(spicetify -c)")/Themes/DribbblishDynamic"
 mkdir -p ../../Extensions
 cp dribbblish-dynamic.js ../../Extensions/.
-spicetify config extensions default-dynamic.js- extensions dribbblish-dynamic.js- extensions dribbblish.js- extensions Vibrant.min.js-
-spicetify config extensions dribbblish-dynamic.js
+spicetify config extensions default-dynamic.js- extensions dribbblish.js- extensions Vibrant.min.js- extensions dribbblish-dynamic.js
 spicetify config current_theme DribbblishDynamic
 spicetify config color_scheme base
 spicetify config inject_css 1 replace_colors 1 overwrite_assets 1
