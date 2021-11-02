@@ -6,7 +6,7 @@ const path = require("path");
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
-    entry: [path.resolve(__dirname, "./src/js/main.js"), path.resolve(__dirname, "./src/styles/main.scss")],
+    entry: [path.resolve(__dirname, "./src/js/main.js"), path.resolve(__dirname, "./src/styles/main.scss"), path.resolve(__dirname, "./src/styles/Colors.scss")],
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "dribbblish-dynamic.js"
@@ -14,12 +14,12 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /main\.js$/,
                 exclude: /node_modules/,
                 use: []
             },
             {
-                test: /\.scss$/,
+                test: /main\.scss$/,
                 exclude: /node_modules/,
                 type: "asset/resource",
                 generator: {
@@ -33,6 +33,15 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /Colors\.scss$/,
+                exclude: /node_modules/,
+                type: "asset/resource",
+                generator: {
+                    filename: "color.ini"
+                },
+                use: [path.resolve(__dirname, "./src/loaders/color-loader.js")]
             }
         ]
     },
@@ -46,7 +55,7 @@ module.exports = {
             "process.env.DRIBBBLISH_VERSION": JSON.stringify(process.env.DRIBBBLISH_VERSION || "Dev")
         }),
         new CopyPlugin({
-            patterns: [{ from: "src/assets", to: "assets" }, { from: "src/color.ini" }]
+            patterns: [{ from: "src/assets", to: "assets" }]
         })
     ],
     optimization: {
