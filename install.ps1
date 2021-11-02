@@ -106,7 +106,7 @@ if ($PSVersionTable.PSVersion.Major -gt $PSMinVersion) {
       $rep = @"
 [Patch]
 xpui.js_find_8008=,(\w+=)32,
-xpui.js_repl_8008=,`${1}56,
+xpui.js_repl_8008=,`${1}58,
 "@
       # In case missing Patch section
       if (-not ($configFile -match "\[Patch\]")) {

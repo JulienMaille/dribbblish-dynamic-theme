@@ -57,3 +57,9 @@ spicetify config current_theme DribbblishDynamic
 spicetify config color_scheme base
 spicetify config inject_css 1 replace_colors 1 overwrite_assets 1
 spicetify apply
+
+echo "PATCHING"
+echo "Please add these lines in your config file"
+echo "  [Patch]"
+echo "  xpui.js_find_8008=,(\w+=)32,"
+echo "  xpui.js_repl_8008=,`${1}58,"

@@ -55,7 +55,7 @@ From Spotify > v1.1.62, in sidebar, they use an adaptive render mechanic to acti
 ```ini
 [Patch]
 xpui.js_find_8008 = ,(\w+=)32,
-xpui.js_repl_8008 = ,${1}56,
+xpui.js_repl_8008 = ,${1}58,
 ```
 
 ## Hide Window Controls
