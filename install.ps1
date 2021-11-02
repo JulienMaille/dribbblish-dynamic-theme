@@ -7,7 +7,7 @@ param (
 $PSMinVersion = 3
 
 if ($v) {
-    $version = $v
+  $version = $v
 }
 
 # Helper functions for pretty terminal output.
@@ -32,8 +32,8 @@ if ($PSVersionTable.PSVersion.Major -gt $PSMinVersion) {
 
   $checkSpice = Get-Command spicetify -ErrorAction Silent
   if ($null -eq $checkSpice) {
-      Write-Host -ForegroundColor Red "Spicetify not found"
-      Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/khanhas/spicetify-cli/master/install.ps1" | Invoke-Expression
+    Write-Host -ForegroundColor Red "Spicetify not found"
+    Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/khanhas/spicetify-cli/master/install.ps1" | Invoke-Expression
   }
 
   if (-not $version) {
@@ -95,26 +95,34 @@ if ($PSVersionTable.PSVersion.Major -gt $PSMinVersion) {
   spicetify config current_theme DribbblishDynamic
   spicetify config color_scheme base
   spicetify config inject_css 1 replace_colors 1 overwrite_assets 1
-  spicetify apply
   Write-Done
 
   # Add patch
   Write-Part "PATCHING       "; Write-Emphasized "config-xpui.ini"
   $configFile = Get-Content "$spicePath\config-xpui.ini"
   if (-not ($configFile -match "xpui.js_find_8008")) {
-      $rep = @"
+    $rep = @"
 [Patch]
 xpui.js_find_8008=,(\w+=)32,
 xpui.js_repl_8008=,`${1}58,
 "@
-      # In case missing Patch section
-      if (-not ($configFile -match "\[Patch\]")) {
-          $configFile += "`n[Patch]`n"
-      }
-      $configFile = $configFile -replace "\[Patch\]",$rep
-      Set-Content "$spicePath\config-xpui.ini" $configFile
+    # In case missing Patch section
+    if (-not ($configFile -match "\[Patch\]")) {
+      $configFile += "`n[Patch]`n"
+    }
+    $configFile = $configFile -replace "\[Patch\]",$rep
+    Set-Content "$spicePath\config-xpui.ini" $configFile
   }
   Write-Done
+
+  Write-Part "APPLYING";
+  $backupVer = $configFile -match "^version"
+  $version = ConvertFrom-StringData $backupVer[0]
+  if ($version.version.Length -gt 0) {
+    spicetify apply
+  } else {
+    spicetify backup apply
+  }
 }
 else {
   Write-Part "`nYour Powershell version is less than "; Write-Emphasized "$PSMinVersion";
