@@ -433,7 +433,8 @@ html {
 }
 
 #spicetify-show-list > * {
-    padding: 0 8px;
+    padding: 0px;
+    margin: 0px 8px;
 }
 
 .main-rootlist-statusIcons {
@@ -679,8 +680,14 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
     font-weight: 500;
 }
 
-.main-trackInfo-release > a {
+.main-trackInfo-release a {
     color: var(--spice-subtext);
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: var(--spice-text);
+    }
 }
 
 .main-topBar-topbarContent .main-playButton-PlayButton {

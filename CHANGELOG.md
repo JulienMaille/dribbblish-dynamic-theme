@@ -5,8 +5,9 @@ Added:
 
 Fixed:
 - Some sidebar items hawing wrong width on hover [(this)](https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/87#issuecomment-954305428)
+- Broken sidebar hover effect with unsticked items (#69)
 - `Sidebar config` buttons being below the text
-- Fix #87 by not showing the playing indicator above "Liked Songs"
+- "Liked Songs" having an playing indicator wich looks bad (#87)
 - Queue icon is hidden (#73) (Temporary until a better solution is found)
 - Playbar album name is now white again
 

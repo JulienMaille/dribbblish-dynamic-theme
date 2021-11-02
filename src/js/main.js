@@ -597,8 +597,9 @@ async function songchange() {
 
     if (!document.getElementById("main-trackInfo-year")) {
         const el = document.createElement("div");
+        el.classList.add("main-trackInfo-release", "standalone-ellipsis-one-line", "main-type-finale");
+        el.setAttribute("as", "div");
         el.id = "main-trackInfo-year";
-        el.classList.add("main-trackInfo-release", "ellipsis-one-line", "main-type-finale");
         document.querySelector(".main-trackInfo-container").append(el);
     }
     const albumInfoSpan = document.getElementById("main-trackInfo-year");
@@ -614,8 +615,15 @@ async function songchange() {
     if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
         moment.locale(Spicetify.Locale.getLocale());
         const albumDate = moment(await getAlbumRelease(album_uri.replace("spotify:album:", "")));
-        const albumLink = `<a title="${Spicetify.Player.data.track.metadata.album_title}" href="${album_uri}" data-uri="${album_uri}" data-interaction-target="album-name" class="tl-cell__content">${Spicetify.Player.data.track.metadata.album_title}</a>`;
-        albumInfoSpan.innerHTML = `${albumLink} • ${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}`;
+        const albumLinkElem = `
+            <span>
+                <span draggable="true">
+                    <a draggable="false" dir="auto" href="${album_uri}">${Spicetify.Player.data.track.metadata.album_title}</a>
+                </span>
+            </span>
+        `;
+        const albumDateElem = `<span> • <span>${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
+        albumInfoSpan.innerHTML = `${albumLinkElem}${albumDateElem}`;
     } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
         // podcast
         bgImage = bgImage.replace("spotify:image:", "https://i.scdn.co/image/");
