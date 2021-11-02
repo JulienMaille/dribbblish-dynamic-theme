@@ -1162,6 +1162,10 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 }
 
 .main-nowPlayingWidget-coverExpanded {
+    transform: translateX(0px);
+}
+
+#main[player-controls="spotify"] .main-nowPlayingWidget-coverExpanded {
     transform: translateX(-27px);
 }
 
