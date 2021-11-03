@@ -40,10 +40,11 @@ $colors: (
     }
 }
 
+$props-to-transition: ("sidebar", "main", "text", "button");
 :root {
     $props: ();
 
-    @each $key, $color in $colors {
+    @each $key in $props-to-transition {
         $props: append($props, --spice-#{$key}, comma);
         $props: append($props, --spice-#{$key}-rgb, comma);
     }
