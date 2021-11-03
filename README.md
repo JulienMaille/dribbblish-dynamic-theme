@@ -41,7 +41,8 @@ curl -fsSL https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-the
 1. Download the latest [DribbblishDynamic_vX.X.X.zip](https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest)
 2. Extract the files to your [Spicetify/Themes folder](https://github.com/khanhas/spicetify-cli/wiki/Customization#themes)
 3. Copy `dribbblish-dynamic.js` to your [Spicetify/Extensions folder](https://github.com/khanhas/spicetify-cli/wiki/Extensions#installing)
-4. Run:
+4. Add the 2 lines in Patch section of the config file (see details below)
+5. Run:
      ```
      spicetify config extensions dribbblish-dynamic.js
      spicetify config current_theme DribbblishDynamic
@@ -72,6 +73,11 @@ In addition to `--transparent-window-controls` you can set `Windows Top Bars` to
 ### Windows (PowerShell)
 ```powershell
 Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/master/uninstall.ps1" | Invoke-Expression
+```
+
+### Linux/MacOS (Bash)
+```bash
+curl -fsSL https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/master/uninstall.sh | sh
 ```
 
 ### Manual Uninstall
