@@ -16,9 +16,11 @@ Steps to reproduce the behavior:
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Version [e.g. 22]
+**Desktop Setup**
+ - Operating System: [e.g. Windows 10, MacOS 10.14]
+ - Spotify version [e.g. 1.1.71.560] from `Menu > Help > About`
+ - Spicetify version [e.g. 2.4.1] run `spicetify -v`
+ - Dribbblish version [e.g. 3.0.1] from `Dribblish Settings > About`
 
 **Logs**
 Add logs from console. To do that
