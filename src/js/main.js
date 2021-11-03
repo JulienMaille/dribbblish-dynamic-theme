@@ -667,15 +667,20 @@ async function pickCoverColor(img) {
 }
 
 function registerCoverListener() {
-    if (!document.querySelector(".main-image-image.cover-art-image")) return setTimeout(registerCoverListener, 250);
-    pickCoverColor(document.querySelector(".main-image-image.cover-art-image"));
+    const img = document.querySelector(".main-image-image.cover-art-image");
+    if (!img) return setTimeout(registerCoverListener, 250); // Check if image exists
+    if (!img.complete) return img.addEventListener("load", registerCoverListener); // Check if image is loaded
+    pickCoverColor(img);
 
     const observer = new MutationObserver((muts) => {
         const img = document.querySelector(".main-image-image.cover-art-image");
-        if (!img) return registerCoverListener();
+        if (!img) {
+            observer.disconnect();
+            return registerCoverListener();
+        }
         pickCoverColor(img);
     });
-    observer.observe(document.querySelector(".main-image-image.cover-art-image"), {
+    observer.observe(img, {
         attributes: true,
         attributeFilter: ["src"]
     });
