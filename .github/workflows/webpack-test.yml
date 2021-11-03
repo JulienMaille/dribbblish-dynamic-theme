@@ -1,0 +1,28 @@
+name: Webpack Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  webpack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Test-Build Webpack
+        run: |
+          npm install
+          npm run build
+          echo "${{ github.event.inputs.version }}" > dist/VERSION
