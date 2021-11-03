@@ -3,6 +3,7 @@
     @return #{"invert("}$v#{")"};
 }
 
+@import "Colors";
 @import "Inputs";
 @import "ConfigMenu";
 @import "NoAds";
@@ -86,7 +87,7 @@ body {
 }
 
 .os-scrollbar-handle {
-    background-color: var(--spice-text) !important;
+    background-color: spiceColor("text") !important;
     border-radius: calc(var(--scrollbar-vertical-size) / 2);
 }
 
@@ -99,7 +100,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: var(--spice-text) !important;
+    background-color: spiceColor("text") !important;
     border-radius: calc(var(--scrollbar-vertical-size) / 2);
 }
 
@@ -131,7 +132,7 @@ body {
 
 .x-searchInput-searchInputSearchIcon,
 .x-searchInput-searchInputClearButton {
-    color: var(--spice-text) !important;
+    color: spiceColor("text") !important;
 }
 
 .main-home-homeHeader,
@@ -162,7 +163,7 @@ body {
     background-color: unset !important;
 }
 .main-topBar-overlay {
-    background-color: var(--spice-main);
+    background-color: spiceColor("main");
 }
 
 .main-entityHeader-shadow,
@@ -177,19 +178,19 @@ body {
 }
 
 .main-trackList-trackListRow:hover {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.2) !important;
+    background-color: spiceColor("selected-row", 0.2) !important;
 }
 
 .main-trackList-trackListRow:focus-within,
 [aria-selected="true"] > .main-trackList-trackListRow {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
+    background-color: spiceColor("selected-row", 0.4) !important;
 }
 
 span.artist-artistVerifiedBadge-badge svg > path:first-of-type {
-    fill: var(--spice-button);
+    fill: spiceColor("button");
 }
 span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
-    fill: var(--spice-text);
+    fill: spiceColor("text");
 }
 
 /* Full window artist background */
@@ -212,7 +213,7 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .main-entityHeader-background.main-entityHeader-overlay:after {
-    background-image: linear-gradient(transparent, transparent), linear-gradient(var(--spice-main), var(--spice-main));
+    background-image: linear-gradient(transparent, transparent), linear-gradient(spiceColor("main"), spiceColor("main"));
 }
 
 .artist-artistOverview-overview .main-entityHeader-withBackgroundImage h1 {
@@ -221,37 +222,37 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .main-contextMenu-menu {
-    background-color: var(--spice-button);
+    background-color: spiceColor("button");
 }
 
 .main-contextMenu-menuHeading,
 .main-contextMenu-menuItemButton,
 .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):focus,
 .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):hover {
-    color: var(--spice-main);
+    color: spiceColor("main");
 }
 
 .main-playPauseButton-button {
-    background-color: var(--spice-button);
+    background-color: spiceColor("button");
     color: white;
 }
 
 /** Queue page header */
 .queue-queue-title,
 .queue-playHistory-title {
-    color: var(--spice-text) !important;
+    color: spiceColor("text") !important;
 }
 
 /** Artist page */
 .artist-artistOverview-heading {
-    color: var(--spice-text) !important;
+    color: spiceColor("text") !important;
 }
 .artist-artistAbout-content .artist-artistAbout-cityBlock div,
 .artist-artistAbout-content .artist-artistAbout-stats div {
-    color: var(--spice-text) !important;
+    color: spiceColor("text") !important;
 }
 .artist-artistAbout-content div {
-    color: var(--spice-text) !important;
+    color: spiceColor("text") !important;
 }
 
 /** Cards */
@@ -287,7 +288,7 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .Root__main-view {
-    background-color: var(--spice-main);
+    background-color: spiceColor("main");
     border-radius: var(--main-corner-radius) var(--main-corner-radius) 0 0;
     overflow: hidden;
 }
@@ -300,14 +301,14 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 
 .main-buddyFeed-headerTitle,
 .main-buddyFeed-activityMetadata .main-buddyFeed-username a {
-    color: var(--spice-sidebar-text);
+    color: spiceColor("sidebar-text");
 }
 
 .main-buddyFeed-activityMetadata .main-buddyFeed-artistAndTrackName a,
 .main-buddyFeed-activityMetadata .main-buddyFeed-artistAndTrackName span,
 .main-buddyFeed-activityMetadata .main-buddyFeed-playbackContextLink,
 .main-buddyFeed-activityMetadata .main-buddyFeed-timestamp {
-    color: rgba(var(--spice-rgb-sidebar-text), 0.8);
+    color: spiceColor("sidebar-text", 0.8);
 }
 
 .main-buddyFeed-buddyFeedRoot .main-avatar-avatar,
@@ -324,11 +325,11 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 
 .view-homeShortcutsGrid-shortcut {
     overflow: hidden;
-    background-color: rgba(var(--spice-rgb-selected-row), 0.4);
+    background-color: spiceColor("selected-row", 0.4);
 }
 
 .view-homeShortcutsGrid-shortcut:hover {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.6);
+    background-color: spiceColor("selected-row", 0.6);
 }
 
 .cover-art,
@@ -355,8 +356,8 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .main-avatar-avatar.main-avatar-withBadge:after {
-    box-shadow: 0 0 0 2px var(--spice-sidebar);
-    background-color: var(--spice-notification);
+    box-shadow: 0 0 0 2px spiceColor("sidebar");
+    background-color: spiceColor("notification");
     right: 0;
 }
 
@@ -367,25 +368,25 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 
 .main-nowPlayingBar-container {
     border-radius: 0 0 var(--main-corner-radius) var(--main-corner-radius);
-    background-color: var(--spice-main);
+    background-color: spiceColor("main");
     border-top: 0;
     min-width: 518px;
 
     &.with-shadow {
-        background: radial-gradient(ellipse at right 50% bottom -80px, rgba(var(--spice-rgb-sidebar), 0.55), var(--spice-main) 60%);
+        background: radial-gradient(ellipse at right 50% bottom -80px, spiceColor("sidebar", 0.55), spiceColor("main") 60%);
     }
 }
 
 .main-buddyFeed-findFriendsButton {
-    color: var(--spice-sidebar-text);
+    color: spiceColor("sidebar-text");
 }
 
 .main-connectBar-connectBar {
     border-radius: 0 0 var(--main-corner-radius) var(--main-corner-radius);
-    border: 2px solid var(--spice-main);
+    border: 2px solid spiceColor("main");
     border-top: 0;
-    background-color: var(--spice-button) !important;
-    color: var(--spice-text) !important;
+    background-color: spiceColor("button") !important;
+    color: spiceColor("text") !important;
 }
 
 .Root__nav-bar {
@@ -405,7 +406,7 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 html,
 .Root__nav-bar,
 .main-buddyFeed-buddyFeed {
-    background-color: var(--spice-sidebar) !important;
+    background-color: spiceColor("sidebar") !important;
 }
 
 html {
@@ -419,7 +420,7 @@ html {
 .main-rootlist-rootlistContent span,
 .main-navBar-entryPoints span {
     z-index: 1;
-    color: var(--spice-sidebar-text);
+    color: spiceColor("sidebar-text");
 }
 
 .main-navBar-navBarItem svg {
@@ -455,8 +456,8 @@ html {
         width: 32px;
         height: 32px;
         margin: 0px;
-        color: var(--spice-sidebar);
-        background-color: rgba(var(--spice-rgb-main), 0.7);
+        color: spiceColor("sidebar");
+        background-color: spiceColor("main", 0.7);
         border-radius: var(--sidebar-icons-border-radius);
     }
 }
@@ -467,10 +468,10 @@ html {
     right: 12px;
     width: 16px;
     height: 16px;
-    color: var(--spice-sidebar-text) !important;
-    background-color: var(--spice-button);
+    color: spiceColor("sidebar-text") !important;
+    background-color: spiceColor("button");
     border-radius: 50%;
-    box-shadow: 0 0 0 2px var(--spice-sidebar);
+    box-shadow: 0 0 0 2px spiceColor("sidebar");
     opacity: 0;
 }
 
@@ -524,13 +525,13 @@ html.sidebar-hide-text .GlueDropTarget span {
 .main-rootlist-rootlist::before {
     top: 0px;
     height: 5%;
-    background: linear-gradient(to bottom, var(--spice-sidebar) 10%, transparent);
+    background: linear-gradient(to bottom, spiceColor("sidebar") 10%, transparent);
 }
 
 .main-rootlist-rootlist::after {
     bottom: 0px;
     height: 15%;
-    background: linear-gradient(to top, var(--spice-sidebar) 10%, transparent);
+    background: linear-gradient(to top, spiceColor("sidebar") 10%, transparent);
 }
 
 .Root__nav-bar .os-scrollbar-vertical,
@@ -544,11 +545,11 @@ html.sidebar-hide-text .GlueDropTarget span {
 }
 
 input:checked ~ .x-toggle-indicatorWrapper {
-    background-color: rgba(var(--spice-rgb-button), 0.4);
+    background-color: spiceColor("button", 0.4);
 }
 
 input:hover:checked ~ .x-toggle-indicatorWrapper {
-    background-color: rgba(var(--spice-rgb-button), 0.5) !important;
+    background-color: spiceColor("button", 0.5) !important;
 }
 
 input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
@@ -564,8 +565,8 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
 }
 
 .main-topBar-historyButtons svg {
-    color: var(--spice-button);
-    fill: var(--spice-button);
+    color: spiceColor("button");
+    fill: spiceColor("button");
 }
 
 .playback-bar__progress-time,
@@ -597,8 +598,8 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
 
 .progress-bar {
     --progress-bar-height: 2px;
-    --fg-color: var(--spice-button);
-    --bg-color: rgba(var(--spice-rgb-text), 0.2);
+    --fg-color: #{spiceColor("button")};
+    --bg-color: #{spiceColor("text", 0.2)};
 }
 
 .progress-bar__slider {
@@ -629,8 +630,8 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
     padding: 0 5px;
     border-radius: 4px;
     text-align: center;
-    color: var(--spice-text);
-    background-color: var(--spice-button);
+    color: spiceColor("text");
+    background-color: spiceColor("button");
     pointer-events: none;
 }
 
@@ -681,12 +682,12 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
 }
 
 .main-trackInfo-release a {
-    color: var(--spice-subtext);
+    color: spiceColor("subtext");
 
     &:hover,
     &:active,
     &:focus {
-        color: var(--spice-text);
+        color: spiceColor("text");
     }
 }
 
@@ -700,7 +701,7 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
 
 .main-entityHeader-metaDataText,
 .main-duration-container {
-    color: var(--spice-subtext);
+    color: spiceColor("subtext");
 }
 
 /** Sidebar */
@@ -745,7 +746,7 @@ html.sidebar-hide-text .main-rootlist-rootlistItem {
 }
 
 .main-rootlist-dropIndicator {
-    background: var(--spice-selected-row);
+    background: spiceColor("selected-row");
     height: 2px;
 }
 
@@ -843,7 +844,7 @@ li.GlueDropTarget {
 }
 
 #dribbblish-update {
-    color: var(--spice-button-active);
+    color: spiceColor("button-active");
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -877,7 +878,7 @@ li.GlueDropTarget {
 
     & span {
         display: block !important;
-        color: var(--spice-subtext);
+        color: spiceColor("subtext");
     }
 }
 
@@ -886,10 +887,10 @@ li.GlueDropTarget {
 
     // Workaround for #73 (https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/73)
     & button {
-        color: var(--spice-subtext);
+        color: spiceColor("subtext");
 
         &:hover {
-            color: var(--spice-text);
+            color: spiceColor("text");
         }
     }
 }
@@ -906,7 +907,7 @@ li.GlueDropTarget {
 .main-playPauseButton-button svg {
     width: 32px !important;
     height: 32px !important;
-    color: var(--spice-button);
+    color: spiceColor("button");
 }
 
 /* Spotify style player bar */
@@ -972,12 +973,12 @@ li.GlueDropTarget {
 .main-likedSongsButton-likedSongsIcon svg,
 .main-yourEpisodesButton-yourEpisodesIcon svg,
 .main-createPlaylistButton-createPlaylistIcon svg {
-    fill: var(--spice-sidebar-text);
+    fill: spiceColor("sidebar-text");
     width: 32px;
     height: 32px;
 }
 .main-yourEpisodesButton-yourEpisodesIcon svg path {
-    fill: var(--spice-sidebar-text);
+    fill: spiceColor("sidebar-text");
 }
 
 /** Grid */
@@ -1000,7 +1001,7 @@ span.main-userWidget-displayName,
 
 /** Sidebar config */
 #dribs-hidden-list {
-    background-color: rgba(var(--spice-rgb-main), 0.3);
+    background-color: spiceColor("main", 0.3);
 }
 
 #dribs-sidebar-config {
@@ -1017,12 +1018,12 @@ span.main-userWidget-displayName,
 #dribs-sidebar-config button {
     min-width: 60px;
     border-radius: 3px;
-    background-color: var(--spice-main);
-    color: var(--spice-text);
-    border: 1px solid var(--spice-text);
+    background-color: spiceColor("main");
+    color: spiceColor("text");
+    border: 1px solid spiceColor("text");
 }
 #dribs-sidebar-config button:disabled {
-    color: var(--spice-button-disabled);
+    color: spiceColor("button-disabled");
 }
 
 .main-navBar-entryPoints {
@@ -1107,7 +1108,7 @@ span.main-userWidget-displayName,
 
 .main-navBar-navBar a:hover,
 .main-navBar-navBar a:hover span {
-    color: var(--spice-sidebar-text) !important;
+    color: spiceColor("sidebar-text") !important;
 }
 
 div.GlueDropTarget.personal-library {
@@ -1171,7 +1172,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 
 /** Mini dribbblish */
 .x-categoryCard-CategoryCard > div {
-    background-color: var(--spice-main);
+    background-color: spiceColor("main");
     width: calc(100% - 14px);
     height: calc(100% - 6px);
     margin: 3px 10px;
@@ -1188,7 +1189,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 }
 
 .x-heroCategoryCard-HeroCategoryCard > div {
-    background-color: var(--spice-main);
+    background-color: spiceColor("main");
     width: calc(100% - 20px);
     height: calc(100% - 6px);
     margin: 3px 16px;
@@ -1197,22 +1198,22 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 
 .main-dropDown-dropDown,
 .x-sortBox-sortDropdown {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
-    color: var(--spice-subtext);
+    background-color: spiceColor("selected-row", 0.4) !important;
+    color: spiceColor("subtext");
 }
 
 .main-dropDown-dropDown:hover,
 .x-sortBox-sortDropdown:hover {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.6) !important;
+    background-color: spiceColor("selected-row", 0.6) !important;
 }
 
 .connect-device-list-item:focus,
 .connect-device-list-item:hover {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.3);
+    background-color: spiceColor("selected-row", 0.3);
 }
 
 .bookmark-filter {
-    color: var(--spice-main) !important;
+    color: spiceColor(main) !important;
 }
 
 /* 1.1.56 */
@@ -1233,13 +1234,13 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 }
 
 .main-userWidget-dropDownMenu > li > button {
-    color: rgba(var(--spice-rgb-selected-row), 0.7);
+    color: spiceColor("selected-row", 0.7);
     padding-left: 8px;
     text-decoration: none;
 }
 .main-userWidget-dropDownMenu > li > button:hover,
 .main-userWidget-dropDownMenu > li > button:focus {
-    color: var(--spice-text);
+    color: spiceColor("text");
 }
 
 .main-userWidget-dropDownMenu svg {
@@ -1253,30 +1254,30 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 }
 
 .main-actionBar-ActionBarRow button:not(.main-playButton-primary) {
-    color: var(--spice-subtext);
+    color: spiceColor("subtext");
 }
 
 /* explicit icon */
 .main-tag-container {
-    background-color: var(--spice-text);
+    background-color: spiceColor("text");
 }
 /* progressbar tooltip text color */
 .playback-bar .prog-tooltip {
-    color: var(--spice-sidebar-text) !important;
+    color: spiceColor("sidebar-text") !important;
 }
 
 /* edit button of CustomApps */
 .reddit-sort-container button.switch,
 .new-releases-header button.switch,
 .lyrics-tabBar-header button.switch {
-    background-color: rgba(var(--spice-rgb-subtext), 0.15) !important;
-    color: var(--spice-text);
+    background-color: spiceColor("subtext", 0.15) !important;
+    color: spiceColor("text");
 }
 
 .reddit-sort-container button.switch:hover,
 .new-releases-header button.switch:hover,
 .lyrics-tabBar-header button.switch:hover {
-    background-color: rgba(var(--spice-rgb-subtext), 0.3) !important;
+    background-color: spiceColor("subtext", 0.3) !important;
 }
 
 .lyrics-lyricsContainer-LyricsBackground {
@@ -1301,7 +1302,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 .main-contextMenu-menuItemButton,
 .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):focus,
 .main-contextMenu-menuItemButton:not(.main-contextMenu-disabled):hover {
-    color: var(--spice-sidebar-text) !important;
+    color: spiceColor("sidebar-text") !important;
 }
 
 /* translucent background cover */

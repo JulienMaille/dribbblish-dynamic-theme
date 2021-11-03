@@ -1,26 +1,26 @@
 button.main-button-primary {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
+    background-color: spiceColor("selected-row", 0.4) !important;
 
     &:hover,
     &:active {
-        background-color: rgba(var(--spice-rgb-selected-row), 0.6) !important;
+        background-color: spiceColor("selected-row", 0.6) !important;
     }
 
     span {
-        color: var(--spice-subtext) !important;
+        color: spiceColor("subtext") !important;
     }
 }
 
 input,
 textarea {
-    background-color: rgba(var(--spice-rgb-selected-row), 0.4) !important;
+    background-color: spiceColor("selected-row", 0.4) !important;
     border-radius: 4px !important;
     padding: 6px 10px 6px 48px;
-    color: var(--spice-text) !important;
+    color: spiceColor("text") !important;
 
     &:hover,
     &:active {
-        background-color: rgba(var(--spice-rgb-selected-row), 0.6) !important;
+        background-color: spiceColor("selected-row", 0.6) !important;
     }
 
     &[type="range"] {
@@ -34,7 +34,7 @@ textarea {
             height: 16px;
             margin-top: -4px;
             border-radius: 50%;
-            background-color: var(--spice-text);
+            background-color: spiceColor("text");
 
             &:hover,
             &:active {
@@ -53,8 +53,8 @@ textarea {
             padding: 0 5px;
             border-radius: 4px;
             text-align: center;
-            color: var(--spice-sidebar-text);
-            background-color: var(--spice-button);
+            color: spiceColor("sidebar-text");
+            background-color: spiceColor("button");
             transition: opacity 0.25s ease;
             opacity: 0;
         }
@@ -71,7 +71,7 @@ textarea {
         &::-webkit-slider-runnable-track {
             width: 100%;
             height: 8px;
-            background-color: rgba(var(--spice-rgb-text), 0.2);
+            background-color: spiceColor("text", 0.2);
             border-radius: 50vw;
         }
     }
@@ -83,7 +83,7 @@ textarea {
         border: none;
         border-radius: 4px !important;
         padding: 0px 10px;
-        color: var(--spice-subtext) !important;
+        color: spiceColor("subtext") !important;
     }
 
     &[type="time"] {
@@ -103,12 +103,12 @@ textarea {
             position: absolute;
             inset: -5px;
             border-radius: 4px;
-            background-color: rgba(var(--spice-rgb-selected-row), 0.4);
+            background-color: spiceColor("selected-row", 0.4);
         }
 
         &:hover::before,
         &:active::before {
-            background-color: rgba(var(--spice-rgb-selected-row), 0.6);
+            background-color: spiceColor("selected-row", 0.6);
         }
     }
 }
