@@ -204,7 +204,14 @@ export default class ConfigMenu {
             if (options.data.max != null && val > options.data.max) this.set(options.key, options.data.max);
 
             const input = /* html */ `
-                <input type="number" id="dribbblish-config-input-${options.key}" value="${this.get(options.key)}">
+                <input
+                    type="number"
+                    id="dribbblish-config-input-${options.key}"
+                    ${options.data.min != null ? `min="${options.data.min}"` : ""}
+                    ${options.data.max != null ? `max="${options.data.max}"` : ""}
+                    step="${options.data.step ?? 1}"
+                    value="${this.get(options.key)}"
+                >
             `;
             this.addInputHTML({ ...options, input });
 

@@ -43,32 +43,26 @@ DribbblishShared.config.register({
 
 DribbblishShared.config.register({
     area: "Sidebar",
-    type: "slider",
+    type: "number",
     key: "sidebarGapLeft",
     name: "Left Sidebar Gap Size",
     description: "Set gap size between sidebar icons (in pixels).",
     defaultValue: 5,
     data: {
-        min: 0,
-        max: 100,
-        step: 1,
-        suffix: "px"
+        min: 0
     },
     onChange: (val) => $("html").css("--sidebar-gap-left", `${val}px`)
 });
 
 DribbblishShared.config.register({
     area: "Sidebar",
-    type: "slider",
+    type: "number",
     key: "sidebarGapRight",
     name: "Right Sidebar Gap Size",
     description: "Set gap size between sidebar icons (in pixels).",
     defaultValue: 32,
     data: {
-        min: 0,
-        max: 100,
-        step: 1,
-        suffix: "px"
+        min: 0
     },
     onChange: (val) => $("html").css("--sidebar-gap-right", `${val}px`)
 });
