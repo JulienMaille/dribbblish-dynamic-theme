@@ -636,6 +636,7 @@ async function songchange() {
     }
 
     $("html").css("--image-url", `url("${bgImage}")`);
+    registerCoverListener();
 }
 
 Spicetify.Player.addEventListener("songchange", songchange);
@@ -666,21 +667,24 @@ async function pickCoverColor(img) {
     updateColors(textColor, sidebarColor);
 }
 
+var coverListener;
 function registerCoverListener() {
     const img = document.querySelector(".main-image-image.cover-art-image");
     if (!img) return setTimeout(registerCoverListener, 250); // Check if image exists
     if (!img.complete) return img.addEventListener("load", registerCoverListener); // Check if image is loaded
     pickCoverColor(img);
 
-    const observer = new MutationObserver((muts) => {
+    if (coverListener != null) {
+        coverListener.disconnect();
+        coverListener = null;
+    }
+
+    coverListener = new MutationObserver((muts) => {
         const img = document.querySelector(".main-image-image.cover-art-image");
-        if (!img) {
-            observer.disconnect();
-            return registerCoverListener();
-        }
+        if (!img) return registerCoverListener();
         pickCoverColor(img);
     });
-    observer.observe(img, {
+    coverListener.observe(img, {
         attributes: true,
         attributeFilter: ["src"]
     });
