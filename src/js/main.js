@@ -424,9 +424,9 @@ let textColor = chroma($("html").css("--spice-text")).hex();
 let textColorBg = chroma($("html").css("--spice-main")).hex();
 let sidebarColor = chroma($("html").css("--spice-sidebar")).hex();
 
-function setRootColor(name, colHex) {
-    $("html").css(`--spice-${name}`, colHex);
-    $("html").css(`--spice-rgb-${name}`, chroma(colHex).rgb().join(","));
+function setRootColor(name, color) {
+    $("html").css(`--spice-${name}`, chroma(color).hex());
+    $("html").css(`--spice-${name}-rgb`, chroma(color).rgb().join(","));
 }
 
 function toggleDark(setDark) {
