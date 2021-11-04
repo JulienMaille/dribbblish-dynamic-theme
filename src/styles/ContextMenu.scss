@@ -6,6 +6,7 @@
     padding: 8px;
 
     &::before {
+        z-index: -1;
         content: "";
         position: absolute;
         inset: 0px;
