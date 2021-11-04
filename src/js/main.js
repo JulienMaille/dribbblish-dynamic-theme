@@ -383,7 +383,7 @@ function copyToClipboard(text) {
 /* js */
 async function getAlbumRelease(uri) {
     const info = await Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
-    return { year: info.year, month: (info.month ?? 1) - 1, day: info.day ?? 0 };
+    return { year: info.year, month: info.month ?? 1, day: info.day ?? 1 };
 }
 
 function isLight(hex) {
