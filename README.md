@@ -63,7 +63,7 @@ xpui.js_repl_8008 = ,${1}58,
 Windows user, please edit your Spotify shortcut and add flag `--transparent-window-controls` after the Spotify.exe:
 To edit an taskbar shortcut, right click it, then right click Spotify in the list again.
 
-<img src="showcase-images/windows-shortcut-instruction.png" alt="img" width="500px"> 
+<img src="showcase-images/windows-shortcut-instruction.png" alt="img"> 
 
 In addition to `--transparent-window-controls` you can set `Windows Top Bars` to `Solid` or `Transparent` to look like this:
 
