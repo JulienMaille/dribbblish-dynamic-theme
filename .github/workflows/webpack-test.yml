@@ -1,10 +1,6 @@
 name: Webpack Test
 
-on:
-  pull_request:
-  push:
-    branches:
-      - main
+on: [pull_request, push]
 
 jobs:
   webpack:
@@ -25,4 +21,10 @@ jobs:
         run: |
           npm install
           npm run build
-          echo "${{ github.event.inputs.version }}" > dist/VERSION
+          echo "Dev" > dist/VERSION
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: DribbblishDynamic_vDev
+          path: dist/**
