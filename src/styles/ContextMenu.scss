@@ -1,0 +1,36 @@
+.main-contextMenu-menu {
+    background-color: transparent !important;
+    overflow: visible;
+    position: relative;
+    border-radius: var(--main-corner-radius);
+    padding: 8px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0px;
+        background-color: spiceColor("main", calc(0.75 - 0.1 * var(--is_light))) !important;
+        backdrop-filter: blur(10px);
+        border-radius: var(--main-corner-radius);
+    }
+
+    .main-contextMenu-menuItem {
+        .main-contextMenu-menuItemButton {
+            border-radius: var(--main-corner-radius);
+            color: spiceColor("subtext") !important;
+
+            &:hover,
+            &:focus,
+            &:active,
+            &[aria-expanded="true"] {
+                background-color: spiceColor("subtext", calc(0.1 + 0.3 * var(--is_light)));
+            }
+
+            &::before,
+            &::after {
+                left: 5px;
+                right: 5px;
+            }
+        }
+    }
+}
