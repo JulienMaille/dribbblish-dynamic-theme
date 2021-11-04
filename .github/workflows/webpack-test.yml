@@ -12,6 +12,9 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+      - name: Get commit SHA
+        run: echo "LATEST_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -22,9 +25,11 @@ jobs:
           npm install
           npm run build
           echo "Dev" > dist/VERSION
-          
+        env:
+          COMMIT_HASH: ${{ env.LATEST_SHA	}}
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: DribbblishDynamic_vDev
+          name: DribbblishDynamic_vDev-${{ env.LATEST_SHA	}}
           path: dist/**

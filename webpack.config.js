@@ -52,7 +52,8 @@ module.exports = {
             cleanAfterEveryBuildPatterns: ["*.LICENSE.txt"]
         }),
         new webpack.DefinePlugin({
-            "process.env.DRIBBBLISH_VERSION": JSON.stringify(process.env.DRIBBBLISH_VERSION || "Dev")
+            "process.env.DRIBBBLISH_VERSION": JSON.stringify(process.env.DRIBBBLISH_VERSION || "Dev"),
+            "process.env.COMMIT_HASH": JSON.stringify(process.env.COMMIT_HASH || "local")
         }),
         new CopyPlugin({
             patterns: [{ from: "src/assets", to: "assets" }]

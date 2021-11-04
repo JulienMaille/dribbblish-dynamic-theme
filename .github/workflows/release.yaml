@@ -22,6 +22,9 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
+      - name: Get commit SHA
+        run: echo "LATEST_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -34,6 +37,7 @@ jobs:
           echo "${{ github.event.inputs.version }}" > dist/VERSION
         env:
           DRIBBBLISH_VERSION: ${{ github.event.inputs.version }}
+          COMMIT_HASH: ${{ env.LATEST_SHA	}}
 
       - name: Zip Release
         working-directory: dist
