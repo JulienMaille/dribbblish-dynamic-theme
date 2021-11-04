@@ -11,6 +11,7 @@ Fixed:
 - "Liked Songs" having an playing indicator wich looks bad (#87)
 - Queue icon is hidden (#73) (Temporary until a better solution is found)
 - Playbar album name is now white again
+- Color sometimes not changing until restart
 
 Improved:
 - Background image now dosen't leak out of the main center area

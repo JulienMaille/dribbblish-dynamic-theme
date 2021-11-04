@@ -846,9 +846,16 @@ li.GlueDropTarget {
     width: auto;
     min-width: unset !important;
 
-    & span {
-        display: block !important;
-        color: spiceColor("subtext");
+    button {
+        span {
+            display: block !important;
+            color: spiceColor("subtext");
+        }
+
+        &:hover span,
+        &.control-button--active span {
+            color: spiceColor("text");
+        }
     }
 }
 
