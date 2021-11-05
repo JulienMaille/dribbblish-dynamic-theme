@@ -1,3 +1,5 @@
+import svgUndo from "../svg/undo.svg";
+
 export default class ConfigMenu {
     /**
      * @typedef {Object} DribbblishConfigItem
@@ -23,6 +25,7 @@ export default class ConfigMenu {
      * @typedef DribbblishConfigArea
      * @property {String} name
      * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
+     * @property {Boolean} [toggleable=true]
      */
 
     /**
@@ -95,7 +98,10 @@ export default class ConfigMenu {
         elem.setAttribute("hidden", options.hidden);
         if (options.childOf) elem.setAttribute("parent", options.childOf);
         elem.innerHTML = /* html */ `
-            <h2 class="x-settings-title main-type-cello${!options.description ? " no-desc" : ""}" as="h2">${options.name}</h2>
+            <h2 class="x-settings-title main-type-cello${!options.description ? " no-desc" : ""}" as="h2">
+                ${options.name}
+                ${["button"].includes(options.type) ? "" : /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${svgUndo}</button>`}
+            </h2>
             <label class="main-type-mesto">${options.description.replace(/\n/g, "<br>")}</label>
             <label class="x-toggle-wrapper x-settings-secondColumn">
                 ${options.input}
@@ -106,6 +112,20 @@ export default class ConfigMenu {
             parent.insertBefore(elem, parent.children[0]);
         } else {
             parent.appendChild(elem);
+        }
+
+        const resetButton = elem.querySelector(".dribbblish-config-item-reset");
+        if (resetButton) {
+            elem.querySelector(".dribbblish-config-item-reset").addEventListener("click", () => {
+                this.reset(options.key);
+                const defaultVal = this.get(options.key);
+                if (options.type == "checkbox") {
+                    elem.querySelector("input").checked = defaultVal;
+                } else {
+                    elem.querySelector("input, select").value = defaultVal;
+                }
+                options.onChange(defaultVal);
+            });
         }
     }
 
@@ -306,31 +326,36 @@ export default class ConfigMenu {
      * @param {DribbblishConfigArea} area
      */
     registerArea(area) {
+        if (area.toggleable == null) area.toggleable = true;
+
         if (!document.querySelector(`.dribbblish-config-area[name="${area.name}"]`)) {
             const areaElem = document.createElement("div");
             areaElem.classList.add("dribbblish-config-area");
             areaElem.style.order = area.order;
             const uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
-            if (!uncollapsedAreas.includes(area.name)) areaElem.toggleAttribute("collapsed");
+            if (area.toggleable && !uncollapsedAreas.includes(area.name)) areaElem.toggleAttribute("collapsed");
             areaElem.setAttribute("name", area.name);
             areaElem.innerHTML = /* html */ `
                 <h2 class="dribbblish-config-area-header">
                     ${area.name}
-                    <svg height="24" width="24" viewBox="0 0 24 24" class="main-topBar-icon"><polyline points="16 4 7 12 16 20" fill="none" stroke="currentColor"></polyline></svg>
+                    ${!area.toggleable ? "" : /* html */ `<svg height="24" width="24" viewBox="0 0 24 24" class="main-topBar-icon"><polyline points="16 4 7 12 16 20" fill="none" stroke="currentColor"></polyline></svg>`}
                 </h2>
                 <div class="dribbblish-config-area-items"></div>
             `;
             document.querySelector(".dribbblish-config-areas").appendChild(areaElem);
-            areaElem.querySelector("h2").addEventListener("click", () => {
-                areaElem.toggleAttribute("collapsed");
-                let uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
-                if (areaElem.hasAttribute("collapsed")) {
-                    uncollapsedAreas = uncollapsedAreas.filter((areaName) => areaName != area.name);
-                } else {
-                    uncollapsedAreas.push(area.name);
-                }
-                localStorage.setItem("dribbblish:config-areas:uncollapsed", JSON.stringify(uncollapsedAreas));
-            });
+
+            if (area.toggleable) {
+                areaElem.querySelector("h2").addEventListener("click", () => {
+                    areaElem.toggleAttribute("collapsed");
+                    let uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
+                    if (areaElem.hasAttribute("collapsed")) {
+                        uncollapsedAreas = uncollapsedAreas.filter((areaName) => areaName != area.name);
+                    } else {
+                        uncollapsedAreas.push(area.name);
+                    }
+                    localStorage.setItem("dribbblish:config-areas:uncollapsed", JSON.stringify(uncollapsedAreas));
+                });
+            }
         }
     }
 

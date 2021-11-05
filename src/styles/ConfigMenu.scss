@@ -64,11 +64,12 @@
                     position: relative;
                     text-align: center;
                     height: 38px;
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    justify-content: center;
 
                     svg {
-                        position: absolute;
-                        margin-left: 10px;
-                        bottom: -2px;
                         color: spiceColor("text");
                         padding: 0px;
                         height: 100%;
@@ -102,6 +103,9 @@
 
                         > {
                             .x-settings-title {
+                                display: flex;
+                                gap: 10px;
+                                align-items: center;
                                 grid-area: header;
                                 margin: 0px;
                                 height: min-content;
@@ -110,6 +114,13 @@
 
                                 &.no-desc {
                                     bottom: -10px;
+                                }
+
+                                .dribbblish-config-item-reset {
+                                    padding: 0px;
+                                    color: spiceColor("text");
+                                    width: 1em;
+                                    height: 1em;
                                 }
                             }
 

@@ -42,6 +42,11 @@ module.exports = {
                     filename: "color.ini"
                 },
                 use: [path.resolve(__dirname, "./src/loaders/color-loader.js")]
+            },
+            {
+                test: /\.svg/,
+                exclude: /node_modules/,
+                use: ["raw-loader"]
             }
         ]
     },
