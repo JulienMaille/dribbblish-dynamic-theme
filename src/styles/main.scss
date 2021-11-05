@@ -397,6 +397,10 @@ html {
     margin: 0px 8px;
 }
 
+#spicetify-sidebar-config {
+    z-index: 999;
+}
+
 .main-rootlist-statusIcons {
     z-index: 1;
     inset: 0;
@@ -422,6 +426,7 @@ html {
 }
 
 .main-rootlist-expandArrow {
+    z-index: 2;
     position: absolute;
     top: 20px;
     right: 12px;
