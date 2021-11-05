@@ -19,3 +19,4 @@ Improved:
 - Sidebar playlist icon images are now properly displayed and won't look stretched anymore
 - Better install script for MacOs/Linux
 - `About` settings area is always open now
+- Context menus are now glassy
