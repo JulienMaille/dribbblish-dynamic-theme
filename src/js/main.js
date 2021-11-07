@@ -28,7 +28,7 @@ DribbblishShared.config.register({
     name: "Round Sidebar Icons",
     description: "If the Sidebar Icons should be round instead of square",
     defaultValue: false,
-    onChange: (val) => $("html").css("--sidebar-icons-border-radius", val ? "50%" : "var(--image-radius)")
+    onChange: (val) => $("html").css("--sidebar-icons-border-radius", val ? "50vh" : "var(--image-radius)")
 });
 
 DribbblishShared.config.register({

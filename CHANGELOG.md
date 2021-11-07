@@ -20,3 +20,4 @@ Improved:
 - Better install script for MacOs/Linux
 - `About` settings area is always open now
 - Context menus are now glassy
+- User menu hover state

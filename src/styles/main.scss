@@ -18,7 +18,7 @@
     --cover-border-radius: 8px;
     --playbar-movement-anim-speed: 0.5s;
     --image-radius: 10px;
-    --sidebar-icons-border-radius: 50%;
+    --sidebar-icons-border-radius: 50vh; // 50vh = round / pill
     --song-transition-speed: 3s;
 }
 
@@ -292,14 +292,13 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .cover-art,
-.main-userWidget-box.update-avail,
 .view-homeShortcutsGrid-shortcut,
 :not(.view-homeShortcutsGrid-imageWrapper) > .main-image-image:not(.main-avatar-image) {
     border-radius: var(--image-radius) !important;
 }
 
 .main-avatar-image,
-.main-userWidget-box:not(.update-avail),
+.main-userWidget-box,
 .main-avatar-userIcon,
 .view-homeShortcutsGrid-shortcutLink {
     border-radius: var(--sidebar-icons-border-radius) !important;
@@ -310,8 +309,14 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .main-userWidget-box.update-avail {
-    backdrop-filter: invert(0.1);
     padding-right: 10px;
+    background-color: spiceColor("subtext", 0.1) !important;
+
+    &:hover,
+    &:active,
+    &[data-context-menu-open="true"] {
+        background-color: spiceColor("subtext", 0.15) !important;
+    }
 }
 
 .main-avatar-avatar.main-avatar-withBadge:after {
@@ -812,7 +817,7 @@ li.GlueDropTarget {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
     letter-spacing: normal;
     line-height: 16px;
