@@ -355,6 +355,7 @@ waitForElement(["#main"], () => {
         description: `
             OS: ${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}
             Spotify: v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}
+            Spicetify: ${Spicetify.version != null ? `v${Spicetify.version}` : "<= v2.7.2"}
             Dribbblish: v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}
         `,
         data: "Copy",
