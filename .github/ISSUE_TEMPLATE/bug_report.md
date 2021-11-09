@@ -1,7 +1,7 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: "[BUG] "
+about: Create a report to help us improve (Preferably open this report from inside the dribbblish settings `About > Report Bugs` as it adds additional info automatically)
+title: ""
 labels: ["bug"]
 assignees: ""
 
@@ -18,7 +18,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop Setup**
  - Operating System: [e.g. Windows 10, MacOS 10.14]
- - Spotify version [e.g. 1.1.71.560] from `Menu > Help > About`
+ - Spotify version [e.g. 1.1.71.560] from `Menu (Three dots top left) > Help > About`
  - Spicetify version [e.g. 2.4.1] run `spicetify -v`
  - Dribbblish version [e.g. 3.0.1] from `Dribblish Settings > About`
 
