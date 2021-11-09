@@ -1,5 +1,7 @@
 import svgUndo from "../svg/undo.svg";
 
+const IGNORED_TYPES = ["button"];
+
 export default class ConfigMenu {
     /**
      * @typedef {Object} DribbblishConfigItem
@@ -7,7 +9,7 @@ export default class ConfigMenu {
      * @property {String|DribbblishConfigArea} [area={name: "Main Settings", order: 0}]
      * @property {any} [data={}]
      * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
-     * @property {String} key
+     * @property {String} [key] defaults to $AREA_$NAME. e.g: About_Info
      * @property {String} name
      * @property {String} [description=""]
      * @property {any} [defaultValue]
@@ -98,14 +100,24 @@ export default class ConfigMenu {
         elem.setAttribute("hidden", options.hidden);
         if (options.childOf) elem.setAttribute("parent", options.childOf);
         elem.innerHTML = /* html */ `
-            <h2 class="x-settings-title main-type-cello${!options.description ? " no-desc" : ""}" as="h2">
-                ${options.name}
-                ${["button"].includes(options.type) ? "" : /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${svgUndo}</button>`}
-            </h2>
-            <label class="main-type-mesto">${options.description.replace(/\n/g, "<br>")}</label>
-            <label class="x-toggle-wrapper x-settings-secondColumn">
-                ${options.input}
-            </label>
+            ${
+                options.name != null && options.description != null
+                    ? /* html */ `
+                        <div class="dribbblish-config-item-header">
+                            <h2 class="x-settings-title main-type-cello" as="h2" empty="${options.name == null}">
+                                ${options.name}
+                                ${IGNORED_TYPES.includes(options.type) ? "" : /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${svgUndo}</button>`}
+                            </h2>
+                            <label class="main-type-mesto" empty="${options.description == null}">${options.description.replace(/\n/g, "<br>")}</label>
+                        </div>
+                    `
+                    : ""
+            }
+            <div class="dribbblish-config-item-input">
+                <label class="x-toggle-wrapper x-settings-secondColumn">
+                    ${options.input}
+                </label>
+            </div>
         `;
 
         if (options.insertOnTop && parent.children.length > 0) {
@@ -152,6 +164,7 @@ export default class ConfigMenu {
         // Set Defaults
         options = { ...defaultOptions, ...options };
         if (typeof options.area == "string") options.area = { name: options.area, order: 0 };
+        if (options.key == null) options.key = `${options.area.name}_${options.name}`.split(" ").join("_");
         options.description = options.description
             .split("\n")
             .filter((line) => line.trim() != "")
@@ -406,5 +419,16 @@ export default class ConfigMenu {
 
     getOptions(key) {
         return this.#config[key];
+    }
+
+    export() {
+        const obj = {};
+        Object.entries(this.#config).forEach(([key, val]) => {
+            if (IGNORED_TYPES.includes(val.type)) return;
+            if (!obj.hasOwnProperty(val.area.name)) obj[val.area.name] = {};
+            obj[val.area.name][key] = this.get(key);
+        });
+
+        return obj;
     }
 }

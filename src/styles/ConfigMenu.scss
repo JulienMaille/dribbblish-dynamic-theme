@@ -87,11 +87,10 @@
                         position: relative;
                         width: 100%;
                         height: min-content;
-                        display: grid;
-                        grid-template-columns: 1fr auto;
-                        grid-template-rows: auto auto;
-                        gap: 5px 10px;
-                        grid-template-areas: "header input" "description input";
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 10px;
 
                         &[parent] {
                             padding-left: 16px;
@@ -101,38 +100,49 @@
                             display: none;
                         }
 
-                        > {
-                            .x-settings-title {
-                                display: flex;
-                                gap: 10px;
-                                align-items: center;
-                                grid-area: header;
-                                margin: 0px;
-                                height: min-content;
-                                position: relative;
-                                bottom: 0px;
+                        .dribbblish-config-item-header {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            gap: 5px;
 
-                                &.no-desc {
-                                    bottom: -10px;
+                            > {
+                                & [empty="true"] {
+                                    display: none;
                                 }
 
-                                .dribbblish-config-item-reset {
-                                    padding: 0px;
-                                    color: spiceColor("text");
-                                    width: 1em;
-                                    height: 1em;
+                                .x-settings-title {
+                                    display: flex;
+                                    gap: 10px;
+                                    align-items: center;
+                                    grid-area: header;
+                                    margin: 0px;
+                                    height: min-content;
+                                    position: relative;
+                                    bottom: 0px;
+
+                                    .dribbblish-config-item-reset {
+                                        padding: 0px;
+                                        color: spiceColor("text");
+                                        width: 1em;
+                                        height: 1em;
+                                    }
+                                }
+
+                                .main-type-mesto {
+                                    grid-area: description;
+                                    height: min-content;
+                                    color: spiceColor("subtext");
+                                }
+
+                                .x-settings-secondColumn {
+                                    grid-area: input;
                                 }
                             }
+                        }
 
-                            .main-type-mesto {
-                                grid-area: description;
-                                height: min-content;
-                                color: spiceColor("subtext");
-                            }
-
-                            .x-settings-secondColumn {
-                                grid-area: input;
-                            }
+                        .dribbblish-config-item-input {
+                            min-width: fit-content;
                         }
                     }
                 }

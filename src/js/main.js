@@ -347,10 +347,12 @@ DribbblishShared.config.register({
 
 // waitForElement because Spicetify is not initialized at startup
 waitForElement(["#main"], () => {
+    DribbblishShared.config.registerArea({ name: "About", order: 999, toggleable: false });
+
     DribbblishShared.config.register({
-        area: { name: "About", order: 999, toggleable: false },
+        area: "About",
         type: "button",
-        key: "aboutDribbblish",
+        key: "aboutDribbblishInfo",
         name: "Info",
         description: `
             OS: ${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}
@@ -359,11 +361,81 @@ waitForElement(["#main"], () => {
             Dribbblish: v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}
         `,
         data: "Copy",
-        onChange: (val) => {
-            copyToClipboard(DribbblishShared.config.getOptions("aboutDribbblish").description);
+        onChange: () => {
+            copyToClipboard(DribbblishShared.config.getOptions("aboutDribbblishInfo").description);
             Spicetify.showNotification("Copied Versions");
         }
     });
+
+    DribbblishShared.config.register({
+        area: "About",
+        type: "button",
+        key: "aboutDribbblishBugs",
+        name: "Report Bugs",
+        data: "Create Report",
+        onChange: () => {
+            const reportBody = `
+                **Describe the bug**
+                A clear and concise description of what the bug is.
+                
+                **To Reproduce**
+                Steps to reproduce the behavior:
+                
+                **Screenshots**
+                If applicable, add screenshots to help explain your problem.
+
+                **Logs**
+                Add logs from console. To do that
+                1. Run \`spicetify enable-devtool\` in terminal
+                2. Spotify will be restarted
+                3. Hit <kbd>Ctrl + Shift + I</kbd> to open DevTools window
+                4. Navigate to tab Console
+                5. Copy console window content.
+
+                \`\`\`console
+                (Please paste here console logs or attach a screenshot)
+                \`\`\`
+
+                ---
+
+                ### Info for Contributors:
+                
+                **Versions**
+                ${DribbblishShared.config.getOptions("aboutDribbblishInfo").description}
+
+                **Extensions**
+                ${$(`script[src^="extensions/"]`)
+                    .toArray()
+                    .map((e) => `- ${e.src.split("/").slice(-1)[0]}`)
+                    .join("\n")}
+
+                **Settings**
+                \`\`\`json
+                ${JSON.stringify(DribbblishShared.config.export(), null, 4)}
+                \`\`\`
+            `
+                .split("\n")
+                .map((line) => line.replace(/^ {16}/, ""))
+                .join("\n");
+
+            const reportURL = new URL("https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/new");
+            reportURL.searchParams.set("labels", "bug");
+            reportURL.searchParams.set("body", reportBody);
+
+            window.open(reportURL.toString(), "_blank");
+        }
+    });
+
+    DribbblishShared.config.register({
+        area: "About",
+        type: "button",
+        key: "aboutDribbblishChangelog",
+        name: "Changelog",
+        data: "Open",
+        onChange: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases", "_blank")
+    });
+
+    // TODO: Add Export / Import buttons for config
 });
 
 function capitalizeFirstLetter(string) {
