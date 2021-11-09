@@ -111,7 +111,7 @@ waitForElement(["#main"], () => {
         name: "Show Album Info in Playbar",
         description: "Show Album Name and Year in the Playbar",
         defaultValue: true,
-        onChange: (val) => $("#main-trackInfo-year").css("display", val ? "block" : "none")
+        onChange: (val) => $("#main").attr("playbar-album-info", val)
     });
 
     DribbblishShared.config.register({

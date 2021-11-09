@@ -660,6 +660,14 @@ input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
     }
 }
 
+#main-trackInfo-year {
+    display: block;
+
+    #main[playbar-album-info="false"] & {
+        display: none;
+    }
+}
+
 .main-topBar-topbarContent .main-playButton-PlayButton {
     --size: 35px !important;
 }
