@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve (Preferably open this report from inside the dribbblish settings `About > Report Bugs` as it adds additional info automatically)
+about: Create a report to help us improve (After v3.1.1, preferably open this report from inside the dribbblish settings `About > Report Bugs` as it adds additional info automatically)
 title: ""
 labels: ["bug"]
 assignees: ""
