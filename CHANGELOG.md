@@ -1,2 +1,2 @@
 Added:
-- `Report Bug` and `Changelog` buttons to `Settings > About`
+- `Report Bugs` and `Changelog` buttons to `Settings > About`

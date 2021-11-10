@@ -3,6 +3,7 @@ import chroma from "chroma-js";
 import $ from "jquery";
 import moment from "moment";
 
+import { waitForElement, copyToClipboard, capitalizeFirstLetter } from "./Util";
 import ConfigMenu from "./ConfigMenu";
 
 class _DribbblishShared {
@@ -124,15 +125,6 @@ waitForElement(["#main"], () => {
         onChange: (val) => $("#main").attr("hide-ads", val)
     });
 });
-
-function waitForElement(els, func, timeout = 100) {
-    const queries = els.map((el) => document.querySelector(el));
-    if (queries.every((a) => a)) {
-        func(queries);
-    } else if (timeout > 0) {
-        setTimeout(waitForElement, 300, els, func, --timeout);
-    }
-}
 
 waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"] li`], ([root, firstItem]) => {
     const listElem = firstItem.parentElement;
@@ -347,7 +339,7 @@ DribbblishShared.config.register({
 
 // waitForElement because Spicetify is not initialized at startup
 waitForElement(["#main"], () => {
-    DribbblishShared.config.registerArea({ name: "About", order: 999, toggleable: false });
+    DribbblishShared.config.registerArea({ name: "About", order: 999 });
 
     DribbblishShared.config.register({
         area: "About",
@@ -372,6 +364,7 @@ waitForElement(["#main"], () => {
         type: "button",
         key: "aboutDribbblishBugs",
         name: "Report Bugs",
+        description: "Open new issue on GitHub",
         data: "Create Report",
         onChange: () => {
             const reportBody = `
@@ -431,27 +424,11 @@ waitForElement(["#main"], () => {
         type: "button",
         key: "aboutDribbblishChangelog",
         name: "Changelog",
+        description: "Open GitHub releases page",
         data: "Open",
         onChange: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases", "_blank")
     });
-
-    // TODO: Add Export / Import buttons for config
 });
-
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function copyToClipboard(text) {
-    var input = document.createElement("textarea");
-    input.style.display = "fixed";
-    input.innerHTML = text;
-    document.body.appendChild(input);
-    input.select();
-    var result = document.execCommand("copy");
-    document.body.removeChild(input);
-    return result;
-}
 
 /* js */
 async function getAlbumRelease(uri) {
