@@ -128,7 +128,7 @@ export default class ConfigMenu {
 
         const resetButton = elem.querySelector(".dribbblish-config-item-reset");
         if (resetButton) {
-            elem.querySelector(".dribbblish-config-item-reset").addEventListener("click", () => {
+            resetButton.addEventListener("click", () => {
                 this.reset(options.key);
                 const defaultVal = this.get(options.key);
                 if (options.type == "checkbox") {

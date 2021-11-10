@@ -6,6 +6,7 @@ export function waitForElement(els, func, timeout = 100) {
         setTimeout(waitForElement, 300, els, func, --timeout);
     }
 }
+
 export function copyToClipboard(text) {
     var input = document.createElement("textarea");
     input.style.display = "fixed";
