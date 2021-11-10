@@ -425,8 +425,7 @@ export default class ConfigMenu {
         const obj = {};
         Object.entries(this.#config).forEach(([key, val]) => {
             if (IGNORED_TYPES.includes(val.type)) return;
-            if (!obj.hasOwnProperty(val.area.name)) obj[val.area.name] = {};
-            obj[val.area.name][key] = this.get(key);
+            obj[key] = this.get(key);
         });
 
         return obj;
