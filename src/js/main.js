@@ -47,7 +47,7 @@ DribbblishShared.config.register({
     type: "number",
     key: "sidebarGapLeft",
     name: "Left Sidebar Gap Size",
-    description: "Set gap size between sidebar icons (in pixels).",
+    description: "Set gap size between sidebar icons (in `pixels`).",
     defaultValue: 5,
     data: {
         min: 0
@@ -60,7 +60,7 @@ DribbblishShared.config.register({
     type: "number",
     key: "sidebarGapRight",
     name: "Right Sidebar Gap Size",
-    description: "Set gap size between sidebar icons (in pixels).",
+    description: "Set gap size between sidebar icons (in `pixels`).",
     defaultValue: 32,
     data: {
         min: 0
@@ -120,7 +120,7 @@ waitForElement(["#main"], () => {
         type: "checkbox",
         key: "hideAds",
         name: "Hide Ads",
-        description: `Hide ads / premium features (see: <a href="https://github.com/Daksh777/SpotifyNoPremium">SpotifyNoPremium</a>)`,
+        description: `Hide ads / premium features (see: [SpotifyNoPremium](https://github.com/Daksh777/SpotifyNoPremium))`,
         defaultValue: false,
         onChange: (val) => $("#main").attr("hide-ads", val)
     });
@@ -347,14 +347,14 @@ waitForElement(["#main"], () => {
         key: "aboutDribbblishInfo",
         name: "Info",
         description: `
-            OS: ${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}
-            Spotify: v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}
-            Spicetify: ${Spicetify.version != null ? `v${Spicetify.version}` : "<= v2.7.2"}
-            Dribbblish: v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}
+            OS: \`${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}\`
+            Spotify: \`v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}\`
+            Spicetify: \`${Spicetify.version != null ? `v${Spicetify.version}` : "<= v2.7.2"}\`
+            Dribbblish: \`v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}\`
         `,
         data: "Copy",
-        onChange: () => {
-            copyToClipboard(DribbblishShared.config.getOptions("aboutDribbblishInfo").description);
+        onChange: function () {
+            copyToClipboard(this.description.replace(/\`/g, ""));
             Spicetify.showNotification("Copied Versions");
         }
     });

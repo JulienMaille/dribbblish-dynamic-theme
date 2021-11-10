@@ -1,3 +1,5 @@
+import MarkdownIt from "markdown-it";
+
 import svgUndo from "../svg/undo.svg";
 
 const IGNORED_TYPES = ["button"];
@@ -57,6 +59,11 @@ export default class ConfigMenu {
         this.#config = {};
         this.configButton = new Spicetify.Menu.Item("Dribbblish Settings", false, () => this.open());
         this.configButton.register();
+        this.md = MarkdownIt({
+            html: true,
+            breaks: true,
+            linkify: true
+        });
 
         const container = document.createElement("div");
         container.id = "dribbblish-config";
@@ -108,7 +115,7 @@ export default class ConfigMenu {
                                 ${options.name}
                                 ${IGNORED_TYPES.includes(options.type) ? "" : /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${svgUndo}</button>`}
                             </h2>
-                            <label class="main-type-mesto" empty="${options.description == null}">${options.description.replace(/\n/g, "<br>")}</label>
+                            <label class="main-type-mesto" empty="${options.description == null}" markdown>${this.md.render(options.description)}</label>
                         </div>
                     `
                     : ""
