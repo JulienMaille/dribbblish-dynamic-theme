@@ -4,6 +4,7 @@
 }
 
 @import "Colors";
+@import "Fonts";
 @import "Inputs";
 @import "ConfigMenu";
 @import "ContextMenu.scss";
@@ -20,41 +21,6 @@
     --image-radius: 10px;
     --sidebar-icons-border-radius: 50vh; // 50vh = round / pill
     --song-transition-speed: 3s;
-}
-
-@font-face {
-    font-family: "Google Sans Display";
-    src: url("glue-resources/fonts/GoogleSansDisplayRegular.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: "Google Sans Display";
-    src: url("glue-resources/fonts/GoogleSansDisplayMedium.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 500;
-}
-
-@font-face {
-    font-family: "Roboto";
-    src: url("glue-resources/fonts/Roboto.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: "Roboto";
-    src: url("glue-resources/fonts/RobotoMedium.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 500;
-}
-
-body {
-    --glue-font-family: "Google Sans Display", "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
-    --info-font-family: "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
-    font-family: var(--glue-font-family);
-    letter-spacing: normal;
 }
 
 .os-scrollbar-handle {

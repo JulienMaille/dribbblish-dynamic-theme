@@ -1,0 +1,32 @@
+// GoogleSans: https://www.cufonfonts.com/font/google-sans
+// Roboto:     https://fonts.google.com/specimen/Roboto
+$font-names: (
+    "glue": "GoogleSans",
+    "info": "Roboto"
+);
+$font-styles: (
+    "Thin": 100,
+    "Light": 300,
+    "Regular": 400,
+    "Medium": 500,
+    "Bold": 700,
+    "Black": 900
+);
+
+@each $prefix, $font in $font-names {
+    @each $style, $weight in $font-styles {
+        @font-face {
+            font-family: $font;
+            font-weight: $weight;
+            font-style: normal;
+            src: url("glue-resources/fonts/#{$font}-#{$style}.ttf") format("truetype");
+        }
+    }
+}
+
+body {
+    --glue-font-family: #{map-get($font-names, "glue")}, #{map-get($font-names, "info")}, spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
+    --info-font-family: #{map-get($font-names, "info")}, spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
+    font-family: var(--glue-font-family);
+    letter-spacing: normal;
+}
