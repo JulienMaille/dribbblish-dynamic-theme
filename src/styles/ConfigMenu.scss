@@ -100,12 +100,12 @@
                         align-items: center;
                         gap: 10px;
 
-                        &[parent] {
-                            padding-left: 16px;
+                        &[hidden] {
+                            display: none;
                         }
 
-                        &[hidden="true"] {
-                            display: none;
+                        &[parent] {
+                            padding-left: 16px;
                         }
 
                         .dribbblish-config-item-header {

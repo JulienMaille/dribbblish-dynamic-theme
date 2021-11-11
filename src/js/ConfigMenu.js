@@ -1,3 +1,4 @@
+import $ from "jquery";
 import MarkdownIt from "markdown-it";
 import MarkdownItAttrs from "markdown-it-attrs";
 
@@ -82,16 +83,16 @@ export default class ConfigMenu {
         `;
 
         document.body.appendChild(container);
-        document.querySelector(".dribbblish-config-close").addEventListener("click", () => this.close());
-        document.querySelector(".dribbblish-config-backdrop").addEventListener("click", () => this.close());
+        $(".dribbblish-config-close").on("click", () => this.close());
+        $(".dribbblish-config-backdrop").on("click", () => this.close());
     }
 
     open() {
-        document.getElementById("dribbblish-config").setAttribute("active", "");
+        $("#dribbblish-config").attr("active", true);
     }
 
     close() {
-        document.getElementById("dribbblish-config").removeAttribute("active");
+        $("#dribbblish-config").removeAttr("active");
     }
 
     /**
@@ -107,7 +108,7 @@ export default class ConfigMenu {
         elem.classList.add("dribbblish-config-item");
         elem.setAttribute("key", options.key);
         elem.setAttribute("type", options.type);
-        elem.setAttribute("hidden", options.hidden);
+        if (options.hidden) elem.setAttribute("hidden", true);
         if (options.childOf) elem.setAttribute("parent", options.childOf);
         elem.innerHTML = /* html */ `
             ${
@@ -136,15 +137,17 @@ export default class ConfigMenu {
             parent.appendChild(elem);
         }
 
-        const resetButton = elem.querySelector(".dribbblish-config-item-reset");
-        if (resetButton) {
-            resetButton.addEventListener("click", () => {
+        const $inputElem = $(elem).find("input, textarea, select");
+        const $resetButton = $(elem).find(".dribbblish-config-item-reset");
+
+        if ($resetButton.length > 0) {
+            $resetButton.on("click", () => {
                 this.reset(options.key);
                 const defaultVal = this.get(options.key);
                 if (options.type == "checkbox") {
-                    elem.querySelector("input").checked = defaultVal;
+                    $inputElem.prop("checked", defaultVal);
                 } else {
-                    elem.querySelector("input, select").value = defaultVal;
+                    $inputElem.prop("value", defaultVal);
                 }
                 options.onChange(defaultVal);
             });
@@ -201,7 +204,7 @@ export default class ConfigMenu {
             `;
             this.addInputHTML({ ...options, input });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("change", (e) => {
+            $(`#dribbblish-config-input-${options.key}`).on("change", (e) => {
                 this.set(options.key, e.target.checked);
                 options.onChange(this.get(options.key));
             });
@@ -219,7 +222,7 @@ export default class ConfigMenu {
             `;
             this.addInputHTML({ ...options, input });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("change", (e) => {
+            $(`#dribbblish-config-input-${options.key}`).on("change", (e) => {
                 this.set(options.key, e.target.value);
                 options.onChange(this.get(options.key));
             });
@@ -236,7 +239,7 @@ export default class ConfigMenu {
             `;
             this.addInputHTML({ ...options, input });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("click", (e) => {
+            $(`#dribbblish-config-input-${options.key}`).on("click", (e) => {
                 options.onChange(true);
             });
         } else if (options.type == "number") {
@@ -259,11 +262,11 @@ export default class ConfigMenu {
             this.addInputHTML({ ...options, input });
 
             // Prevent inputting +, - and e. Why is it even possible in the first place?
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("keypress", (e) => {
+            $(`#dribbblish-config-input-${options.key}`).on("keypress", (e) => {
                 if (["+", "-", "e"].includes(e.key)) e.preventDefault();
             });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("input", (e) => {
+            $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 if (options.data.min != null && e.target.value < options.data.min) e.target.value = options.data.min;
                 if (options.data.max != null && e.target.value > options.data.max) e.target.value = options.data.max;
 
@@ -278,7 +281,7 @@ export default class ConfigMenu {
             `;
             this.addInputHTML({ ...options, input });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("input", (e) => {
+            $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 // TODO: maybe add an validation function via `data.validate`
                 this.set(options.key, e.target.value);
                 options.onChange(this.get(options.key));
@@ -304,9 +307,10 @@ export default class ConfigMenu {
             `;
             this.addInputHTML({ ...options, input });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("input", (e) => {
-                document.getElementById(`dribbblish-config-input-${options.key}`).setAttribute("tooltip", `${e.target.value}${options.data?.suffix ?? ""}`);
-                document.getElementById(`dribbblish-config-input-${options.key}`).setAttribute("value", e.target.value);
+            $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
+                $(`#dribbblish-config-input-${options.key}`).attr("tooltip", `${e.target.value}${options.data?.suffix ?? ""}`);
+                $(`#dribbblish-config-input-${options.key}`).attr("value", e.target.value);
+
                 this.set(options.key, Number(e.target.value));
                 options.onChange(this.get(options.key));
             });
@@ -318,8 +322,9 @@ export default class ConfigMenu {
             `;
             this.addInputHTML({ ...options, input });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("input", (e) => {
-                document.getElementById(`dribbblish-config-input-${options.key}`).setAttribute("value", e.target.value);
+            $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
+                $(`#dribbblish-config-input-${options.key}`).attr("value", e.target.value);
+
                 this.set(options.key, e.target.value);
                 options.onChange(this.get(options.key));
             });
@@ -331,7 +336,7 @@ export default class ConfigMenu {
             `;
             this.addInputHTML({ ...options, input });
 
-            document.getElementById(`dribbblish-config-input-${options.key}`).addEventListener("input", (e) => {
+            $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 this.set(options.key, e.target.value);
                 options.onChange(this.get(options.key));
             });
@@ -424,7 +429,7 @@ export default class ConfigMenu {
      */
     setHidden(key, hidden) {
         this.#config[key].hidden = hidden;
-        document.querySelector(`.dribbblish-config-item[key="${key}"]`).setAttribute("hidden", hidden);
+        document.querySelector(`.dribbblish-config-item[key="${key}"]`).toggleAttribute("hidden", hidden);
     }
 
     getOptions(key) {
