@@ -545,7 +545,7 @@ DribbblishShared.config.register({
     description: "Select Dark / Bright mode",
     defaultValue: "dark",
     showChildren: (val) => {
-        if (val == 2) return ["darkModeOnTime", "darkModeOffTime"];
+        if (val == "time") return ["darkModeOnTime", "darkModeOffTime"];
         //if (val == 3) return [""];
         return false;
     },
