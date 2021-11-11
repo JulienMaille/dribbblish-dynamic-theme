@@ -42,26 +42,28 @@ textarea {
             }
         }
 
-        &::after {
-            z-index: 9999;
-            content: attr(tooltip);
-            position: absolute;
-            min-width: 50px;
-            top: -10px;
-            left: 50%;
-            transform: translateX(calc(-50%));
-            padding: 0 5px;
-            border-radius: 4px;
-            text-align: center;
-            color: spiceColor("sidebar-text");
-            background-color: spiceColor("button");
-            transition: opacity 0.25s ease;
-            opacity: 0;
-        }
+        &[tooltip] {
+            &::after {
+                z-index: 9999;
+                content: attr(tooltip);
+                position: absolute;
+                min-width: 50px;
+                top: -22px;
+                left: 50%;
+                transform: translateX(calc(-50%));
+                padding: 0 5px;
+                border-radius: 4px;
+                text-align: center;
+                color: spiceColor("sidebar-text");
+                background-color: spiceColor("button");
+                transition: opacity 0.25s ease;
+                opacity: 0;
+            }
 
-        &:hover::after,
-        &:active::after {
-            opacity: 1;
+            &:hover::after,
+            &:active::after {
+                opacity: 1;
+            }
         }
 
         &:focus {
