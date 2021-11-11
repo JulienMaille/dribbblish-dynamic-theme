@@ -355,7 +355,7 @@ waitForElement(["#main"], () => {
         data: "Copy",
         onChange: function () {
             copyToClipboard(this.description.replace(/\`/g, ""));
-            Spicetify.showNotification("Copied Versions");
+            Spicetify.showNotification("Copied!");
         }
     });
 
@@ -546,7 +546,6 @@ DribbblishShared.config.register({
     defaultValue: "dark",
     showChildren: (val) => {
         if (val == "time") return ["darkModeOnTime", "darkModeOffTime"];
-        //if (val == 3) return [""];
         return false;
     },
     onChange: (val) => {

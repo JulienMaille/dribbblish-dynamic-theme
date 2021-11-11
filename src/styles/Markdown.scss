@@ -1,3 +1,11 @@
 *[markdown] {
-    // This would be where we change any styles associated with markdown
+    code {
+        background-color: spiceColor("subtext", 0.1);
+        padding: 0px 5px;
+        border-radius: 3px;
+    }
+
+    .muted {
+        opacity: 0.5;
+    }
 }

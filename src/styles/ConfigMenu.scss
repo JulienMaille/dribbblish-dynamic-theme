@@ -9,6 +9,14 @@
 
     &[active] {
         display: flex;
+
+        & ~ #main::after {
+            z-index: 4;
+            position: absolute;
+            content: "";
+            inset: 0px;
+            backdrop-filter: blur(3px) brightness(60%);
+        }
     }
 
     .dribbblish-config-container {
@@ -133,6 +141,7 @@
                                     grid-area: description;
                                     height: min-content;
                                     color: spiceColor("subtext");
+                                    line-height: calc(1em + 6px); // To have line gaps
                                 }
 
                                 .x-settings-secondColumn {
@@ -154,6 +163,5 @@
         position: absolute;
         content: "";
         inset: 0px;
-        backdrop-filter: blur(3px) brightness(60%);
     }
 }

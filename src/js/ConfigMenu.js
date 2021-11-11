@@ -1,4 +1,5 @@
 import MarkdownIt from "markdown-it";
+import MarkdownItAttrs from "markdown-it-attrs";
 
 import svgUndo from "../svg/undo.svg";
 
@@ -62,8 +63,10 @@ export default class ConfigMenu {
         this.md = MarkdownIt({
             html: true,
             breaks: true,
-            linkify: true
+            linkify: true,
+            typographer: true
         });
+        this.md.use(MarkdownItAttrs);
 
         const container = document.createElement("div");
         container.id = "dribbblish-config";
