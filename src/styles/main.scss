@@ -1275,3 +1275,9 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 canvas[width="250"][height="250"] {
     display: none;
 }
+
+// workaround to remove gradient near album info #103
+.main-trackInfo-container > div > div:before,
+.main-trackInfo-container > div > div:after {
+	display: none;
+}
