@@ -51,7 +51,7 @@
 .main-type-ballad,
 .main-type-balladBold,
 .main-type-canon {
-    font-family: var(--info-font-family);
+    @include spiceFont("info");
     letter-spacing: normal;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .lyrics-lyricsContainer-LyricsLine {
-    font-family: var(--glue-font-family);
+    @include spiceFont("glue");
     letter-spacing: -0.03em !important;
 }
 
@@ -836,7 +836,6 @@ li.GlueDropTarget {
 .main-nowPlayingWidget-nowPlaying {
     justify-content: center;
 
-    // Workaround for #73 (https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/73)
     & button {
         color: spiceColor("subtext");
 
@@ -901,9 +900,9 @@ li.GlueDropTarget {
 
 .main-collectionLinkButton-collectionLinkText,
 .main-createPlaylistButton-text,
-.main-navBar-navBarLink > span {
-    font-size: 14px;
-    font-weight: 400;
+.main-navBar-navBarLink > span,
+.main-rootlist-rootlistItemLink > span {
+    @include spiceFont("info", 14px, "Regular");
     letter-spacing: normal;
     line-height: 20px;
     text-transform: none;

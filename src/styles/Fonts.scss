@@ -4,7 +4,7 @@ $font-names: (
     "glue": "GoogleSans",
     "info": "Roboto"
 );
-$font-styles: (
+$font-weights: (
     "Thin": 100,
     "Light": 300,
     "Regular": 400,
@@ -13,8 +13,9 @@ $font-styles: (
     "Black": 900
 );
 
+// add @font-face rules
 @each $prefix, $font in $font-names {
-    @each $style, $weight in $font-styles {
+    @each $style, $weight in $font-weights {
         @font-face {
             font-family: $font;
             font-weight: $weight;
@@ -24,6 +25,30 @@ $font-styles: (
     }
 }
 
+// spiceFont mixin
+@mixin spiceFont($type: "glue", $size: null, $weight: null) {
+    @if map-has-key($font-names, $type) {
+        font-family: var(--#{$type}-font-family);
+    } @else {
+        @error "$type is invalid";
+    }
+
+    @if $size != null {
+        font-size: $size;
+    }
+
+    @if $weight != null {
+        @if type-of($weight) == "number" and unit($weight) == "" {
+            font-weight: $weight;
+        } @else if map-has-key($font-weights, $weight) {
+            font-weight: #{map-get($font-weights, $weight)};
+        } @else {
+            @error "$weight is invalid";
+        }
+    }
+}
+
+// set font variables
 body {
     --glue-font-family: #{map-get($font-names, "glue")}, #{map-get($font-names, "info")}, spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
     --info-font-family: #{map-get($font-names, "info")}, spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
