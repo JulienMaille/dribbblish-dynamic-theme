@@ -4,3 +4,4 @@ Added:
 
 Fixed:
 - Fonts looking blurry
+- Notification popups are now visible when the (dribbblish) settings are open
