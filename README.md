@@ -23,7 +23,7 @@ Right click at folder and choose images for your playlist folder. Every image fo
 <img src="showcase-images/playlist-folders.gif" alt="img" width="500px"> 
 
 ### Left/Right expanded cover
-In profile menu, toggle option "Right expanded cover" to change expaned current track cover image to left or right side, whereever you prefer.
+In profile menu, toggle option "Right expanded cover" to change expanded current track cover image to left or right side, wherever you prefer.
 
 ## Install / Update
 Make sure you are using spicetify >= v2.6.0 and Spotify >= v1.1.67.
@@ -53,7 +53,7 @@ curl -fsSL https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-the
      ```
 
 ## IMPORTANT!
-From Spotify > v1.1.62, in sidebar, they use an adaptive render mechanic to actively show and hide items on scroll. It helps reducing number of items to render, hence there is significant performance boost if you have a large playlists collection. But the drawbacks is that item height is hard-coded, it messes up user interaction when we explicity change, in CSS, playlist item height bigger than original value. So you need to add these 2 lines in Patch section in config file:
+From Spotify > v1.1.62, in sidebar, they use an adaptive render mechanic to actively show and hide items on scroll. It helps reducing number of items to render, hence there is significant performance boost if you have a large playlists collection. But the drawbacks is that item height is hard-coded, it messes up user interaction when we explicitly change, in CSS, playlist item height bigger than original value. So you need to add these 2 lines in Patch section in config file:
 ```ini
 [Patch]
 xpui.js_find_8008 = ,(\w+=)32,
