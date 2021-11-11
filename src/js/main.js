@@ -476,7 +476,7 @@ let sidebarColor = chroma($("html").css("--spice-sidebar")).hex();
 
 function setRootColor(name, color) {
     $("html").css(`--spice-${name}`, chroma(color).hex());
-    $("html").css(`--spice-${name}-rgb`, chroma(color).rgb().join(","));
+    $("html").css(`--spice-rgb-${name}`, chroma(color).rgb().join(","));
 }
 
 function toggleDark(setDark) {

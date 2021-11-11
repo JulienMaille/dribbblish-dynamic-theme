@@ -17,14 +17,6 @@ $colors: (
     misc: #bfbfbf
 );
 
-// Set initial Vars
-:root {
-    @each $key, $color in $colors {
-        --spice-#{$key}: #{$color};
-        --spice-#{$key}-rgb: #{red($color)}, #{green($color)}, #{blue($color)};
-    }
-}
-
 // Set Transitions
 @each $key, $color in $colors {
     @property --spice-#{$key} {
@@ -33,7 +25,7 @@ $colors: (
         inherits: true;
     }
 
-    @property --spice-#{$key}-rgb {
+    @property --spice-rgb-#{$key} {
         syntax: "<number>, <number>, <number>";
         initial-value: #{red($color)}, #{green($color)}, #{blue($color)};
         inherits: true;
@@ -46,7 +38,7 @@ $props-to-transition: ("sidebar", "main", "text", "button");
 
     @each $key in $props-to-transition {
         $props: append($props, --spice-#{$key}, comma);
-        $props: append($props, --spice-#{$key}-rgb, comma);
+        $props: append($props, --spice-rgb-#{$key}, comma);
     }
 
     transition: all var(--song-transition-speed) linear;
@@ -58,6 +50,6 @@ $props-to-transition: ("sidebar", "main", "text", "button");
     @if $alpha == 1 {
         @return var(--spice-#{$key});
     } @else {
-        @return rgba(var(--spice-#{$key}-rgb), $alpha);
+        @return rgba(var(--spice-rgb-#{$key}), $alpha);
     }
 }
