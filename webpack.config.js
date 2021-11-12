@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("path");
 
@@ -69,9 +68,5 @@ module.exports = {
         new CopyPlugin({
             patterns: [{ from: "src/assets", to: "assets" }]
         })
-    ],
-    optimization: {
-        minimize: true,
-        minimizer: [`...`, new CssMinimizerPlugin()]
-    }
+    ]
 };
