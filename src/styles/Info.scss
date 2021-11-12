@@ -1,0 +1,38 @@
+#dribbblish-info-container {
+    display: flex;
+    gap: 8px;
+    margin-right: 8px;
+    height: 100%;
+
+    &:empty {
+        display: none;
+    }
+
+    & > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 100%;
+        padding: 0px 10px;
+        color: spiceColor("sidebar-text");
+        background-color: spiceColor("button");
+        border-radius: var(--sidebar-icons-border-radius);
+        line-height: 13px;
+        @include spiceFont("glue", 14px);
+
+        &[clickable] {
+            cursor: pointer;
+        }
+
+        &[icon-only] {
+            padding: 0px;
+            aspect-ratio: 1/1;
+        }
+
+        & svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

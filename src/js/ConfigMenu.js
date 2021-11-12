@@ -2,7 +2,7 @@ import $ from "jquery";
 import MarkdownIt from "markdown-it";
 import MarkdownItAttrs from "markdown-it-attrs";
 
-import svgUndo from "../svg/undo.svg";
+import svgUndo from "svg/undo";
 
 export default class ConfigMenu {
     /**

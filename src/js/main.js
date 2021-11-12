@@ -5,13 +5,15 @@ import moment from "moment";
 
 import { waitForElement, copyToClipboard, capitalizeFirstLetter } from "./Util";
 import ConfigMenu from "./ConfigMenu";
+import Info from "./Info";
 
-class _DribbblishShared {
-    constructor() {
-        this.config = new ConfigMenu();
-    }
-}
-const DribbblishShared = new _DribbblishShared();
+import svgArrowDown from "svg/arrow-down";
+import svgCode from "svg/code";
+
+const DribbblishShared = {
+    config: new ConfigMenu(),
+    info: new Info()
+};
 
 DribbblishShared.config.register({
     type: "checkbox",
@@ -741,39 +743,16 @@ function registerCoverListener() {
 registerCoverListener();
 
 // Check latest release every 10m
-waitForElement([".main-userWidget-box"], ([userWidget]) => {
+waitForElement([".main-topBar-container"], ([topBarContainer]) => {
     function checkForUpdate() {
         fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
-            .then((response) => {
-                return response.json();
-            })
+            .then((response) => response.json())
             .then((data) => {
-                let upd;
-                if (!document.getElementById("dribbblish-update")) {
-                    upd = document.createElement("div");
-                    upd.id = "dribbblish-update";
-                    //upd.setAttribute("title", `Changes: ${data.name}`);
-                    userWidget.append(upd);
-                } else {
-                    upd = document.getElementById("dribbblish-update");
-                }
-
-                upd.style.display = "block";
-                userWidget.classList.add("update-avail");
-                if (process.env.DRIBBBLISH_VERSION == "Dev") {
-                    upd.innerText = "Dev version!";
-                } else if (data.tag_name > process.env.DRIBBBLISH_VERSION) {
-                    upd.innerText = `Theme UPD v${data.tag_name} avail.`;
-                    new Spicetify.Menu.Item("Update Dribbblish", false, () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank")).register();
-                } else {
-                    userWidget.classList.remove("update-avail");
-                    upd.style.display = "none";
-                }
+                const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
+                DribbblishShared.info.set("upd", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+                DribbblishShared.info.set("dev", isDev ? { tooltip: "Dev build", icon: svgCode } : null);
             })
-            .catch((err) => {
-                // Do something for an error here
-                console.error(err);
-            });
+            .catch(console.error);
     }
 
     setInterval(checkForUpdate(), 10 * 60 * 1000);

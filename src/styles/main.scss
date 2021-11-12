@@ -10,6 +10,7 @@
 @import "ContextMenu.scss";
 @import "NoAds";
 @import "Markdown";
+@import "Info";
 
 :root {
     --bar-height: 70px;
@@ -273,17 +274,8 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 
 .main-userWidget-box {
     background-color: transparent !important;
-}
-
-.main-userWidget-box.update-avail {
-    padding-right: 10px;
-    background-color: spiceColor("subtext", 0.1) !important;
-
-    &:hover,
-    &:active,
-    &[data-context-menu-open="true"] {
-        background-color: spiceColor("subtext", 0.15) !important;
-    }
+    padding: 0px;
+    margin: 0px;
 }
 
 .main-avatar-avatar.main-avatar-withBadge:after {
@@ -769,18 +761,6 @@ li.GlueDropTarget {
     pointer-events: none;
 }
 
-#dribbblish-update {
-    color: spiceColor("button-active");
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: normal;
-    line-height: 16px;
-    text-transform: none;
-}
-
 /** Rearrange player bar */
 .main-nowPlayingBar-left {
     order: 1;
@@ -1253,4 +1233,10 @@ canvas[width="250"][height="250"] {
 .main-trackInfo-container > div > div:before,
 .main-trackInfo-container > div > div:after {
     display: none;
+}
+
+// workaround to re-center track-info
+#main:not([player-controls="spotify"]) .main-trackInfo-container > div > div > div {
+    display: flex;
+    justify-content: center;
 }

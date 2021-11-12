@@ -10,3 +10,4 @@ Fixed:
 Improved:
 - Settings that have been changed from default will now show a line next to them. Inspired by the [Visual Studio Code settings UI](https://d33wubrfki0l68.cloudfront.net/d1f1ea4def506997ced23d3d912154794e530e1c/063d2/assets/img/blog/2020-09-17-vscode-settings/settings-ui.png)
 - Checkbox / Switch input styles are now more in line with other input styles
+- Available updates are noe shown as clickable button next to your user icon instead of having to open the user menu

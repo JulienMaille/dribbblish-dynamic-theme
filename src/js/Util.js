@@ -1,9 +1,21 @@
-export function waitForElement(els, func, timeout = 100) {
+/**
+ * @callback waitForElCb
+ * @param {HTMLElement[]} queries
+ */
+
+/**
+ *
+ * @param {String[]} els
+ * @param {waitForElCb} cb
+ * @param {Number} [tries=100]
+ * @param {Number} [interval=300]
+ */
+export function waitForElement(els, cb, tries = 100, interval = 300) {
     const queries = els.map((el) => document.querySelector(el));
     if (queries.every((a) => a)) {
-        func(queries);
-    } else if (timeout > 0) {
-        setTimeout(waitForElement, 300, els, func, --timeout);
+        cb(queries);
+    } else if (tries > 0) {
+        setTimeout(waitForElement, interval, els, cb, --tries);
     }
 }
 
