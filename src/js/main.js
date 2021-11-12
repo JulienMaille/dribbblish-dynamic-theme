@@ -435,7 +435,7 @@ waitForElement(["#main"], () => {
 /* js */
 async function getAlbumRelease(uri) {
     const info = await Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
-    return { year: info.year, month: info.month ?? 1, day: info.day ?? 1 };
+    return { year: info.year, month: (info.month ?? 1) - 1, day: info.day ?? 1 };
 }
 
 function isLight(hex) {
@@ -668,7 +668,7 @@ async function songchange() {
                 </span>
             </span>
         `;
-        const albumDateElem = `<span> • <span>${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
+        const albumDateElem = `<span> • <span title="${albumDate.format("L")}">${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
         albumInfoSpan.innerHTML = `${albumLinkElem}${albumDateElem}`;
     } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
         // podcast
