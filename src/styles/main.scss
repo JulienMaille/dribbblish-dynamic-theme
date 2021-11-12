@@ -475,24 +475,6 @@ html.sidebar-hide-text .GlueDropTarget span {
     display: none;
 }
 
-.x-toggle-indicatorWrapper {
-    background-color: transparent;
-    backdrop-filter: invert(0.25);
-}
-
-input:checked ~ .x-toggle-indicatorWrapper {
-    background-color: spiceColor("button", 0.4);
-}
-
-input:hover:checked ~ .x-toggle-indicatorWrapper {
-    background-color: spiceColor("button", 0.5) !important;
-}
-
-input:hover:not([disabled]):not(:active) ~ .x-toggle-indicatorWrapper {
-    background-color: transparent;
-    backdrop-filter: invert(0.4);
-}
-
 /** */
 .main-topBar-historyButtons .main-topBar-button {
     background-color: unset;
@@ -1146,17 +1128,6 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     border-radius: 5px;
 }
 
-.main-dropDown-dropDown,
-.x-sortBox-sortDropdown {
-    background-color: spiceColor("selected-row", 0.4) !important;
-    color: spiceColor("subtext");
-}
-
-.main-dropDown-dropDown:hover,
-.x-sortBox-sortDropdown:hover {
-    background-color: spiceColor("selected-row", 0.6) !important;
-}
-
 .connect-device-list-item:focus,
 .connect-device-list-item:hover {
     background-color: spiceColor("selected-row", 0.3);
@@ -1272,6 +1243,8 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     height: 100%;
 }
 
+// ! WORKAROUNDS / TEMP FIXES
+// Spotify UI breaks after advertisements #63
 canvas[width="250"][height="250"] {
     display: none;
 }
@@ -1279,5 +1252,5 @@ canvas[width="250"][height="250"] {
 // workaround to remove gradient near album info #103
 .main-trackInfo-container > div > div:before,
 .main-trackInfo-container > div > div:after {
-	display: none;
+    display: none;
 }

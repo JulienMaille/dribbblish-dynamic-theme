@@ -108,6 +108,16 @@
                             padding-left: 16px;
                         }
 
+                        &[changed]::before {
+                            content: "";
+                            position: absolute;
+                            left: -13px;
+                            top: -3px;
+                            bottom: -3px;
+                            width: 3px;
+                            background-color: spiceColor("sidebar");
+                        }
+
                         .dribbblish-config-item-header {
                             display: flex;
                             flex-direction: column;
