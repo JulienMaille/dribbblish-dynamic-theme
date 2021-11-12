@@ -626,6 +626,7 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
     setRootColor("tab-active", buttonBgColHex);
     setRootColor("button-disabled", buttonBgColHex);
     setRootColor("sidebar", sideColHex);
+    setRootColor("sidebar-text", isLight(sideColHex) ? "#000000" : "#FFFFFF");
 
     if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
 }
