@@ -11,6 +11,12 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         filename: "dribbblish-dynamic.js"
     },
+    resolve: {
+        extensions: [".js", ".svg"],
+        alias: {
+            svg: path.resolve(__dirname, "./src/svg")
+        }
+    },
     module: {
         rules: [
             {
@@ -46,7 +52,7 @@ module.exports = {
             {
                 test: /\.svg/,
                 exclude: /node_modules/,
-                use: ["raw-loader"]
+                type: "asset/source"
             }
         ]
     },
