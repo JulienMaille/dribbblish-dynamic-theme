@@ -367,8 +367,9 @@ html {
 
 .main-rootlist-statusIcons {
     z-index: 1;
-    inset: 0;
     position: absolute;
+    inset: 0;
+    left: calc(var(--indentation) * var(--left-sidebar-item-indentation-width));
     margin-left: 12px;
     display: flex;
     align-items: center;
@@ -377,6 +378,10 @@ html {
 
     [href="/collection/tracks"] > & {
         display: none;
+    }
+
+    html.sidebar-hide-text & {
+        left: 0px;
     }
 
     .main-playButton-button {
@@ -595,8 +600,7 @@ html.sidebar-hide-text .GlueDropTarget span {
     color: spiceColor("subtext");
 
     &:hover,
-    &:active,
-    &:focus {
+    &:active {
         color: spiceColor("text");
     }
 }
