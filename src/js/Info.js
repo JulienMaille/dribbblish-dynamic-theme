@@ -1,6 +1,4 @@
 import $ from "jquery";
-import MarkdownIt from "markdown-it";
-import MarkdownItAttrs from "markdown-it-attrs";
 
 import { waitForElement } from "./Util";
 
@@ -10,6 +8,8 @@ export default class Info {
      * @property {String} [text]
      * @property {String} [tooltip]
      * @property {String} [icon]
+     * @property {{fg: String, bg: String}} [color] defaults to {fg: "sidebar-text", bg: "button"}
+     * @property {Number} [order=0] order < 0 = More to the Left | order > 0 = More to the Right
      * @property {onClick} [onClick]
      */
 
@@ -21,15 +21,10 @@ export default class Info {
     /** @type {HTMLDivElement} */
     #container;
 
-    constructor() {
-        this.md = MarkdownIt({
-            html: true,
-            breaks: true,
-            linkify: true,
-            typographer: true
-        });
-        this.md.use(MarkdownItAttrs);
+    /** @type {MarkdownIt} */
+    #md;
 
+    constructor() {
         waitForElement([".main-topBar-container", ".main-userWidget-box"], ([topBarContainer, userWidget]) => {
             this.#container = document.createElement("div");
             this.#container.id = "dribbblish-info-container";
@@ -52,12 +47,18 @@ export default class Info {
         if (info.text == null) elem.setAttribute("icon-only", "");
         if (info.tooltip != null) elem.setAttribute("title", info.tooltip);
         if (info.onClick != null) elem.setAttribute("clickable", "");
-        elem.innerHTML = `${this.md.render(info.text ?? "")}${info.icon ?? ""}`;
+        if (info.color != null) {
+            const { bg, fg } = info.color;
+            if (bg != null) elem.style.backgroundColor = bg;
+            if (fg != null) elem.style.color = fg;
+        }
+        if (info.order != 0) elem.style.order = info.order;
+        elem.innerHTML = `${info.text ?? ""}${info.icon ?? ""}`;
 
         this.#container.appendChild(elem);
     }
 
     remove(key) {
-        $(this.#container).find(`[key="${key}"]`).remove();
+        $(this.#container).find(`.dribbblish-info-item[key="${key}"]`).remove();
     }
 }
