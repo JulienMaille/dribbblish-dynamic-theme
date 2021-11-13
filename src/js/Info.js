@@ -24,11 +24,16 @@ export default class Info {
     /** @type {MarkdownIt} */
     #md;
 
+    /** @type {Boolean} */
+    #ready = false;
+
     constructor() {
         waitForElement([".main-topBar-container", ".main-userWidget-box"], ([topBarContainer, userWidget]) => {
             this.#container = document.createElement("div");
             this.#container.id = "dribbblish-info-container";
             topBarContainer.insertBefore(this.#container, userWidget);
+
+            this.#ready = true;
         });
     }
 
@@ -37,6 +42,11 @@ export default class Info {
      * @param {DribbblishInfo} info
      */
     set(key, info) {
+        if (!this.#ready) {
+            setTimeout(() => this.set(key, info), 200);
+            return;
+        }
+
         this.remove(key);
         if (info.text == null && info.icon == null) throw new Error("invalid info");
 
@@ -58,6 +68,9 @@ export default class Info {
         this.#container.appendChild(elem);
     }
 
+    /**
+     * @param {String} key
+     */
     remove(key) {
         $(this.#container).find(`.dribbblish-info-item[key="${key}"]`).remove();
     }
