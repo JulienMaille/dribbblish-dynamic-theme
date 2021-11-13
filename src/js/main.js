@@ -9,6 +9,7 @@ import Info from "./Info";
 
 import svgArrowDown from "svg/arrow-down";
 import svgCode from "svg/code";
+import svgWifiSlash from "svg/wifi-slash";
 
 const DribbblishShared = {
     config: new ConfigMenu(),
@@ -759,5 +760,19 @@ waitForElement([".main-topBar-container"], ([topBarContainer]) => {
     setInterval(checkForUpdate(), 10 * 60 * 1000);
     checkForUpdate();
 });
+
+// Show "Offline info"
+window.addEventListener("offline", () =>
+    DribbblishShared.info.set("offline", {
+        tooltip: "Offline",
+        icon: svgWifiSlash,
+        order: 999,
+        color: {
+            fg: "#ffffff",
+            bg: "#ff2323"
+        }
+    })
+);
+window.addEventListener("online", () => DribbblishShared.info.remove("offline"));
 
 $("html").css("--warning_message", " ");

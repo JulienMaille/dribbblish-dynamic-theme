@@ -1227,6 +1227,11 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     height: 100%;
 }
 
+// Hide default Sporify "Offline" notice
+.main-noConnection {
+    display: none;
+}
+
 // ! WORKAROUNDS / TEMP FIXES
 // Spotify UI breaks after advertisements #63
 canvas[width="250"][height="250"] {
