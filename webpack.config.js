@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const sass = require("sass");
 const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("path");
@@ -19,13 +20,11 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /main\.js$/,
-                exclude: /node_modules/,
+                include: path.resolve(__dirname, "./src/js/main.js"),
                 use: []
             },
             {
-                test: /main\.scss$/,
-                exclude: /node_modules/,
+                include: path.resolve(__dirname, "./src/styles/main.scss"),
                 type: "asset/resource",
                 generator: {
                     filename: "user.css"
@@ -34,14 +33,14 @@ module.exports = {
                     {
                         loader: "sass-loader",
                         options: {
+                            implementation: sass,
                             sourceMap: true
                         }
                     }
                 ]
             },
             {
-                test: /Colors\.scss$/,
-                exclude: /node_modules/,
+                include: path.resolve(__dirname, "./src/styles/Colors.scss"),
                 type: "asset/resource",
                 generator: {
                     filename: "color.ini"
