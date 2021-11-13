@@ -11,12 +11,14 @@ import svgArrowDown from "svg/arrow-down";
 import svgCode from "svg/code";
 import svgWifiSlash from "svg/wifi-slash";
 
-const DribbblishShared = {
+const Dribbblish = {
     config: new ConfigMenu(),
     info: new Info()
 };
+// To expose to external scripts
+window.Dribbblish = Dribbblish;
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     type: "checkbox",
     key: "rightBigCover",
     name: "Right expanded cover",
@@ -25,7 +27,7 @@ DribbblishShared.config.register({
     onChange: (val) => $("html").toggleClass("right-expanded-cover", val)
 });
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     area: "Sidebar",
     type: "checkbox",
     key: "roundSidebarIcons",
@@ -35,7 +37,7 @@ DribbblishShared.config.register({
     onChange: (val) => $("html").css("--sidebar-icons-border-radius", val ? "50vh" : "var(--image-radius)")
 });
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     area: "Animations & Transitions",
     type: "checkbox",
     key: "sidebarHoverAnimation",
@@ -45,7 +47,7 @@ DribbblishShared.config.register({
     onChange: (val) => $("html").css("--sidebar-icons-hover-animation", val ? "1" : "0")
 });
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     area: "Sidebar",
     type: "number",
     key: "sidebarGapLeft",
@@ -58,7 +60,7 @@ DribbblishShared.config.register({
     onChange: (val) => $("html").css("--sidebar-gap-left", `${val}px`)
 });
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     area: "Sidebar",
     type: "number",
     key: "sidebarGapRight",
@@ -72,7 +74,7 @@ DribbblishShared.config.register({
 });
 
 waitForElement([".main-nowPlayingBar-container"], ([container]) => {
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         area: "Playbar",
         type: "checkbox",
         key: "playbarShadow",
@@ -84,7 +86,7 @@ waitForElement([".main-nowPlayingBar-container"], ([container]) => {
 });
 
 waitForElement(["#main"], () => {
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         type: "select",
         data: { none: "None", "none-padding": "None (With Top Padding)", solid: "Solid", transparent: "Transparent" },
         key: "winTopBar",
@@ -94,7 +96,7 @@ waitForElement(["#main"], () => {
         onChange: (val) => $("#main").attr("top-bar", val)
     });
 
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         area: "Playbar",
         type: "select",
         data: { dribbblish: "Dribbblish", spotify: "Spotify" },
@@ -108,7 +110,7 @@ waitForElement(["#main"], () => {
         }
     });
 
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         area: "Playbar",
         type: "checkbox",
         key: "showAlbumInfoInPlaybar",
@@ -118,7 +120,7 @@ waitForElement(["#main"], () => {
         onChange: (val) => $("#main").attr("playbar-album-info", val)
     });
 
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         area: "Ads",
         type: "checkbox",
         key: "hideAds",
@@ -168,9 +170,7 @@ waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `
         }
     }
 
-    DribbblishShared.loadPlaylistImage = loadPlaylistImage;
     loadPlaylistImage();
-
     new MutationObserver(loadPlaylistImage).observe(listElem, { childList: true });
 });
 
@@ -295,7 +295,7 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
             } catch {
                 Spicetify.showNotification("File too large");
             }
-            DribbblishShared.loadPlaylistImage?.call();
+            loadPlaylistImage();
         };
         reader.readAsDataURL(file);
     };
@@ -305,7 +305,7 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
         ([uri]) => {
             const id = Spicetify.URI.from(uri).id;
             localStorage.removeItem("dribbblish:folder-image:" + id);
-            DribbblishShared.loadPlaylistImage?.call();
+            loadPlaylistImage();
         },
         ([uri]) => Spicetify.URI.isFolder(uri),
         "x"
@@ -324,7 +324,7 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
 
 /* Config settings */
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     area: "Animations & Transitions",
     type: "slider",
     key: "fadeDuration",
@@ -342,9 +342,9 @@ DribbblishShared.config.register({
 
 // waitForElement because Spicetify is not initialized at startup
 waitForElement(["#main"], () => {
-    DribbblishShared.config.registerArea({ name: "About", order: 999 });
+    Dribbblish.config.registerArea({ name: "About", order: 999 });
 
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         area: "About",
         type: "button",
         key: "aboutDribbblishInfo",
@@ -362,7 +362,7 @@ waitForElement(["#main"], () => {
         }
     });
 
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         area: "About",
         type: "button",
         key: "aboutDribbblishBugs",
@@ -397,7 +397,7 @@ waitForElement(["#main"], () => {
                 ### Info for Contributors:
                 
                 **Versions**
-                ${DribbblishShared.config.getOptions("aboutDribbblishInfo").description}
+                ${Dribbblish.config.getOptions("aboutDribbblishInfo").description}
 
                 **Extensions**
                 ${$(`script[src^="extensions/"]`)
@@ -407,7 +407,7 @@ waitForElement(["#main"], () => {
 
                 **Settings**
                 \`\`\`json
-                ${JSON.stringify(DribbblishShared.config.export(), null, 4)}
+                ${JSON.stringify(Dribbblish.config.export(), null, 4)}
                 \`\`\`
             `
                 .split("\n")
@@ -422,7 +422,7 @@ waitForElement(["#main"], () => {
         }
     });
 
-    DribbblishShared.config.register({
+    Dribbblish.config.register({
         area: "About",
         type: "button",
         key: "aboutDribbblishChangelog",
@@ -498,10 +498,10 @@ function toggleDark(setDark) {
 }
 
 function checkDarkLightMode(colors) {
-    const theme = DribbblishShared.config.get("theme");
+    const theme = Dribbblish.config.get("theme");
     if (theme == "time") {
-        const start = 60 * parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOnTime").split(":")[1]);
-        const end = 60 * parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[0]) + parseInt(DribbblishShared.config.get("darkModeOffTime").split(":")[1]);
+        const start = 60 * parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[0]) + parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[1]);
+        const end = 60 * parseInt(Dribbblish.config.get("darkModeOffTime").split(":")[0]) + parseInt(Dribbblish.config.get("darkModeOffTime").split(":")[1]);
 
         const now = new Date();
         const time = 60 * now.getHours() + now.getMinutes();
@@ -517,7 +517,7 @@ function checkDarkLightMode(colors) {
 // Run every Minute to check time and set dark / light mode
 setInterval(checkDarkLightMode, 60000);
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     area: "Theme",
     type: "checkbox",
     key: "dynamicColors",
@@ -539,7 +539,7 @@ DribbblishShared.config.register({
     ]
 });
 
-DribbblishShared.config.register({
+Dribbblish.config.register({
     area: "Theme",
     type: "select",
     data: { dark: "Dark", light: "Light", time: "Based on Time", color: "Based on Color" },
@@ -602,8 +602,8 @@ function updateColors(textColHex, sideColHex, checkDarkMode = true) {
         sideColHex = currentSideColor;
     }
 
-    if (!DribbblishShared.config.get("dynamicColors")) {
-        const col = DribbblishShared.config.get("colorOverride");
+    if (!Dribbblish.config.get("dynamicColors")) {
+        const col = Dribbblish.config.get("colorOverride");
         textColHex = col;
         sideColHex = col;
     }
@@ -751,8 +751,8 @@ waitForElement([".main-topBar-container"], ([topBarContainer]) => {
             .then((response) => response.json())
             .then((data) => {
                 const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-                DribbblishShared.info.set("upd", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
-                DribbblishShared.info.set("dev", isDev ? { tooltip: "Dev build", icon: svgCode } : null);
+                Dribbblish.info.set("upd", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: svgCode } : null);
             })
             .catch(console.error);
     }
@@ -763,7 +763,7 @@ waitForElement([".main-topBar-container"], ([topBarContainer]) => {
 
 // Show "Offline info"
 window.addEventListener("offline", () =>
-    DribbblishShared.info.set("offline", {
+    Dribbblish.info.set("offline", {
         tooltip: "Offline",
         icon: svgWifiSlash,
         order: 999,
@@ -773,6 +773,6 @@ window.addEventListener("offline", () =>
         }
     })
 );
-window.addEventListener("online", () => DribbblishShared.info.remove("offline"));
+window.addEventListener("online", () => Dribbblish.info.remove("offline"));
 
 $("html").css("--warning_message", " ");

@@ -57,13 +57,16 @@ export default class ConfigMenu {
     /** @type {Object.<string, DribbblishConfigItem>} */
     #config;
 
+    /** @type {Spicetify.Menu.Item} */
+    #configButton;
+
     /** @type {MarkdownIt} */
     #md;
 
     constructor() {
         this.#config = {};
-        this.configButton = new Spicetify.Menu.Item("Dribbblish Settings", false, () => this.open());
-        this.configButton.register();
+        this.#configButton = new Spicetify.Menu.Item("Dribbblish Settings", false, () => this.open());
+        this.#configButton.register();
         this.#md = MarkdownIt({
             html: true,
             breaks: true,
@@ -102,7 +105,7 @@ export default class ConfigMenu {
      * @private
      * @param {DribbblishConfigItem} options
      */
-    addInputHTML(options) {
+    #addInputHTML(options) {
         this.registerArea(options.area);
         const parent = document.querySelector(`.dribbblish-config-area[name="${options.area.name}"] .dribbblish-config-area-items`);
 
@@ -194,7 +197,7 @@ export default class ConfigMenu {
             $(`.dribbblish-config-item[key="${options.key}"]`).attr("changed", options.save && val != options.defaultValue ? "" : null);
             options._onChange.call(options, val);
             const show = options.showChildren.call(options, val);
-            options.children.forEach((child) => this.setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
+            options.children.forEach((child) => this.#setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
         };
         options.children = options.children.map((child) => {
             return { ...child, area: options.area, childOf: options.key };
@@ -209,7 +212,7 @@ export default class ConfigMenu {
                     <span class="x-toggle-indicator"></span>
                 </span>
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("change", (e) => {
                 this.set(options.key, e.target.checked, options.save);
@@ -227,7 +230,7 @@ export default class ConfigMenu {
                         .join("")}
                 </select>
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("change", (e) => {
                 this.set(options.key, e.target.value, options.save);
@@ -246,7 +249,7 @@ export default class ConfigMenu {
                     </div>
                 </button>
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("click", (e) => {
                 options.onChange(true);
@@ -268,7 +271,7 @@ export default class ConfigMenu {
                     value="${this.get(options.key)}"
                 >
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             // Prevent inputting +, - and e. Why is it even possible in the first place?
             $(`#dribbblish-config-input-${options.key}`).on("keypress", (e) => {
@@ -288,7 +291,7 @@ export default class ConfigMenu {
             const input = /* html */ `
                 <input type="text" id="dribbblish-config-input-${options.key}" value="${this.get(options.key)}">
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 // TODO: maybe add an validation function via `data.validate`
@@ -301,7 +304,7 @@ export default class ConfigMenu {
             const input = /* html */ `
                 <textarea id="dribbblish-config-input-${options.key}">${this.get(options.key)}</textarea>
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 // TODO: maybe add an validation function via `data.validate`
@@ -327,7 +330,7 @@ export default class ConfigMenu {
                     tooltip="${this.get(options.key)}${options.data?.suffix ?? ""}"
                 >
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 $(`#dribbblish-config-input-${options.key}`).attr("tooltip", `${e.target.value}${options.data?.suffix ?? ""}`);
@@ -342,7 +345,7 @@ export default class ConfigMenu {
             const input = /* html */ `
                 <input type="time" id="dribbblish-config-input-${options.key}" name="${options.name}" value="${this.get(options.key)}">
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 $(`#dribbblish-config-input-${options.key}`).attr("value", e.target.value);
@@ -356,7 +359,7 @@ export default class ConfigMenu {
             const input = /* html */ `
                 <input type="color" id="dribbblish-config-input-${options.key}" name="${options.name}" value="${this.get(options.key)}">
             `;
-            this.addInputHTML({ ...options, input });
+            this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 this.set(options.key, e.target.value, options.save);
@@ -459,8 +462,9 @@ export default class ConfigMenu {
      *
      * @param {String} key
      * @param {Boolean} hidden
+     * @private
      */
-    setHidden(key, hidden) {
+    #setHidden(key, hidden) {
         this.#config[key].hidden = hidden;
         $(`.dribbblish-config-item[key="${key}"]`).attr("hidden", hidden ? "" : null);
     }
