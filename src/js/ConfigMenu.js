@@ -57,17 +57,20 @@ export default class ConfigMenu {
     /** @type {Object.<string, DribbblishConfigItem>} */
     #config;
 
+    /** @type {MarkdownIt} */
+    #md;
+
     constructor() {
         this.#config = {};
         this.configButton = new Spicetify.Menu.Item("Dribbblish Settings", false, () => this.open());
         this.configButton.register();
-        this.md = MarkdownIt({
+        this.#md = MarkdownIt({
             html: true,
             breaks: true,
             linkify: true,
             typographer: true
         });
-        this.md.use(MarkdownItAttrs);
+        this.#md.use(MarkdownItAttrs);
 
         const container = document.createElement("div");
         container.id = "dribbblish-config";
@@ -119,7 +122,7 @@ export default class ConfigMenu {
                                 ${options.name}
                                 ${options.resetButton ? /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${svgUndo}</button>` : ""}
                             </h2>
-                            <label class="main-type-mesto" empty="${options.description == null}" markdown>${this.md.render(options.description)}</label>
+                            <label class="main-type-mesto" empty="${options.description == null}" markdown>${this.#md.render(options.description)}</label>
                         </div>
                     `
                     : ""
