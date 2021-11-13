@@ -19,7 +19,7 @@
         background-color: spiceColor("button");
         border-radius: var(--sidebar-icons-border-radius);
         line-height: 13px;
-        @include spiceFont("glue", 14px);
+        @include spiceFont("glue", 14px, "Medium");
 
         &[clickable] {
             cursor: pointer;
