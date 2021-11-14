@@ -1,4 +1,4 @@
-import * as Vibrant from "node-vibrant";
+import ColorThief from "colorthief";
 import chroma from "chroma-js";
 import $ from "jquery";
 import moment from "moment";
@@ -15,6 +15,7 @@ const Dribbblish = {
     config: new ConfigMenu(),
     info: new Info()
 };
+const colorThief = new ColorThief();
 // To expose to external scripts
 window.Dribbblish = Dribbblish;
 
@@ -440,9 +441,7 @@ async function getAlbumRelease(uri) {
 }
 
 function isLight(hex) {
-    var [r, g, b] = chroma(hex).rgb().map(Number);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    return brightness > 128;
+    return chroma(hex).luminance() > 0.5;
 }
 
 // From: https://stackoverflow.com/a/13763063/12126879
@@ -472,7 +471,7 @@ function getImageLightness(img) {
     return brightness;
 }
 
-// parse to hex beacuse "--spice-sidebar" is `rgb()`
+// parse to hex because "--spice-sidebar" is `rgb()`
 let textColor = chroma($("html").css("--spice-text")).hex();
 let textColorBg = chroma($("html").css("--spice-main")).hex();
 let sidebarColor = chroma($("html").css("--spice-sidebar")).hex();
@@ -699,24 +698,12 @@ async function pickCoverColor(img) {
 
     $("html").css("--image-brightness", getImageLightness(img) / 255);
 
-    var swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
-    var lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"];
-    var darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
+    if (img.complete) {
+        textColor = sidebarColor = chroma(colorThief.getColor(img)).hex();
+    } else {
+        textColor = sidebarColor = "#509bf5";
+    }
 
-    var mainCols = isLight(textColorBg) ? lightCols : darkCols;
-    textColor = "#509bf5";
-    for (var col in mainCols)
-        if (swatches[mainCols[col]]) {
-            textColor = swatches[mainCols[col]].getHex();
-            break;
-        }
-
-    sidebarColor = "#509bf5";
-    for (var col in lightCols)
-        if (swatches[lightCols[col]]) {
-            sidebarColor = swatches[lightCols[col]].getHex();
-            break;
-        }
     updateColors(textColor, sidebarColor);
 }
 
