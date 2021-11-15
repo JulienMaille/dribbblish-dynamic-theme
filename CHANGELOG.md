@@ -9,6 +9,7 @@ Fixed:
 - Playing icon position being wrong when listening to a playlist that is inside a folder ([#106 (comment)](https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/106#issuecomment-967208507))
 
 Improved:
+- The settings UI now better represents grouped items
 - Settings that have been changed from default will now show a line next to them. Inspired by the [Visual Studio Code settings UI](https://d33wubrfki0l68.cloudfront.net/d1f1ea4def506997ced23d3d912154794e530e1c/063d2/assets/img/blog/2020-09-17-vscode-settings/settings-ui.png)
 - Checkbox / Switch input styles are now more in line with other input styles
 - Available updates are now shown as a clickable button next to your user icon instead of having to open the user menu
