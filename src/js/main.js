@@ -472,7 +472,6 @@ function getImageLightness(img) {
 }
 
 // parse to hex because "--spice-sidebar" is `rgb()`
-let textColor = chroma($("html").css("--spice-text")).hex();
 let textColorBg = chroma($("html").css("--spice-main")).hex();
 let sidebarColor = chroma($("html").css("--spice-sidebar")).hex();
 
@@ -493,7 +492,7 @@ function toggleDark(setDark) {
     setRootColor("subtext", setDark ? "#EAEAEA" : "#3D3D3D");
     setRootColor("notification", setDark ? "#303030" : "#DDDDDD");
 
-    updateColors(textColor, sidebarColor, false);
+    updateColors(sidebarColor, false);
 }
 
 function checkDarkLightMode(colors) {
@@ -588,27 +587,27 @@ Dribbblish.config.register({
     ]
 });
 
-var currentColor;
 var currentSideColor;
 
-function updateColors(textColHex, sideColHex, checkDarkMode = true) {
-    if (textColHex && sideColHex) {
-        currentColor = textColHex;
+function updateColors(sideColHex, checkDarkMode = true) {
+    if (sideColHex) {
         currentSideColor = sideColHex;
     } else {
-        if (!(currentColor && currentSideColor)) return; // If `updateColors()` is called early these vars are undefined and would break
-        textColHex = currentColor;
+        if (!currentSideColor) return; // If `updateColors()` is called early these vars are undefined and would break
         sideColHex = currentSideColor;
     }
 
     if (!Dribbblish.config.get("dynamicColors")) {
-        const col = Dribbblish.config.get("colorOverride");
-        textColHex = col;
-        sideColHex = col;
+        sideColHex = Dribbblish.config.get("colorOverride");
     }
 
     let isLightBg = isLight(textColorBg);
-    if (isLightBg) textColHex = chroma(textColHex).darken(0.15).hex(); // vibrant color is always too bright for white bg mode
+    let textColHex = sideColHex;
+    if (isLightBg && chroma(textColHex).luminance() > 0.2) {
+        textColHex = chroma(textColHex).luminance(0.2).hex();
+    } else if (!isLightBg && chroma(textColHex).luminance() < 0.1) {
+        textColHex = chroma(textColHex).luminance(0.1).hex();
+    }
 
     let darkColHex = chroma(textColHex)
         .brighten(isLightBg ? 0.12 : -0.2)
@@ -654,8 +653,7 @@ async function songchange() {
     let bgImage = Spicetify.Player.data.track.metadata.image_url;
     if (bgImage === undefined) {
         bgImage = "/images/tracklist-row-song-fallback.svg";
-        textColor = "#509bf5";
-        updateColors(textColor, textColor);
+        updateColors("#509bf5");
     }
 
     if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
@@ -699,12 +697,12 @@ async function pickCoverColor(img) {
     $("html").css("--image-brightness", getImageLightness(img) / 255);
 
     if (img.complete) {
-        textColor = sidebarColor = chroma(colorThief.getColor(img)).hex();
+        sidebarColor = chroma(colorThief.getColor(img)).hex();
     } else {
-        textColor = sidebarColor = "#509bf5";
+        sidebarColor = "#509bf5";
     }
 
-    updateColors(textColor, sidebarColor);
+    updateColors(sidebarColor);
 }
 
 var coverListener;
