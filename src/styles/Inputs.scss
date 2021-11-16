@@ -11,6 +11,17 @@ button.main-button-primary {
     }
 }
 
+// Modals
+.GenericModal button.main-button-primary {
+    background-color: spiceColor("subtext", 0.6) !important;
+    color: spiceColor("main") !important;
+
+    &:hover,
+    &:active {
+        background-color: spiceColor("subtext") !important;
+    }
+}
+
 // Checkbox
 .x-toggle-indicatorWrapper {
     background-color: spiceColor("subtext", 0.1);
