@@ -1055,12 +1055,12 @@ div.GlueDropTarget.personal-library > *.active {
 }
 
 html.right-expanded-cover .main-coverSlotExpanded-container {
-    right: calc(var(--main-gap) + 10px);
+    right: var(--main-gap);
     left: unset;
 }
 
 html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
-    right: calc(var(--main-gap) + var(--buddy-feed-width) + 10px);
+    right: calc(var(--main-gap) + var(--buddy-feed-width));
     left: unset;
 }
 

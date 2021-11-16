@@ -8,6 +8,7 @@ Fixed:
 - Notification popups are being invisible when the (dribbblish) settings are open
 - Missing on/off times settings for `Based on Time` dark mode (#107)
 - Playing icon position being wrong when listening to a playlist that is inside a folder ([#106 (comment)](https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/106#issuecomment-967208507))
+- Alignment of right expanded cover
 
 Improved:
 - The settings UI now better represents grouped items
