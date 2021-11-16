@@ -129,7 +129,7 @@
                         }
 
                         &[invalid]::before {
-                            background-color: rgba(red, 0.2);
+                            border: 2px solid rgba(red, 0.8);
                         }
 
                         &[changed] {
@@ -190,6 +190,7 @@
                                     height: min-content;
                                     color: spiceColor("subtext");
                                     line-height: calc(1em + 6px); // To have line gaps
+                                    line-break: anywhere;
                                 }
 
                                 .x-settings-secondColumn {
@@ -200,6 +201,12 @@
 
                         .dribbblish-config-item-input {
                             min-width: fit-content;
+
+                            &::before {
+                                content: var(--validation-error);
+                                margin-right: 8px;
+                                color: rgba(red, 0.8);
+                            }
                         }
                     }
                 }
