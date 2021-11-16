@@ -696,12 +696,20 @@ async function pickCoverColor(img) {
 
     $("html").css("--image-brightness", getImageLightness(img) / 255);
 
+    sidebarColor = "#509bf5";
     if (img.complete) {
-        sidebarColor = chroma(colorThief.getColor(img)).hex();
-    } else {
-        sidebarColor = "#509bf5";
+        const dominant = colorThief.getColor(img);
+        let palette = colorThief.getPalette(img);
+        palette.unshift(dominant);
+        sidebarColor = chroma(dominant).hex();
+        for (const col of palette) {
+            const chrmCol = chroma(col);
+            if (chrmCol.luminance() > 0.05 && chrmCol.luminance() < 0.9) {
+                sidebarColor = chrmCol.hex();
+                break;
+            }
+        }
     }
-
     updateColors(sidebarColor);
 }
 
