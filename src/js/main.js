@@ -566,7 +566,7 @@ Dribbblish.config.register({
     key: "theme",
     name: "Theme",
     description: "Select Dark / Bright mode",
-    defaultValue: "dark",
+    defaultValue: "time",
     showChildren: (val) => {
         if (val == "time") return ["darkModeOnTime", "darkModeOffTime"];
         return false;
