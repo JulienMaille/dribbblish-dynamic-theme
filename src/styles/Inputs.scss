@@ -66,6 +66,10 @@ select {
     &:active {
         background-color: spiceColor("selected-row", 0.6) !important;
     }
+    
+    option {
+        background: spiceColor("main") !important;
+    }
 }
 
 input {
