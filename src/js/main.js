@@ -556,7 +556,7 @@ Dribbblish.config.register({
     key: "colorSelectionAlgorithm",
     name: "Color Selection Algorithm",
     description: `
-        [Algorithm of selecting colors from the albumart]
+        Algorithm of selecting colors from the albumart
         - **Colorthief [(see)](https://lokeshdhakar.com/projects/color-thief/):** Gets more fitting colors
         - **Vibrant [(see)](https://jariz.github.io/vibrant.js/):** Gets more vibrant colors *(was the default up to v3.1.1)*
         - **Static:** Select a static color to be used
