@@ -1,9 +1,10 @@
 import * as Vibrant from "node-vibrant";
+import ColorThief from "colorthief";
 import chroma from "chroma-js";
 import $ from "jquery";
 import moment from "moment";
 
-import { waitForElement, copyToClipboard, capitalizeFirstLetter } from "./Util";
+import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum } from "./Util";
 import ConfigMenu from "./ConfigMenu";
 import Info from "./Info";
 
@@ -16,6 +17,7 @@ const Dribbblish = {
     config: new ConfigMenu(),
     info: new Info()
 };
+const colorThief = new ColorThief();
 // To expose to external scripts
 window.Dribbblish = Dribbblish;
 
@@ -387,7 +389,7 @@ waitForElement(["#main"], () => {
         type: "button",
         key: "aboutDribbblishBugs",
         name: "Report Bugs",
-        description: "Open new issue on GitHub",
+        description: "Open new issue on GitHub to report a bug",
         data: "Create Report",
         onChange: () => {
             const reportBody = `
@@ -445,6 +447,22 @@ waitForElement(["#main"], () => {
     Dribbblish.config.register({
         area: "About",
         type: "button",
+        key: "aboutDribbblishFeature",
+        name: "Request Feature",
+        description: "Open new issue on GitHub to request a feature",
+        data: "Request Feature",
+        onChange: () => {
+            const reportURL = new URL("https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/new");
+            reportURL.searchParams.set("labels", "enhancement");
+            reportURL.searchParams.set("template", "feature_request.md");
+
+            window.open(reportURL.toString(), "_blank");
+        }
+    });
+
+    Dribbblish.config.register({
+        area: "About",
+        type: "button",
         key: "aboutDribbblishChangelog",
         name: "Changelog",
         description: "Open GitHub releases page",
@@ -460,9 +478,7 @@ async function getAlbumRelease(uri) {
 }
 
 function isLight(hex) {
-    var [r, g, b] = chroma(hex).rgb().map(Number);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    return brightness > 128;
+    return chroma(hex).luminance() > 0.5;
 }
 
 // From: https://stackoverflow.com/a/13763063/12126879
@@ -492,10 +508,8 @@ function getImageLightness(img) {
     return brightness;
 }
 
-// parse to hex beacuse "--spice-sidebar" is `rgb()`
-let textColor = chroma($("html").css("--spice-text")).hex();
+// parse to hex because "--spice-sidebar" is `rgb()`
 let textColorBg = chroma($("html").css("--spice-main")).hex();
-let sidebarColor = chroma($("html").css("--spice-sidebar")).hex();
 
 function setRootColor(name, color) {
     $("html").css(`--spice-${name}`, chroma(color).hex());
@@ -514,10 +528,10 @@ function toggleDark(setDark) {
     setRootColor("subtext", setDark ? "#EAEAEA" : "#3D3D3D");
     setRootColor("notification", setDark ? "#303030" : "#DDDDDD");
 
-    updateColors(textColor, sidebarColor, false);
+    updateColors(false);
 }
 
-function checkDarkLightMode(colors) {
+function checkDarkLightMode() {
     const theme = Dribbblish.config.get("theme");
     if (theme == "time") {
         const start = 60 * parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[0]) + parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[1]);
@@ -530,22 +544,31 @@ function checkDarkLightMode(colors) {
         if (end < start) dark = start <= time || time < end;
         else dark = start <= time && time < end;
         toggleDark(dark);
-    } else if (theme == "color") {
-        if (colors && colors.length > 0) toggleDark(isLight(colors[0]));
     }
 }
+
 // Run every Minute to check time and set dark / light mode
 setInterval(checkDarkLightMode, 60000);
 
 Dribbblish.config.register({
     area: "Theme",
-    type: "checkbox",
-    key: "dynamicColors",
-    name: "Dynamic",
-    description: "If the Theme's Color should be extracted from Albumart",
-    defaultValue: true,
-    onChange: (val) => updateColors(),
-    showChildren: (val) => !val,
+    type: "select",
+    key: "colorSelectionAlgorithm",
+    name: "Color Selection Algorithm",
+    description: `
+        [Algorithm of selecting colors from the albumart]
+        - **Colorthief [(see)](https://lokeshdhakar.com/projects/color-thief/):** Gets more fitting colors
+        - **Vibrant [(see)](https://jariz.github.io/vibrant.js/):** Gets more vibrant colors *(was the default up to v3.1.1)*
+        - **Static:** Select a static color to be used
+        {.muted}
+    `,
+    data: { colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
+    defaultValue: "colorthief",
+    onChange: () => updateColors(),
+    showChildren: (val) => {
+        if (val == "static") return ["colorOverride"];
+        return ["colorSelectionMode"];
+    },
     children: [
         {
             type: "color",
@@ -554,7 +577,53 @@ Dribbblish.config.register({
             description: "The Color of the Theme",
             defaultValue: "#1ed760",
             fireInitialChange: false,
-            onChange: (val) => updateColors()
+            onChange: () => updateColors()
+        },
+        {
+            area: "Theme",
+            type: "select",
+            key: "colorSelectionMode",
+            name: "Color Selection Mode",
+            description: `
+                Method of selecting colors from the albumart
+                - **Default:** Choose closest matching{.muted}
+                - **Luminance:** Choose matching current theme (lighter/darker){.muted}
+            `,
+            data: { default: "Default", luminance: "Luminance" },
+            defaultValue: "default",
+            onChange: () => updateColors(),
+            showChildren: (val) => {
+                if (val == "dynamicLuminance") return ["lightModeLuminance", "darkModeLuminance"];
+                return false;
+            },
+            children: [
+                {
+                    type: "number",
+                    key: "lightModeLuminance",
+                    name: "Desired Light Mode Luminance",
+                    description: `
+                        Set desired luminance in light mode.
+                        *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
+                    `,
+                    defaultValue: 0.6,
+                    data: { min: 0, max: 1, step: 0.05 },
+                    fireInitialChange: false,
+                    onChange: () => updateColors()
+                },
+                {
+                    type: "number",
+                    key: "darkModeLuminance",
+                    name: "Desired Dark Mode Luminance",
+                    description: `
+                        Set desired luminance in dark mode.
+                        *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
+                    `,
+                    defaultValue: 0.2,
+                    data: { min: 0, max: 1, step: 0.05 },
+                    fireInitialChange: false,
+                    onChange: () => updateColors()
+                }
+            ]
         }
     ]
 });
@@ -562,7 +631,7 @@ Dribbblish.config.register({
 Dribbblish.config.register({
     area: "Theme",
     type: "select",
-    data: { dark: "Dark", light: "Light", time: "Based on Time", color: "Based on Color" },
+    data: { dark: "Dark", light: "Light", time: "Based on Time" },
     key: "theme",
     name: "Theme",
     description: "Select Dark / Bright mode",
@@ -580,9 +649,6 @@ Dribbblish.config.register({
                 toggleDark(false);
                 break;
             case "time":
-                checkDarkLightMode();
-                break;
-            case "color":
                 checkDarkLightMode();
                 break;
         }
@@ -609,27 +675,16 @@ Dribbblish.config.register({
     ]
 });
 
-var currentColor;
-var currentSideColor;
-
-function updateColors(textColHex, sideColHex, checkDarkMode = true) {
-    if (textColHex && sideColHex) {
-        currentColor = textColHex;
-        currentSideColor = sideColHex;
-    } else {
-        if (!(currentColor && currentSideColor)) return; // If `updateColors()` is called early these vars are undefined and would break
-        textColHex = currentColor;
-        sideColHex = currentSideColor;
-    }
-
-    if (!Dribbblish.config.get("dynamicColors")) {
-        const col = Dribbblish.config.get("colorOverride");
-        textColHex = col;
-        sideColHex = col;
-    }
+function updateColors(checkDarkMode = true, sideColHex) {
+    if (sideColHex == undefined) return registerCoverListener();
 
     let isLightBg = isLight(textColorBg);
-    if (isLightBg) textColHex = chroma(textColHex).darken(0.15).hex(); // vibrant color is always too bright for white bg mode
+    let textColHex = sideColHex;
+    if (isLightBg && chroma(textColHex).luminance() > 0.2) {
+        textColHex = chroma(textColHex).luminance(0.2).hex();
+    } else if (!isLightBg && chroma(textColHex).luminance() < 0.1) {
+        textColHex = chroma(textColHex).luminance(0.1).hex();
+    }
 
     let darkColHex = chroma(textColHex)
         .brighten(isLightBg ? 0.12 : -0.2)
@@ -675,8 +730,6 @@ async function songchange() {
     let bgImage = Spicetify.Player.data.track.metadata.image_url;
     if (bgImage === undefined) {
         bgImage = "/images/tracklist-row-song-fallback.svg";
-        textColor = "#509bf5";
-        updateColors(textColor, textColor);
     }
 
     if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
@@ -719,25 +772,41 @@ async function pickCoverColor(img) {
 
     $("html").css("--image-brightness", getImageLightness(img) / 255);
 
-    var swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
-    var lightCols = ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"];
-    var darkCols = ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
+    let color = "#509bf5";
+    if (img.complete) {
+        const colorSelectionAlgorithm = Dribbblish.config.get("colorSelectionAlgorithm");
+        const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
+        let palette = {};
 
-    var mainCols = isLight(textColorBg) ? lightCols : darkCols;
-    textColor = "#509bf5";
-    for (var col in mainCols)
-        if (swatches[mainCols[col]]) {
-            textColor = swatches[mainCols[col]].getHex();
-            break;
+        if (colorSelectionAlgorithm == "colorthief") {
+            palette = Object.fromEntries([colorThief.getColor(img), ...colorThief.getPalette(img, 24, 5)].map((c) => chroma(c)).map((c) => [c.luminance(), c]));
+        } else if (colorSelectionAlgorithm == "vibrant") {
+            const swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
+            for (var col of ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]) {
+                if (swatches[col]) {
+                    const c = chroma(swatches[col].getHex());
+                    palette[c.luminance()] = c;
+                }
+            }
+        } else if (colorSelectionAlgorithm == "static") {
+            palette[1] = chroma(Dribbblish.config.get("colorOverride"));
         }
 
-    sidebarColor = "#509bf5";
-    for (var col in lightCols)
-        if (swatches[lightCols[col]]) {
-            sidebarColor = swatches[lightCols[col]].getHex();
-            break;
+        if (colorSelectionMode == "default") {
+            color = Object.values(palette)[0];
+            for (const col of Object.values(palette)) {
+                if (col.luminance() > 0.05 && col.luminance() < 0.9) {
+                    color = col.hex();
+                    break;
+                }
+            }
+        } else if (colorSelectionMode == "luminance") {
+            const wantedLuminance = $("html").css("--is_light") == "1" ? Dribbblish.config.get("lightModeLuminance") : Dribbblish.config.get("darkModeLuminance");
+            color = palette[getClosestToNum(Object.keys(palette), wantedLuminance)].hex();
         }
-    updateColors(textColor, sidebarColor);
+    }
+
+    updateColors(false, color);
 }
 
 var coverListener;

@@ -1,5 +1,5 @@
 Added:
-- `Report Bugs` and `Changelog` buttons to `Settings > About`
+- `Report Bugs`, `Request Feature` and `Changelog` buttons to `Settings > About`
 - Markdown parsing for settings descriptions
 - Option to have a button to open the settings next to your profile picture
 
@@ -18,3 +18,4 @@ Improved:
 - Available updates are now shown as a clickable button next to your user icon instead of having to open the user menu
 - The "offline" icon is now handled by dribbblish and fits in with the other info icons
 - Hovering over the release date in the album info now shows the full date
+- Better color extraction from the cover image
