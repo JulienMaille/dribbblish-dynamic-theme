@@ -1,5 +1,5 @@
 Added:
-- `Report Bugs` and `Changelog` buttons to `Settings > About`
+- `Report Bugs`, `Request Feature` and `Changelog` buttons to `Settings > About`
 - Markdown parsing for settings descriptions
 - Option to have a button to open the settings next to your profile picture
 

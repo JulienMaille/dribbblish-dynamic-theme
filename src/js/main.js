@@ -389,7 +389,7 @@ waitForElement(["#main"], () => {
         type: "button",
         key: "aboutDribbblishBugs",
         name: "Report Bugs",
-        description: "Open new issue on GitHub",
+        description: "Open new issue on GitHub to report a bug",
         data: "Create Report",
         onChange: () => {
             const reportBody = `
@@ -439,6 +439,22 @@ waitForElement(["#main"], () => {
             const reportURL = new URL("https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/new");
             reportURL.searchParams.set("labels", "bug");
             reportURL.searchParams.set("body", reportBody);
+
+            window.open(reportURL.toString(), "_blank");
+        }
+    });
+
+    Dribbblish.config.register({
+        area: "About",
+        type: "button",
+        key: "aboutDribbblishFeature",
+        name: "Request Feature",
+        description: "Open new issue on GitHub to request a feature",
+        data: "Request Feature",
+        onChange: () => {
+            const reportURL = new URL("https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/new");
+            reportURL.searchParams.set("labels", "enhancement");
+            reportURL.searchParams.set("template", "feature_request.md");
 
             window.open(reportURL.toString(), "_blank");
         }
