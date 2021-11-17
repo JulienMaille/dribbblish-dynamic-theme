@@ -1,3 +1,4 @@
+import * as Vibrant from "node-vibrant";
 import ColorThief from "colorthief";
 import chroma from "chroma-js";
 import $ from "jquery";
@@ -473,7 +474,6 @@ function getImageLightness(img) {
 
 // parse to hex because "--spice-sidebar" is `rgb()`
 let textColorBg = chroma($("html").css("--spice-main")).hex();
-let sidebarColor = chroma($("html").css("--spice-sidebar")).hex();
 
 function setRootColor(name, color) {
     $("html").css(`--spice-${name}`, chroma(color).hex());
@@ -517,44 +517,22 @@ setInterval(checkDarkLightMode, 60000);
 Dribbblish.config.register({
     area: "Theme",
     type: "select",
-    key: "colorSelectionMode",
-    name: "Color Selection Mode",
-    description: "Method of selecting colors from the albumart",
-    data: { dynamic: "Dynamic", dynamicLuminance: "Dynamic (Luminance)", static: "Static" },
-    defaultValue: "dynamic",
+    key: "colorSelectionAlgorithm",
+    name: "Color Selection Algorithm",
+    description: `
+        Algorithm of selecting colors from the albumart
+        - **Colorthief:** Gets more fitting colors{.muted}
+        - **Vibrant:** Gets more vibrant colors (was the default up to v3.1.1){.muted}
+        - **Static:** Select a static color to be used{.muted}
+    `,
+    data: { colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
+    defaultValue: "colorthief",
     onChange: () => updateColors(),
     showChildren: (val) => {
-        if (val == "dynamicLuminance") return ["lightModeLuminance", "darkModeLuminance"];
         if (val == "static") return ["colorOverride"];
-        return false;
+        return ["colorSelectionMode"];
     },
     children: [
-        {
-            type: "number",
-            key: "lightModeLuminance",
-            name: "Desired Light Mode Luminance",
-            description: `
-                Set desired luminance in light mode.
-                *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
-            `,
-            defaultValue: 0.6,
-            data: { min: 0, max: 1, step: 0.05 },
-            fireInitialChange: false,
-            onChange: () => updateColors()
-        },
-        {
-            type: "number",
-            key: "darkModeLuminance",
-            name: "Desired Dark Mode Luminance",
-            description: `
-                Set desired luminance in dark mode.
-                *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
-            `,
-            defaultValue: 0.2,
-            data: { min: 0, max: 1, step: 0.05 },
-            fireInitialChange: false,
-            onChange: () => updateColors()
-        },
         {
             type: "color",
             key: "colorOverride",
@@ -563,6 +541,52 @@ Dribbblish.config.register({
             defaultValue: "#1ed760",
             fireInitialChange: false,
             onChange: () => updateColors()
+        },
+        {
+            area: "Theme",
+            type: "select",
+            key: "colorSelectionMode",
+            name: "Color Selection Mode",
+            description: `
+                Method of selecting colors from the albumart
+                - **Default:** Choose closest matching{.muted}
+                - **Luminance:** Choose matching current theme (lighter/darker){.muted}
+            `,
+            data: { default: "Default", luminance: "Luminance" },
+            defaultValue: "default",
+            onChange: () => updateColors(),
+            showChildren: (val) => {
+                if (val == "dynamicLuminance") return ["lightModeLuminance", "darkModeLuminance"];
+                return false;
+            },
+            children: [
+                {
+                    type: "number",
+                    key: "lightModeLuminance",
+                    name: "Desired Light Mode Luminance",
+                    description: `
+                        Set desired luminance in light mode.
+                        *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
+                    `,
+                    defaultValue: 0.6,
+                    data: { min: 0, max: 1, step: 0.05 },
+                    fireInitialChange: false,
+                    onChange: () => updateColors()
+                },
+                {
+                    type: "number",
+                    key: "darkModeLuminance",
+                    name: "Desired Dark Mode Luminance",
+                    description: `
+                        Set desired luminance in dark mode.
+                        *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
+                    `,
+                    defaultValue: 0.2,
+                    data: { min: 0, max: 1, step: 0.05 },
+                    fireInitialChange: false,
+                    onChange: () => updateColors()
+                }
+            ]
         }
     ]
 });
@@ -711,27 +735,41 @@ async function pickCoverColor(img) {
 
     $("html").css("--image-brightness", getImageLightness(img) / 255);
 
-    sidebarColor = "#509bf5";
+    let color = "#509bf5";
     if (img.complete) {
-        const palette = Object.fromEntries([colorThief.getColor(img), ...colorThief.getPalette(img, 24, 5)].map((c) => chroma(c)).map((c) => [c.luminance(), c]));
+        const colorSelectionAlgorithm = Dribbblish.config.get("colorSelectionAlgorithm");
         const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
-        if (colorSelectionMode == "dynamic") {
-            sidebarColor = Object.values(palette)[0];
+        let palette = {};
+
+        if (colorSelectionAlgorithm == "colorthief") {
+            palette = Object.fromEntries([colorThief.getColor(img), ...colorThief.getPalette(img, 24, 5)].map((c) => chroma(c)).map((c) => [c.luminance(), c]));
+        } else if (colorSelectionAlgorithm == "vibrant") {
+            const swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
+            for (var col of ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]) {
+                if (swatches[col]) {
+                    const c = chroma(swatches[col].getHex());
+                    palette[c.luminance()] = c;
+                }
+            }
+        } else if (colorSelectionAlgorithm == "static") {
+            palette[1] = chroma(Dribbblish.config.get("colorOverride"));
+        }
+
+        if (colorSelectionMode == "default") {
+            color = Object.values(palette)[0];
             for (const col of Object.values(palette)) {
                 if (col.luminance() > 0.05 && col.luminance() < 0.9) {
-                    sidebarColor = col.hex();
+                    color = col.hex();
                     break;
                 }
             }
-        } else if (colorSelectionMode == "dynamicLuminance") {
+        } else if (colorSelectionMode == "luminance") {
             const wantedLuminance = $("html").css("--is_light") == "1" ? Dribbblish.config.get("lightModeLuminance") : Dribbblish.config.get("darkModeLuminance");
-            sidebarColor = palette[getClosestToNum(Object.keys(palette), wantedLuminance)].hex();
-        } else if (colorSelectionMode == "static") {
-            sidebarColor = Dribbblish.config.get("colorOverride");
+            color = palette[getClosestToNum(Object.keys(palette), wantedLuminance)].hex();
         }
     }
 
-    updateColors(false, sidebarColor);
+    updateColors(false, color);
 }
 
 var coverListener;
