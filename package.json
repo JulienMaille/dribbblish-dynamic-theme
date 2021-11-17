@@ -21,6 +21,7 @@
         "jquery": "^3.6.0",
         "markdown-it": "^12.2.0",
         "markdown-it-attrs": "^4.1.0",
+        "markdown-it-bracketed-spans": "^1.0.1",
         "moment": "^2.29.1",
         "node-vibrant": "3.1.4"
     }

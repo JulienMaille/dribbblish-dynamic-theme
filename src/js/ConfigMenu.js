@@ -1,6 +1,7 @@
 import $ from "jquery";
 import MarkdownIt from "markdown-it";
 import MarkdownItAttrs from "markdown-it-attrs";
+import markdownItBracketedSpans from "markdown-it-bracketed-spans";
 
 import svgUndo from "svg/undo";
 
@@ -82,6 +83,7 @@ export default class ConfigMenu {
             typographer: true
         });
         this.#md.use(MarkdownItAttrs);
+        this.#md.use(markdownItBracketedSpans);
 
         const container = document.createElement("div");
         container.id = "dribbblish-config";
