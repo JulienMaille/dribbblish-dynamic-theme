@@ -11,6 +11,7 @@ import Info from "./Info";
 import svgArrowDown from "svg/arrow-down";
 import svgCode from "svg/code";
 import svgWifiSlash from "svg/wifi-slash";
+import svgCog from "svg/cog";
 
 const Dribbblish = {
     config: new ConfigMenu(),
@@ -19,6 +20,25 @@ const Dribbblish = {
 const colorThief = new ColorThief();
 // To expose to external scripts
 window.Dribbblish = Dribbblish;
+
+Dribbblish.config.register({
+    type: "checkbox",
+    key: "openSettingsInfo",
+    name: "Open Settings Icon",
+    description: "Show an icon next to your profile image to open the dribbblish settings",
+    defaultValue: true,
+    onChange: (val) =>
+        Dribbblish.info[val ? "set" : "remove"]("settings", {
+            icon: svgCog,
+            color: {
+                fg: "var(--spice-subtext)",
+                bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
+            },
+            order: 999,
+            tooltip: "Open Dribbblish Settings",
+            onClick: () => Dribbblish.config.open()
+        })
+});
 
 Dribbblish.config.register({
     type: "checkbox",
@@ -598,7 +618,7 @@ Dribbblish.config.register({
     key: "theme",
     name: "Theme",
     description: "Select Dark / Bright mode",
-    defaultValue: "dark",
+    defaultValue: "time",
     showChildren: (val) => {
         if (val == "time") return ["darkModeOnTime", "darkModeOffTime"];
         return false;
@@ -803,7 +823,7 @@ waitForElement([".main-topBar-container"], ([topBarContainer]) => {
             .then((response) => response.json())
             .then((data) => {
                 const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-                Dribbblish.info.set("upd", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
                 Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: svgCode } : null);
             })
             .catch(console.error);
@@ -818,7 +838,7 @@ window.addEventListener("offline", () =>
     Dribbblish.info.set("offline", {
         tooltip: "Offline",
         icon: svgWifiSlash,
-        order: 999,
+        order: 998,
         color: {
             fg: "#ffffff",
             bg: "#ff2323"

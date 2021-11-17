@@ -1,6 +1,7 @@
 import $ from "jquery";
 import MarkdownIt from "markdown-it";
 import MarkdownItAttrs from "markdown-it-attrs";
+import markdownItBracketedSpans from "markdown-it-bracketed-spans";
 
 import svgUndo from "svg/undo";
 
@@ -11,7 +12,7 @@ export default class ConfigMenu {
      * @property {String|DribbblishConfigArea} [area={name: "Main Settings", order: 0}]
      * @property {any} [data={}]
      * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
-     * @property {String} [key] defaults to `${area}_${name]`. e.g: About_Info
+     * @property {String} key
      * @property {String} name
      * @property {String} [description=""]
      * @property {any} [defaultValue]
@@ -20,6 +21,7 @@ export default class ConfigMenu {
      * @property {Boolean} [insertOnTop=false]
      * @property {Boolean} [fireInitialChange=true]
      * @property {Boolean} [save=true]
+     * @property {validate} [validate]
      * @property {showChildren} [showChildren]
      * @property {onAppended} [onAppended]
      * @property {onChange} [onChange]
@@ -32,6 +34,13 @@ export default class ConfigMenu {
      * @property {String} name
      * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
      * @property {Boolean} [toggleable=true]
+     */
+
+    /**
+     * @callback validate
+     * @this {DribbblishConfigItem}
+     * @param {any} value
+     * @returns {Boolean | String}
      */
 
     /**
@@ -74,6 +83,7 @@ export default class ConfigMenu {
             typographer: true
         });
         this.#md.use(MarkdownItAttrs);
+        this.#md.use(markdownItBracketedSpans);
 
         const container = document.createElement("div");
         container.id = "dribbblish-config";
@@ -116,6 +126,7 @@ export default class ConfigMenu {
         elem.setAttribute("type", options.type);
         if (options.hidden) elem.setAttribute("hidden", true);
         if (options.childOf) elem.setAttribute("parent", options.childOf);
+        if (options.children.length > 0) elem.setAttribute("children", options.children.map((c) => c.key).join(" "));
         elem.innerHTML = /* html */ `
             ${
                 options.name != null && options.description != null
@@ -154,6 +165,7 @@ export default class ConfigMenu {
                     $inputElem.prop("checked", defaultVal);
                 } else {
                     $inputElem.prop("value", defaultVal);
+                    if (options.type == "slider") $inputElem.attr("tooltip", defaultVal);
                 }
                 options.onChange(defaultVal);
             });
@@ -177,6 +189,7 @@ export default class ConfigMenu {
             insertOnTop: false,
             fireInitialChange: true,
             save: true,
+            validate: () => true,
             showChildren: () => true,
             onAppended: () => {},
             onChange: () => {},
@@ -186,7 +199,6 @@ export default class ConfigMenu {
         // Set Defaults
         options = { ...defaultOptions, ...options };
         if (typeof options.area == "string") options.area = { name: options.area, order: 0 };
-        if (options.key == null) options.key = `${options.area.name}_${options.name}`.split(" ").join("_");
         options.description = options.description
             .split("\n")
             .filter((line) => line.trim() != "")
@@ -194,7 +206,11 @@ export default class ConfigMenu {
             .join("\n");
         options._onChange = options.onChange;
         options.onChange = (val) => {
-            $(`.dribbblish-config-item[key="${options.key}"]`).attr("changed", options.save && val != options.defaultValue ? "" : null);
+            const isValid = validate(val);
+            $(`.dribbblish-config-item[key="${options.key}"]`).attr("changed", isValid === true && val != options.defaultValue ? "" : null);
+            if (!isValid) return;
+            this.set(options.key, val, options.save);
+
             options._onChange.call(options, val);
             const show = options.showChildren.call(options, val);
             options.children.forEach((child) => this.#setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
@@ -204,6 +220,18 @@ export default class ConfigMenu {
         });
 
         this.#config[options.key] = options;
+
+        function validate(val) {
+            const isValid = options.validate.call(options, val);
+            const $elem = $(`.dribbblish-config-item[key="${options.key}"]`);
+            if (isValid === true) {
+                $elem.attr("invalid", null).css("--validation-error", "");
+            } else {
+                const error = isValid === false ? "Invalid" : isValid;
+                $elem.attr("invalid", "").css("--validation-error", `"${error.replace(/"/g, `\\"`)}"`);
+            }
+            return isValid;
+        }
 
         if (options.type == "checkbox") {
             const input = /* html */ `
@@ -215,8 +243,7 @@ export default class ConfigMenu {
             this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("change", (e) => {
-                this.set(options.key, e.target.checked, options.save);
-                options.onChange(this.get(options.key));
+                options.onChange(e.target.checked);
             });
         } else if (options.type == "select") {
             // Validate
@@ -233,8 +260,7 @@ export default class ConfigMenu {
             this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("change", (e) => {
-                this.set(options.key, e.target.value, options.save);
-                options.onChange(this.get(options.key));
+                options.onChange(e.target.value);
             });
         } else if (options.type == "button") {
             if (typeof options.data != "string") options.data = options.name;
@@ -257,9 +283,9 @@ export default class ConfigMenu {
         } else if (options.type == "number") {
             // Validate
             if (options.defaultValue == null) options.defaultValue = 0;
-            const val = this.get(options.key);
-            if (options.data.min != null && val < options.data.min) this.set(options.key, options.data.min, options.save);
-            if (options.data.max != null && val > options.data.max) this.set(options.key, options.data.max, options.save);
+            const _val = this.get(options.key);
+            if (options.data.min != null && _val < options.data.min) this.set(options.key, options.data.min, options.save);
+            if (options.data.max != null && _val > options.data.max) this.set(options.key, options.data.max, options.save);
 
             const input = /* html */ `
                 <input
@@ -282,8 +308,7 @@ export default class ConfigMenu {
                 if (options.data.min != null && e.target.value < options.data.min) e.target.value = options.data.min;
                 if (options.data.max != null && e.target.value > options.data.max) e.target.value = options.data.max;
 
-                this.set(options.key, Number(e.target.value), options.save);
-                options.onChange(this.get(options.key));
+                options.onChange(Number(e.target.value));
             });
         } else if (options.type == "text") {
             if (options.defaultValue == null) options.defaultValue = "";
@@ -294,9 +319,10 @@ export default class ConfigMenu {
             this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
-                // TODO: maybe add an validation function via `data.validate`
-                this.set(options.key, e.target.value, options.save);
-                options.onChange(this.get(options.key));
+                const val = e.target.value;
+                if (!validate(val)) return;
+                this.set(options.key, val, options.save);
+                options.onChange(val);
             });
         } else if (options.type == "textarea") {
             if (options.defaultValue == null) options.defaultValue = "";
@@ -307,9 +333,7 @@ export default class ConfigMenu {
             this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
-                // TODO: maybe add an validation function via `data.validate`
-                this.set(options.key, e.target.value, options.save);
-                options.onChange(this.get(options.key));
+                options.onChange(e.target.value);
             });
         } else if (options.type == "slider") {
             // Validate
@@ -336,8 +360,7 @@ export default class ConfigMenu {
                 $(`#dribbblish-config-input-${options.key}`).attr("tooltip", `${e.target.value}${options.data?.suffix ?? ""}`);
                 $(`#dribbblish-config-input-${options.key}`).attr("value", e.target.value);
 
-                this.set(options.key, Number(e.target.value), options.save);
-                options.onChange(this.get(options.key));
+                options.onChange(Number(e.target.value));
             });
         } else if (options.type == "time") {
             // Validate
@@ -350,8 +373,7 @@ export default class ConfigMenu {
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
                 $(`#dribbblish-config-input-${options.key}`).attr("value", e.target.value);
 
-                this.set(options.key, e.target.value, options.save);
-                options.onChange(this.get(options.key));
+                options.onChange(e.target.value);
             });
         } else if (options.type == "color") {
             // Validate
@@ -362,8 +384,7 @@ export default class ConfigMenu {
             this.#addInputHTML({ ...options, input });
 
             $(`#dribbblish-config-input-${options.key}`).on("input", (e) => {
-                this.set(options.key, e.target.value, options.save);
-                options.onChange(this.get(options.key));
+                options.onChange(e.target.value);
             });
         } else {
             throw new Error(`Config Type "${options.type}" invalid`);
@@ -372,6 +393,7 @@ export default class ConfigMenu {
         // Re-write internal config since some values may have changed
         this.#config[options.key] = options;
 
+        validate(this.get(options.key));
         $(`.dribbblish-config-item[key="${options.key}"]`).attr("changed", options.save && this.get(options.key) != options.defaultValue ? "" : null);
 
         options.children.forEach((child) => this.register(child));
@@ -466,7 +488,32 @@ export default class ConfigMenu {
      */
     #setHidden(key, hidden) {
         this.#config[key].hidden = hidden;
-        $(`.dribbblish-config-item[key="${key}"]`).attr("hidden", hidden ? "" : null);
+        const $elem = $(`.dribbblish-config-item[key="${key}"]`);
+        $elem.attr("hidden", hidden ? "" : null);
+
+        // If element has children or a parent
+        if ($elem.attr("parent") != null || $elem.attr("children") != null) {
+            // Get parent of element block
+            const $parent = $elem.attr("parent") != null ? $(`[children~="${key}"]`) : $elem;
+            const $nextChildren = $parent.nextAll(`[parent="${$parent.attr("key")}"]`);
+
+            // Make parent connect on bottom when children are visible
+            $parent.attr("connect-bottom", $nextChildren.filter(":not([hidden])").length > 0 ? "" : null);
+
+            // Reset all children's bottom connection
+            $nextChildren.each(function () {
+                $(this).attr("connect-bottom", null);
+            });
+            // Add bottom connection to all but the last visible child
+            $nextChildren
+                .filter(":not([hidden])")
+                .slice(0, -1)
+                .each(function () {
+                    $(this).attr("connect-bottom", "");
+                });
+
+            //* NOTE: All children automatically have a top connection
+        }
     }
 
     getOptions(key) {

@@ -8,9 +8,15 @@ export default class Info {
      * @property {String} [text]
      * @property {String} [tooltip]
      * @property {String} [icon]
-     * @property {{fg: String, bg: String}} [color] defaults to {fg: "sidebar-text", bg: "button"}
+     * @property {DribbblishInfoColor} [color]
      * @property {Number} [order=0] order < 0 = More to the Left | order > 0 = More to the Right
      * @property {onClick} [onClick]
+     */
+
+    /**
+     * @typedef {Object} DribbblishInfoColor
+     * @property {String} [fg]
+     * @property {String} [bg]
      */
 
     /**
@@ -58,9 +64,9 @@ export default class Info {
         if (info.tooltip != null) elem.setAttribute("title", info.tooltip);
         if (info.onClick != null) elem.setAttribute("clickable", "");
         if (info.color != null) {
-            const { bg, fg } = info.color;
-            if (bg != null) elem.style.backgroundColor = bg;
+            const { fg, bg } = info.color;
             if (fg != null) elem.style.color = fg;
+            if (bg != null) elem.style.backgroundColor = bg;
         }
         if (info.order != 0) elem.style.order = info.order;
         elem.innerHTML = `${info.text ?? ""}${info.icon ?? ""}`;

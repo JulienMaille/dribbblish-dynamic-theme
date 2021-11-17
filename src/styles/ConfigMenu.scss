@@ -23,7 +23,7 @@
         z-index: 1;
         position: relative;
         width: clamp(500px, 50%, 650px);
-        background-color: spiceColor("main", 0.9);
+        background-color: spiceColor("main", 0.95);
         backdrop-filter: blur(3px);
         padding: 20px 15px;
         border-radius: var(--main-corner-radius);
@@ -44,22 +44,23 @@
             display: flex;
             width: 100%;
             flex-direction: column;
-            gap: 16px;
+            gap: 8px;
             max-height: 60vh;
             overflow-y: auto;
-            padding: 0px 50px;
+            padding: 0px 25px;
 
             .dribbblish-config-area {
                 display: flex;
                 flex-direction: column;
-                gap: 16px;
+                align-items: center;
+                gap: 8px;
 
                 &[collapsed] {
                     overflow: hidden;
                     min-height: 38px; //for some reason height alone isn't enough
                     height: 38px;
 
-                    > h2 svg {
+                    .dribbblish-config-area-header svg {
                         transform: rotate(270deg);
                     }
                 }
@@ -71,6 +72,7 @@
                 .dribbblish-config-area-header {
                     position: relative;
                     text-align: center;
+                    width: fit-content;
                     height: 38px;
                     display: flex;
                     gap: 10px;
@@ -89,7 +91,8 @@
                 .dribbblish-config-area-items {
                     display: flex;
                     flex-direction: column;
-                    gap: 16px;
+                    gap: 8px;
+                    width: 100%;
 
                     .dribbblish-config-item {
                         position: relative;
@@ -99,23 +102,58 @@
                         justify-content: space-between;
                         align-items: center;
                         gap: 10px;
+                        padding: 8px 16px;
 
                         &[hidden] {
                             display: none;
                         }
 
-                        &[parent] {
-                            padding-left: 16px;
-                        }
-
-                        &[changed]::before {
+                        &::before {
+                            z-index: -1;
                             content: "";
                             position: absolute;
-                            left: -13px;
-                            top: -3px;
-                            bottom: -3px;
-                            width: 3px;
-                            background-color: spiceColor("sidebar");
+                            inset: 0px;
+                            border-radius: var(--main-corner-radius);
+                            background-color: spiceColor("subtext", 0.03, 0.04);
+                        }
+
+                        &[parent]::before {
+                            top: -8px;
+                            border-top-left-radius: 0px;
+                            border-top-right-radius: 0px;
+                        }
+
+                        &[connect-bottom]::before {
+                            border-bottom-left-radius: 0px;
+                            border-bottom-right-radius: 0px;
+                        }
+
+                        &[invalid]::before {
+                            border: 2px solid rgba(red, 0.8);
+                        }
+
+                        &[changed] {
+                            &::after {
+                                content: "";
+                                position: absolute;
+                                left: 0px;
+                                top: 0px;
+                                bottom: 0px;
+                                width: 5px;
+                                background-color: spiceColor("text");
+                                border-top-left-radius: var(--main-corner-radius);
+                                border-bottom-left-radius: var(--main-corner-radius);
+                            }
+
+                            &[parent]::after {
+                                top: -4px;
+                                border-top-left-radius: 0px;
+                            }
+
+                            &[connect-bottom]::after {
+                                bottom: -4px;
+                                border-bottom-left-radius: 0px;
+                            }
                         }
 
                         .dribbblish-config-item-header {
@@ -152,6 +190,7 @@
                                     height: min-content;
                                     color: spiceColor("subtext");
                                     line-height: calc(1em + 6px); // To have line gaps
+                                    line-break: anywhere;
                                 }
 
                                 .x-settings-secondColumn {
@@ -162,6 +201,12 @@
 
                         .dribbblish-config-item-input {
                             min-width: fit-content;
+
+                            &::before {
+                                content: var(--validation-error);
+                                margin-right: 8px;
+                                color: rgba(red, 0.8);
+                            }
                         }
                     }
                 }

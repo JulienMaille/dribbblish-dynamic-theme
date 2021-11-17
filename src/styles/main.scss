@@ -973,6 +973,7 @@ span.main-userWidget-displayName,
 }
 
 .main-rootlist-wrapper > div:nth-child(2) > li img,
+.main-navBar-navBarLink > svg,
 .main-navBar-navBarLink > .icon {
     z-index: 1;
 }
@@ -1055,12 +1056,12 @@ div.GlueDropTarget.personal-library > *.active {
 }
 
 html.right-expanded-cover .main-coverSlotExpanded-container {
-    right: calc(var(--main-gap) + 10px);
+    right: var(--main-gap);
     left: unset;
 }
 
 html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
-    right: calc(var(--main-gap) + var(--buddy-feed-width) + 10px);
+    right: calc(var(--main-gap) + var(--buddy-feed-width));
     left: unset;
 }
 
@@ -1225,6 +1226,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 }
 .main-view-container__scroll-node-child {
     height: 100%;
+    padding-bottom: 0px;
 }
 
 // Hide default Sporify "Offline" notice

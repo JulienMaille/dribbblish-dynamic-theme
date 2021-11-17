@@ -46,10 +46,13 @@ $props-to-transition: ("sidebar", "main", "text", "button");
 }
 
 // Color Function
-@function spiceColor($key, $alpha: 1) {
+// $light-offset is added when in light mode
+@function spiceColor($key, $alpha: 1, $light-offset: 0) {
     @if $alpha == 1 {
         @return var(--spice-#{$key});
-    } @else {
+    } @else if $light-offset == 0 {
         @return rgba(var(--spice-rgb-#{$key}), $alpha);
+    } @else {
+        @return rgba(var(--spice-rgb-#{$key}), calc($alpha + var(--is_light) * $light-offset));
     }
 }
