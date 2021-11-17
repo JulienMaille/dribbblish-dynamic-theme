@@ -846,7 +846,7 @@ waitForElement([".main-topBar-container"], ([topBarContainer]) => {
             .catch(console.error);
     }
 
-    setInterval(checkForUpdate(), 10 * 60 * 1000);
+    setInterval(checkForUpdate, 10 * 60 * 1000);
     checkForUpdate();
 });
 
