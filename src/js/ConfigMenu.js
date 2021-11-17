@@ -221,7 +221,6 @@ export default class ConfigMenu {
 
         function validate(val) {
             const isValid = options.validate.call(options, val);
-            console.log(isValid);
             const $elem = $(`.dribbblish-config-item[key="${options.key}"]`);
             if (isValid === true) {
                 $elem.attr("invalid", null).css("--validation-error", "");
