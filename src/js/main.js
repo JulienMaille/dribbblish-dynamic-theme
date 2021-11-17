@@ -834,21 +834,19 @@ function registerCoverListener() {
 registerCoverListener();
 
 // Check latest release every 10m
-waitForElement([".main-topBar-container"], ([topBarContainer]) => {
-    function checkForUpdate() {
-        fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
-            .then((response) => response.json())
-            .then((data) => {
-                const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-                Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
-                Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: svgCode } : null);
-            })
-            .catch(console.error);
-    }
+function checkForUpdate() {
+    fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
+        .then((response) => response.json())
+        .then((data) => {
+            const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
+            Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+            Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: svgCode } : null);
+        })
+        .catch(console.error);
+}
 
-    setInterval(checkForUpdate, 10 * 60 * 1000);
-    checkForUpdate();
-});
+setInterval(checkForUpdate, 10 * 60 * 1000);
+checkForUpdate();
 
 // Show "Offline info"
 window.addEventListener("offline", () =>
