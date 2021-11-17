@@ -9,6 +9,7 @@ Fixed:
 - Missing on/off times settings for `Based on Time` dark mode (#107)
 - Playing icon position being wrong when listening to a playlist that is inside a folder ([#106 (comment)](https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/106#issuecomment-967208507))
 - Alignment of right expanded cover
+- Slider tooltip is incorrect after a reset (#111)
 
 Improved:
 - The settings UI now better represents grouped items

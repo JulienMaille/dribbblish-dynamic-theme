@@ -163,6 +163,7 @@ export default class ConfigMenu {
                     $inputElem.prop("checked", defaultVal);
                 } else {
                     $inputElem.prop("value", defaultVal);
+                    if (options.type == "slider") $inputElem.attr("tooltip", defaultVal);
                 }
                 options.onChange(defaultVal);
             });
