@@ -1213,6 +1213,10 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     border-radius: var(--main-corner-radius);
     opacity: lightOffset(0.07, 0.03);
     transition: background-image var(--song-transition-speed) linear;
+
+    html:not(.buddyfeed-visible) & {
+        inset: var(--main-gap) 0px var(--main-gap) var(--sidebar-width);
+    }
 }
 
 // Fix lyrics-plus having a scrollbar when top-bar is `solid` or `transparent`
