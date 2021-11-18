@@ -3,6 +3,7 @@
     @return #{"invert("}$v#{")"};
 }
 
+@import "Util";
 @import "Colors";
 @import "Fonts";
 @import "Inputs";
@@ -23,28 +24,22 @@
     --image-radius: 10px;
     --sidebar-icons-border-radius: 50vh; // 50vh = round / pill
     --song-transition-speed: 3s;
-}
-
-.os-scrollbar-handle {
-    background-color: spiceColor("text") !important;
-    border-radius: calc(var(--scrollbar-vertical-size) / 2);
-}
-
-.os-scrollbar-handle:hover {
-    filter: brightness(80%);
+    --is_dark: calc(1 - var(--is_light));
 }
 
 ::-webkit-scrollbar {
     width: var(--scrollbar-vertical-size);
 }
 
+.os-scrollbar-handle,
 ::-webkit-scrollbar-thumb {
-    background-color: spiceColor("text") !important;
-    border-radius: calc(var(--scrollbar-vertical-size) / 2);
+    background-color: spiceColor("sidebar") !important;
+    border-radius: 50vw;
 }
 
+.os-scrollbar-handle:hover,
 ::-webkit-scrollbar-thumb:hover {
-    filter: brightness(80%);
+    background-color: spiceColor("sidebar", 0.8) !important;
 }
 
 .main-type-mesto,
@@ -1216,7 +1211,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     background-position: center center;
     filter: blur(15px);
     border-radius: var(--main-corner-radius);
-    opacity: calc(0.07 + 0.03 * var(--is_light, 0));
+    opacity: lightOffset(0.07, 0.03);
     transition: background-image var(--song-transition-speed) linear;
 }
 

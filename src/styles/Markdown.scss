@@ -1,4 +1,14 @@
 *[markdown] {
+    ol,
+    ul {
+        list-style: inside;
+
+        > li::marker {
+            content: "• ";
+            font-weight: 900;
+        }
+    }
+
     code {
         background-color: spiceColor("subtext", 0.1);
         padding: 0px 5px;
@@ -6,6 +16,6 @@
     }
 
     .muted {
-        color: spiceColor("subtext", 0.5);
+        color: spiceColor("subtext", 0.5, 0.2);
     }
 }

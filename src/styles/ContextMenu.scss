@@ -4,13 +4,18 @@
     position: relative;
     border-radius: var(--main-corner-radius);
     padding: 8px;
+    box-shadow: 0px 0px 8px spiceColor("subtext", 0.1, 0.1);
+
+    &:not([data-depth="0"]) {
+        margin: -5px 0px;
+    }
 
     &::before {
         z-index: -1;
         content: "";
         position: absolute;
         inset: 0px;
-        background-color: spiceColor("main", calc(0.75 - 0.1 * var(--is_light))) !important;
+        background-color: spiceColor("main", 0.75, -0.1) !important;
         backdrop-filter: blur(10px);
         border-radius: var(--main-corner-radius);
     }
@@ -24,7 +29,7 @@
             &:focus,
             &:active,
             &[aria-expanded="true"] {
-                background-color: spiceColor("subtext", calc(0.1 + 0.3 * var(--is_light)));
+                background-color: spiceColor("subtext", 0.1, 0.3);
             }
 
             &::before,

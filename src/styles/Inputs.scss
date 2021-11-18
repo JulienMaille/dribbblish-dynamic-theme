@@ -66,7 +66,7 @@ select {
     &:active {
         background-color: spiceColor("selected-row", 0.6) !important;
     }
-    
+
     option {
         background: spiceColor("main") !important;
     }
@@ -136,7 +136,7 @@ input {
 
     &[type="time"] {
         &::-webkit-calendar-picker-indicator {
-            filter: invert(calc(1 - var(--is_light)));
+            filter: invert(var(--is_dark));
         }
     }
 

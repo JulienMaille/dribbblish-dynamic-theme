@@ -1,0 +1,4 @@
+// returns $n and adds $offset when the theme is light
+@function lightOffset($n, $offset) {
+    @return calc($n + $offset * var(--is_light));
+}
