@@ -143,7 +143,7 @@ waitForElement(["#main"], () => {
     });
 
     Dribbblish.config.register({
-        area: "Ads",
+        order: 999,
         type: "checkbox",
         key: "hideAds",
         name: "Hide Ads",
