@@ -1,6 +1,10 @@
 # Dribbblish Dynamic
 A theme for [Spicetify](https://github.com/khanhas/spicetify-cli)
 
+<a href="https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest"><img src="https://img.shields.io/github/release/JulienMaille/dribbblish-dynamic-theme/all.svg"></a>
+<a href="https://github.com/JulienMaille/dribbblish-dynamic-theme/releases"><img src="https://img.shields.io/github/downloads/JulienMaille/dribbblish-dynamic-theme/total.svg"></a>
+
+
 ### Preview
 
 <img src="showcase-images/preview.gif" alt="img" width="500px"> 
