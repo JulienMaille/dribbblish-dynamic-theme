@@ -24,6 +24,7 @@
         "markdown-it-attrs": "^4.1.0",
         "markdown-it-bracketed-spans": "^1.0.1",
         "moment": "^2.29.1",
-        "node-vibrant": "^3.1.6"
+        "node-vibrant": "^3.1.6",
+        "svgson": "^5.2.1"
     }
 }

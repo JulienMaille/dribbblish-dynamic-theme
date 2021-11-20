@@ -1,9 +1,8 @@
 import $ from "jquery";
-import MarkdownIt from "markdown-it";
-import MarkdownItAttrs from "markdown-it-attrs";
-import MarkdownItBracketedSpans from "markdown-it-bracketed-spans";
 
-import svgUndo from "svg/undo";
+import { renderMD } from "./Util";
+
+import iconUndo from "icon/undo";
 
 export default class ConfigMenu {
     /**
@@ -69,21 +68,10 @@ export default class ConfigMenu {
     /** @type {Spicetify.Menu.Item} */
     #configButton;
 
-    /** @type {MarkdownIt} */
-    #md;
-
     constructor() {
         this.#config = {};
         this.#configButton = new Spicetify.Menu.Item("Dribbblish Settings", false, () => this.open());
         this.#configButton.register();
-        this.#md = MarkdownIt({
-            html: true,
-            breaks: true,
-            linkify: true,
-            typographer: true
-        });
-        this.#md.use(MarkdownItBracketedSpans);
-        this.#md.use(MarkdownItAttrs);
 
         const container = document.createElement("div");
         container.id = "dribbblish-config";
@@ -134,9 +122,9 @@ export default class ConfigMenu {
                         <div class="dribbblish-config-item-header">
                             <h2 class="x-settings-title main-type-cello" as="h2" empty="${options.name == null}">
                                 ${options.name}
-                                ${options.resetButton ? /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${svgUndo}</button>` : ""}
+                                ${options.resetButton ? /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${iconUndo}</button>` : ""}
                             </h2>
-                            <label class="main-type-mesto" empty="${options.description == null}" markdown>${this.#md.render(options.description)}</label>
+                            <label class="main-type-mesto" empty="${options.description == null}" markdown>${renderMD(options.description)}</label>
                         </div>
                     `
                     : ""

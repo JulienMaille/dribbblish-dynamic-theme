@@ -16,7 +16,7 @@
         height: 100%;
         padding: 0px 8px;
         color: spiceColor("sidebar-text");
-        background-color: spiceColor("button");
+        background-color: spiceColor("sidebar");
         border-radius: var(--sidebar-icons-border-radius);
         line-height: 13px;
         @include spiceFont("glue", 14px, "Medium");

@@ -14,7 +14,7 @@ module.exports = {
     resolve: {
         extensions: [".js", ".svg"],
         alias: {
-            svg: path.resolve(__dirname, "./src/svg")
+            icon: path.resolve(__dirname, "./src/icons")
         }
     },
     module: {
@@ -49,23 +49,24 @@ module.exports = {
             },
             {
                 test: /\.svg/,
-                exclude: /node_modules/,
-                type: "asset/source"
+                type: "asset/source",
+                resourceQuery: /.?/,
+                use: [path.resolve(__dirname, "./src/loaders/icon-loader.js")]
             }
         ]
     },
     devtool: "inline-source-map",
     plugins: [
-        new CleanWebpackPlugin({
-            protectWebpackAssets: false,
-            cleanAfterEveryBuildPatterns: ["*.LICENSE.txt"]
+        new CopyPlugin({
+            patterns: [{ from: "src/assets", to: "assets" }]
         }),
         new webpack.DefinePlugin({
             "process.env.DRIBBBLISH_VERSION": JSON.stringify(process.env.DRIBBBLISH_VERSION || "Dev"),
             "process.env.COMMIT_HASH": JSON.stringify(process.env.COMMIT_HASH || "local")
         }),
-        new CopyPlugin({
-            patterns: [{ from: "src/assets", to: "assets" }]
+        new CleanWebpackPlugin({
+            protectWebpackAssets: false,
+            cleanAfterEveryBuildPatterns: ["*.LICENSE.txt"]
         })
     ]
 };

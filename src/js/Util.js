@@ -1,3 +1,7 @@
+import MarkdownIt from "markdown-it";
+import MarkdownItAttrs from "markdown-it-attrs";
+import MarkdownItBracketedSpans from "markdown-it-bracketed-spans";
+
 /**
  * @callback waitForElCb
  * @param {HTMLElement[]} queries
@@ -36,4 +40,23 @@ export function capitalizeFirstLetter(string) {
 
 export function getClosestToNum(arr, num) {
     return arr.reduce((prev, curr) => (Math.abs(curr - num) < Math.abs(prev - num) ? curr : prev));
+}
+
+export function renderMD(src, env) {
+    const md = MarkdownIt({
+        html: true,
+        breaks: true,
+        linkify: true,
+        typographer: true
+    });
+    md.use(MarkdownItBracketedSpans);
+    md.use(MarkdownItAttrs);
+
+    return md.render(src, env);
+}
+
+export function htmlToNode(htmlStr) {
+    var div = document.createElement("div");
+    div.innerHTML = htmlStr.trim();
+    return div.firstChild;
 }

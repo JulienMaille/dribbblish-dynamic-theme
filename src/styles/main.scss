@@ -638,7 +638,7 @@ html.sidebar-hide-text .GlueDropTarget span {
     padding: 0 12px;
 }
 
-img.playlist-picture {
+.playlist-picture {
     width: 32px;
     height: 32px;
     flex: 0 0 32px;
@@ -646,6 +646,10 @@ img.playlist-picture {
     background-size: cover;
     background-position: center;
     border-radius: var(--sidebar-icons-border-radius);
+
+    &[type="icon"] {
+        padding: 2px;
+    }
 }
 
 .main-rootlist-rootlistItem a span {
@@ -737,12 +741,9 @@ li.GlueDropTarget {
     padding-top: 32px;
 }
 
-#main[top-bar="none-padding"] .spotify__container--is-desktop.spotify__os--is-windows[dir="ltr"] .Root__top-bar + .main-buddyFeed-buddyFeedRoot .main-topBar-container {
-    padding-right: 167px;
-}
-
 .main-topBar-container {
     max-width: unset;
+    padding: 16px 32px !important;
 }
 
 /** Custom elements */
@@ -969,7 +970,8 @@ span.main-userWidget-displayName,
 
 .main-rootlist-wrapper > div:nth-child(2) > li img,
 .main-navBar-navBarLink > svg,
-.main-navBar-navBarLink > .icon {
+.main-navBar-navBarLink > .icon,
+.main-rootlist-rootlistItemLink > svg {
     z-index: 1;
 }
 
@@ -1051,7 +1053,7 @@ div.GlueDropTarget.personal-library > *.active {
 }
 
 html.right-expanded-cover .main-coverSlotExpanded-container {
-    right: var(--main-gap);
+    right: calc(var(--main-gap) * 2);
     left: unset;
 }
 

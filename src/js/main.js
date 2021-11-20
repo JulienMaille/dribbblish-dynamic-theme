@@ -7,11 +7,12 @@ import moment from "moment";
 import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum } from "./Util";
 import ConfigMenu from "./ConfigMenu";
 import Info from "./Info";
+import "./Folders";
 
-import svgArrowDown from "svg/arrow-down";
-import svgCode from "svg/code";
-import svgWifiSlash from "svg/wifi-slash";
-import svgCog from "svg/cog";
+import iconArrowDown from "icon/arrow-down";
+import iconCode from "icon/code";
+import iconWifiSlash from "icon/wifi-slash";
+import iconCog from "icon/cog";
 
 const Dribbblish = {
     config: new ConfigMenu(),
@@ -29,7 +30,7 @@ Dribbblish.config.register({
     defaultValue: true,
     onChange: (val) =>
         Dribbblish.info[val ? "set" : "remove"]("settings", {
-            icon: svgCog,
+            icon: iconCog,
             color: {
                 fg: "var(--spice-subtext)",
                 bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
@@ -153,49 +154,6 @@ waitForElement(["#main"], () => {
     });
 });
 
-waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"] li`], ([root, firstItem]) => {
-    const listElem = firstItem.parentElement;
-    root.classList.add("dribs-playlist-list");
-
-    /** Replace Playlist name with their pictures */
-    function loadPlaylistImage() {
-        for (const item of listElem.children) {
-            let link = item.querySelector("a");
-            if (!link) continue;
-
-            let [_, app, uid] = link.pathname.split("/");
-            let uri;
-            if (app === "playlist") {
-                uri = Spicetify.URI.playlistV2URI(uid);
-            } else if (app === "folder") {
-                const base64 = localStorage.getItem("dribbblish:folder-image:" + uid);
-                let img = link.querySelector("img");
-                if (!img) {
-                    img = document.createElement("img");
-                    img.classList.add("playlist-picture");
-                    link.prepend(img);
-                }
-                img.src = base64 || "/images/tracklist-row-song-fallback.svg";
-                continue;
-            }
-
-            Spicetify.CosmosAsync.get(`sp://core-playlist/v1/playlist/${uri.toURI()}/metadata`, { policy: { picture: true } }).then((res) => {
-                const meta = res.metadata;
-                let img = link.querySelector("img");
-                if (!img) {
-                    img = document.createElement("img");
-                    img.classList.add("playlist-picture");
-                    link.prepend(img);
-                }
-                img.src = meta.picture || "/images/tracklist-row-song-fallback.svg";
-            });
-        }
-    }
-
-    loadPlaylistImage();
-    new MutationObserver(loadPlaylistImage).observe(listElem, { childList: true });
-});
-
 waitForElement([".main-rootlist-rootlist", ".main-rootlist-wrapper > :nth-child(2) > :first-child", "#spicetify-show-list"], ([rootlist]) => {
     function checkSidebarPlaylistScroll() {
         const topDist = rootlist.getBoundingClientRect().top - document.querySelector("#spicetify-show-list:not(:empty), .main-rootlist-wrapper > :nth-child(2) > :first-child").getBoundingClientRect().top;
@@ -295,53 +253,6 @@ waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => 
             root.classList.remove("is-connectBarVisible");
         }
     });
-
-    const filePickerForm = document.createElement("form");
-    filePickerForm.setAttribute("aria-hidden", true);
-    filePickerForm.innerHTML = '<input type="file" class="hidden-visually" />';
-    document.body.appendChild(filePickerForm);
-    /** @type {HTMLInputElement} */
-    const filePickerInput = filePickerForm.childNodes[0];
-    filePickerInput.accept = ["image/jpeg", "image/apng", "image/avif", "image/gif", "image/png", "image/svg+xml", "image/webp"].join(",");
-
-    filePickerInput.onchange = () => {
-        if (!filePickerInput.files.length) return;
-
-        const file = filePickerInput.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const result = event.target.result;
-            const id = Spicetify.URI.from(filePickerInput.uri).id;
-            try {
-                localStorage.setItem("dribbblish:folder-image:" + id, result);
-            } catch {
-                Spicetify.showNotification("File too large");
-            }
-            loadPlaylistImage();
-        };
-        reader.readAsDataURL(file);
-    };
-
-    new Spicetify.ContextMenu.Item(
-        "Remove folder image",
-        ([uri]) => {
-            const id = Spicetify.URI.from(uri).id;
-            localStorage.removeItem("dribbblish:folder-image:" + id);
-            loadPlaylistImage();
-        },
-        ([uri]) => Spicetify.URI.isFolder(uri),
-        "x"
-    ).register();
-    new Spicetify.ContextMenu.Item(
-        "Choose folder image",
-        ([uri]) => {
-            filePickerInput.uri = uri;
-            filePickerForm.reset();
-            filePickerInput.click();
-        },
-        ([uri]) => Spicetify.URI.isFolder(uri),
-        "edit"
-    ).register();
 })();
 
 /* Config settings */
@@ -839,8 +750,8 @@ function checkForUpdate() {
         .then((response) => response.json())
         .then((data) => {
             const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-            Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: svgArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
-            Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: svgCode } : null);
+            Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: iconArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+            Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode } : null);
         })
         .catch(console.error);
 }
@@ -852,7 +763,7 @@ checkForUpdate();
 window.addEventListener("offline", () =>
     Dribbblish.info.set("offline", {
         tooltip: "Offline",
-        icon: svgWifiSlash,
+        icon: iconWifiSlash,
         order: 998,
         color: {
             fg: "#ffffff",
