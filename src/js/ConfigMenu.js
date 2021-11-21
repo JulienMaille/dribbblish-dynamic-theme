@@ -194,8 +194,8 @@ export default class ConfigMenu {
             .join("\n");
         options._onChange = options.onChange;
         options.onChange = (val) => {
-            const isValid = validate(val);
-            $(`.dribbblish-config-item[key="${options.key}"]`).attr("changed", isValid === true && val != options.defaultValue ? "" : null);
+            const isValid = validate(val) === true;
+            $(`.dribbblish-config-item[key="${options.key}"]`).attr("changed", options.type != "button" && isValid && val != options.defaultValue ? "" : null);
             if (!isValid) return;
             this.set(options.key, val, options.save);
 
@@ -204,7 +204,7 @@ export default class ConfigMenu {
             options.children.forEach((child) => this.#setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
         };
         options.children = options.children.map((child) => {
-            return { ...child, area: options.area, childOf: options.key };
+            return { ...child, area: options.area, childOf: options.key, order: options.order ?? 0 + child.order ?? 0 };
         });
 
         this.#config[options.key] = options;
