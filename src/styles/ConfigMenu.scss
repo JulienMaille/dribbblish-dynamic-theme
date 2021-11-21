@@ -27,12 +27,12 @@
         backdrop-filter: blur(3px);
         padding: 20px 15px;
         border-radius: var(--main-corner-radius);
-        box-shadow: 0 0 10px 3px #0000003b;
         display: flex;
         gap: 5px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        @include spiceShadow();
 
         .dribbblish-config-close {
             position: absolute;

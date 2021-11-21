@@ -43,6 +43,10 @@ export default class Info {
         });
     }
 
+    isReady() {
+        return this.#ready;
+    }
+
     /**
      * @param {String} key
      * @param {DribbblishInfo} info

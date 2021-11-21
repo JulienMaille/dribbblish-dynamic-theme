@@ -4,9 +4,8 @@ import chroma from "chroma-js";
 import $ from "jquery";
 import moment from "moment";
 
-import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum } from "./Util";
-import ConfigMenu from "./ConfigMenu";
-import Info from "./Info";
+import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum, randomFromArray } from "./Util";
+import { default as _Dribbblish } from "./Dribbblish";
 import "./Folders";
 
 import iconArrowDown from "icon/arrow-down";
@@ -14,101 +13,105 @@ import iconCode from "icon/code";
 import iconWifiSlash from "icon/wifi-slash";
 import iconCog from "icon/cog";
 
-const Dribbblish = {
-    config: new ConfigMenu(),
-    info: new Info()
-};
-const colorThief = new ColorThief();
 // To expose to external scripts
+const Dribbblish = new _Dribbblish();
 window.Dribbblish = Dribbblish;
 
-Dribbblish.config.register({
-    type: "checkbox",
-    key: "openSettingsInfo",
-    name: "Open Settings Icon",
-    description: "Show an icon next to your profile image to open the dribbblish settings",
-    defaultValue: true,
-    onChange: (val) =>
-        Dribbblish.info[val ? "set" : "remove"]("settings", {
-            icon: iconCog,
-            color: {
-                fg: "var(--spice-subtext)",
-                bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
-            },
-            order: 999,
-            tooltip: "Open Dribbblish Settings",
-            onClick: () => Dribbblish.config.open()
-        })
-});
+const colorThief = new ColorThief();
 
-Dribbblish.config.register({
-    type: "checkbox",
-    key: "rightBigCover",
-    name: "Right expanded cover",
-    description: "Have the expanded cover Image on the right instead of on the left",
-    defaultValue: true,
-    onChange: (val) => $("html").toggleClass("right-expanded-cover", val)
-});
+// In the future maybe have some useful info here
+const loadingHints = ["Getting things ready...", "Starting up...", "Just one moment..."];
+Dribbblish.loader.show(randomFromArray(loadingHints));
 
-Dribbblish.config.register({
-    area: "Sidebar",
-    type: "checkbox",
-    key: "roundSidebarIcons",
-    name: "Round Sidebar Icons",
-    description: "If the Sidebar Icons should be round instead of square",
-    defaultValue: false,
-    onChange: (val) => $("html").css("--sidebar-icons-border-radius", val ? "50vh" : "var(--image-radius)")
-});
+Dribbblish.on("ready", () => {
+    setTimeout(() => Dribbblish.loader.hide(), 3000);
 
-Dribbblish.config.register({
-    area: "Animations & Transitions",
-    type: "checkbox",
-    key: "sidebarHoverAnimation",
-    name: "Sidebar Hover Animation",
-    description: "If the Sidebar Icons should have an animated background on hover",
-    defaultValue: true,
-    onChange: (val) => $("html").css("--sidebar-icons-hover-animation", val ? "1" : "0")
-});
-
-Dribbblish.config.register({
-    area: "Sidebar",
-    type: "number",
-    key: "sidebarGapLeft",
-    name: "Left Sidebar Gap Size",
-    description: "Set gap size between sidebar icons (in `pixels`).",
-    defaultValue: 5,
-    data: {
-        min: 0
-    },
-    onChange: (val) => $("html").css("--sidebar-gap-left", `${val}px`)
-});
-
-Dribbblish.config.register({
-    area: "Sidebar",
-    type: "number",
-    key: "sidebarGapRight",
-    name: "Right Sidebar Gap Size",
-    description: "Set gap size between sidebar icons (in `pixels`).",
-    defaultValue: 32,
-    data: {
-        min: 0
-    },
-    onChange: (val) => $("html").css("--sidebar-gap-right", `${val}px`)
-});
-
-waitForElement([".main-nowPlayingBar-container"], ([container]) => {
     Dribbblish.config.register({
-        area: "Playbar",
         type: "checkbox",
-        key: "playbarShadow",
-        name: "Playbar Shadow",
-        description: "Add a shadow effect underneath the playbar",
+        key: "openSettingsInfo",
+        name: "Open Settings Icon",
+        description: "Show an icon next to your profile image to open the dribbblish settings",
         defaultValue: true,
-        onChange: (val) => $(container).toggleClass("with-shadow", val)
+        onChange: (val) =>
+            Dribbblish.info[val ? "set" : "remove"]("settings", {
+                icon: iconCog,
+                color: {
+                    fg: "var(--spice-subtext)",
+                    bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
+                },
+                order: 999,
+                tooltip: "Open Dribbblish Settings",
+                onClick: () => Dribbblish.config.open()
+            })
     });
-});
 
-waitForElement(["#main"], () => {
+    Dribbblish.config.register({
+        type: "checkbox",
+        key: "rightBigCover",
+        name: "Right expanded cover",
+        description: "Have the expanded cover Image on the right instead of on the left",
+        defaultValue: true,
+        onChange: (val) => $("html").toggleClass("right-expanded-cover", val)
+    });
+
+    Dribbblish.config.register({
+        area: "Sidebar",
+        type: "checkbox",
+        key: "roundSidebarIcons",
+        name: "Round Sidebar Icons",
+        description: "If the Sidebar Icons should be round instead of square",
+        defaultValue: false,
+        onChange: (val) => $("html").css("--sidebar-icons-border-radius", val ? "50vh" : "var(--image-radius)")
+    });
+
+    Dribbblish.config.register({
+        area: "Animations & Transitions",
+        type: "checkbox",
+        key: "sidebarHoverAnimation",
+        name: "Sidebar Hover Animation",
+        description: "If the Sidebar Icons should have an animated background on hover",
+        defaultValue: true,
+        onChange: (val) => $("html").css("--sidebar-icons-hover-animation", val ? "1" : "0")
+    });
+
+    Dribbblish.config.register({
+        area: "Sidebar",
+        type: "number",
+        key: "sidebarGapLeft",
+        name: "Left Sidebar Gap Size",
+        description: "Set gap size between sidebar icons (in `pixels`).",
+        defaultValue: 5,
+        data: {
+            min: 0
+        },
+        onChange: (val) => $("html").css("--sidebar-gap-left", `${val}px`)
+    });
+
+    Dribbblish.config.register({
+        area: "Sidebar",
+        type: "number",
+        key: "sidebarGapRight",
+        name: "Right Sidebar Gap Size",
+        description: "Set gap size between sidebar icons (in `pixels`).",
+        defaultValue: 32,
+        data: {
+            min: 0
+        },
+        onChange: (val) => $("html").css("--sidebar-gap-right", `${val}px`)
+    });
+
+    waitForElement([".main-nowPlayingBar-container"], ([container]) => {
+        Dribbblish.config.register({
+            area: "Playbar",
+            type: "checkbox",
+            key: "playbarShadow",
+            name: "Playbar Shadow",
+            description: "Add a shadow effect underneath the playbar",
+            defaultValue: true,
+            onChange: (val) => $(container).toggleClass("with-shadow", val)
+        });
+    });
+
     Dribbblish.config.register({
         type: "select",
         data: { none: "None", "none-padding": "None (With Top Padding)", solid: "Solid", transparent: "Transparent" },
@@ -152,129 +155,126 @@ waitForElement(["#main"], () => {
         defaultValue: false,
         onChange: (val) => $("#main").attr("hide-ads", val)
     });
-});
 
-waitForElement([".main-rootlist-rootlist", ".main-rootlist-wrapper > :nth-child(2) > :first-child", "#spicetify-show-list"], ([rootlist]) => {
-    function checkSidebarPlaylistScroll() {
-        const topDist = rootlist.getBoundingClientRect().top - document.querySelector("#spicetify-show-list:not(:empty), .main-rootlist-wrapper > :nth-child(2) > :first-child").getBoundingClientRect().top;
-        const bottomDist = document.querySelector(".main-rootlist-wrapper > :nth-child(2) > :last-child").getBoundingClientRect().bottom - rootlist.getBoundingClientRect().bottom;
+    waitForElement([".main-rootlist-rootlist", ".main-rootlist-wrapper > :nth-child(2) > :first-child", "#spicetify-show-list"], ([rootlist]) => {
+        function checkSidebarPlaylistScroll() {
+            const topDist = rootlist.getBoundingClientRect().top - document.querySelector("#spicetify-show-list:not(:empty), .main-rootlist-wrapper > :nth-child(2) > :first-child").getBoundingClientRect().top;
+            const bottomDist = document.querySelector(".main-rootlist-wrapper > :nth-child(2) > :last-child").getBoundingClientRect().bottom - rootlist.getBoundingClientRect().bottom;
 
-        rootlist.classList.remove("no-top-shadow", "no-bottom-shadow");
-        if (topDist < 10) rootlist.classList.add("no-top-shadow");
-        if (bottomDist < 10) rootlist.classList.add("no-bottom-shadow");
-    }
-    checkSidebarPlaylistScroll();
-
-    // Use Interval because scrolling takes a while and getBoundingClientRect() gets position at the moment of calling, so the interval keeps calling for 1s
-    let c = 0;
-    let interval;
-    rootlist.addEventListener("wheel", () => {
+            rootlist.classList.remove("no-top-shadow", "no-bottom-shadow");
+            if (topDist < 10) rootlist.classList.add("no-top-shadow");
+            if (bottomDist < 10) rootlist.classList.add("no-bottom-shadow");
+        }
         checkSidebarPlaylistScroll();
-        c = 0;
-        if (interval == null)
-            interval = setInterval(() => {
-                if (c > 20) {
-                    clearInterval(interval);
-                    interval = null;
-                    return;
-                }
 
-                checkSidebarPlaylistScroll();
-                c++;
-            }, 50);
+        // Use Interval because scrolling takes a while and getBoundingClientRect() gets position at the moment of calling, so the interval keeps calling for 1s
+        let c = 0;
+        let interval;
+        rootlist.addEventListener("wheel", () => {
+            checkSidebarPlaylistScroll();
+            c = 0;
+            if (interval == null)
+                interval = setInterval(() => {
+                    if (c > 20) {
+                        clearInterval(interval);
+                        interval = null;
+                        return;
+                    }
+
+                    checkSidebarPlaylistScroll();
+                    c++;
+                }, 50);
+        });
     });
-});
 
-waitForElement([".Root__main-view"], ([mainView]) => {
-    const shadow = document.createElement("div");
-    shadow.id = "dribbblish-back-shadow";
-    mainView.prepend(shadow);
-});
-
-waitForElement([".Root__nav-bar .LayoutResizer__input, .Root__nav-bar .LayoutResizer__resize-bar input"], ([resizer]) => {
-    const observer = new MutationObserver(updateVariable);
-    observer.observe(resizer, { attributes: true, attributeFilter: ["value"] });
-    function updateVariable() {
-        let value = resizer.value;
-        if (value < 121) value = 72;
-        $("html").toggleClass("sidebar-hide-text", value < 121);
-        $("html").css("--sidebar-width", `${value}px`);
-    }
-    updateVariable();
-});
-
-waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => {
-    const observer = new ResizeObserver(updateVariable);
-    observer.observe(resizeHost);
-    function updateVariable([event]) {
-        $("html").css("--main-view-width", event.contentRect.width + "px");
-        $("html").css("--main-view-height", event.contentRect.height + "px");
-        $("html").toggleClass("minimal-player", event.contentRect.width < 700);
-        $("html").toggleClass("extra-minimal-player", event.contentRect.width < 550);
-    }
-});
-
-(function Dribbblish() {
-    const progBar = document.querySelector(".playback-bar");
-    const root = document.querySelector(".Root");
-
-    if (!Spicetify.Player.origin || !progBar || !root) {
-        setTimeout(Dribbblish, 300);
-        return;
-    }
-
-    const progKnob = progBar.querySelector(".progress-bar__slider");
-
-    const tooltip = document.createElement("div");
-    tooltip.className = "prog-tooltip";
-    progKnob.append(tooltip);
-
-    function updateProgTime(timeOverride) {
-        const newText = Spicetify.Player.formatTime(timeOverride || Spicetify.Player.getProgress()) + " / " + Spicetify.Player.formatTime(Spicetify.Player.getDuration());
-        // To reduce DOM Updates when the Song is Paused
-        if (tooltip.innerText != newText) tooltip.innerText = newText;
-    }
-    const knobPosObserver = new MutationObserver((muts) => {
-        const progressPercentage = Number($(".progress-bar").css("--progress-bar-transform").replace("%", "")) / 100;
-        updateProgTime(Spicetify.Player.getDuration() * progressPercentage);
+    waitForElement([".Root__main-view"], ([mainView]) => {
+        const shadow = document.createElement("div");
+        shadow.id = "dribbblish-back-shadow";
+        mainView.prepend(shadow);
     });
-    knobPosObserver.observe(document.querySelector(".progress-bar"), {
-        attributes: true,
-        attributeFilter: ["style"]
-    });
-    Spicetify.Player.addEventListener("songchange", () => updateProgTime());
-    updateProgTime();
 
-    Spicetify.CosmosAsync.sub("sp://connect/v1", (state) => {
-        const isExternal = state.devices.some((a) => a.is_active);
-        if (isExternal) {
-            root.classList.add("is-connectBarVisible");
-        } else {
-            root.classList.remove("is-connectBarVisible");
+    waitForElement([".Root__nav-bar .LayoutResizer__input, .Root__nav-bar .LayoutResizer__resize-bar input"], ([resizer]) => {
+        const observer = new MutationObserver(updateVariable);
+        observer.observe(resizer, { attributes: true, attributeFilter: ["value"] });
+        function updateVariable() {
+            let value = resizer.value;
+            if (value < 121) value = 72;
+            $("html").toggleClass("sidebar-hide-text", value < 121);
+            $("html").css("--sidebar-width", `${value}px`);
+        }
+        updateVariable();
+    });
+
+    waitForElement([".Root__main-view .os-resize-observer-host"], ([resizeHost]) => {
+        const observer = new ResizeObserver(updateVariable);
+        observer.observe(resizeHost);
+        function updateVariable([event]) {
+            $("html").css("--main-view-width", event.contentRect.width + "px");
+            $("html").css("--main-view-height", event.contentRect.height + "px");
+            $("html").toggleClass("minimal-player", event.contentRect.width < 700);
+            $("html").toggleClass("extra-minimal-player", event.contentRect.width < 550);
         }
     });
-})();
 
-/* Config settings */
+    (function Dribbblish() {
+        const progBar = document.querySelector(".playback-bar");
+        const root = document.querySelector(".Root");
 
-Dribbblish.config.register({
-    area: "Animations & Transitions",
-    type: "slider",
-    key: "fadeDuration",
-    name: "Color Fade Duration",
-    description: "Select the duration of the color fading transition",
-    defaultValue: 0.5,
-    data: {
-        min: 0,
-        max: 10,
-        step: 0.1,
-        suffix: "s"
-    },
-    onChange: (val) => $("html").css("--song-transition-speed", `${val}s`)
-});
+        if (!Spicetify.Player.origin || !progBar || !root) {
+            setTimeout(Dribbblish, 300);
+            return;
+        }
 
-// waitForElement because Spicetify is not initialized at startup
-waitForElement(["#main"], () => {
+        const progKnob = progBar.querySelector(".progress-bar__slider");
+
+        const tooltip = document.createElement("div");
+        tooltip.className = "prog-tooltip";
+        progKnob.append(tooltip);
+
+        function updateProgTime(timeOverride) {
+            const newText = Spicetify.Player.formatTime(timeOverride || Spicetify.Player.getProgress()) + " / " + Spicetify.Player.formatTime(Spicetify.Player.getDuration());
+            // To reduce DOM Updates when the Song is Paused
+            if (tooltip.innerText != newText) tooltip.innerText = newText;
+        }
+        const knobPosObserver = new MutationObserver((muts) => {
+            const progressPercentage = Number($(".progress-bar").css("--progress-bar-transform").replace("%", "")) / 100;
+            updateProgTime(Spicetify.Player.getDuration() * progressPercentage);
+        });
+        knobPosObserver.observe(document.querySelector(".progress-bar"), {
+            attributes: true,
+            attributeFilter: ["style"]
+        });
+        Spicetify.Player.addEventListener("songchange", () => updateProgTime());
+        updateProgTime();
+
+        Spicetify.CosmosAsync.sub("sp://connect/v1", (state) => {
+            const isExternal = state.devices.some((a) => a.is_active);
+            if (isExternal) {
+                root.classList.add("is-connectBarVisible");
+            } else {
+                root.classList.remove("is-connectBarVisible");
+            }
+        });
+    })();
+
+    /* Config settings */
+
+    Dribbblish.config.register({
+        area: "Animations & Transitions",
+        type: "slider",
+        key: "fadeDuration",
+        name: "Color Fade Duration",
+        description: "Select the duration of the color fading transition",
+        defaultValue: 0.5,
+        data: {
+            min: 0,
+            max: 10,
+            step: 0.1,
+            suffix: "s"
+        },
+        onChange: (val) => $("html").css("--song-transition-speed", `${val}s`)
+    });
+
     Dribbblish.config.registerArea({ name: "About", order: 999 });
 
     Dribbblish.config.register({
@@ -283,11 +283,11 @@ waitForElement(["#main"], () => {
         key: "aboutDribbblishInfo",
         name: "Info",
         description: `
-            OS: \`${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}\`
-            Spotify: \`v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}\`
-            Spicetify: \`${Spicetify.version != null ? `v${Spicetify.version}` : "<= v2.7.2"}\`
-            Dribbblish: \`v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}\`
-        `,
+                OS: \`${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}\`
+                Spotify: \`v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}\`
+                Spicetify: \`${Spicetify.version != null ? `v${Spicetify.version}` : "<= v2.7.2"}\`
+                Dribbblish: \`v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}\`
+            `,
         data: "Copy",
         onChange: function () {
             copyToClipboard(this.description.replace(/\`/g, ""));
@@ -304,45 +304,45 @@ waitForElement(["#main"], () => {
         data: "Create Report",
         onChange: () => {
             const reportBody = `
-                **Describe the bug**
-                A clear and concise description of what the bug is.
-                
-                **To Reproduce**
-                Steps to reproduce the behavior:
-                
-                **Screenshots**
-                If applicable, add screenshots to help explain your problem.
-
-                **Logs**
-                Add logs from console. To do that
-                1. Run \`spicetify enable-devtool\` in terminal
-                2. Spotify will be restarted
-                3. Hit <kbd>Ctrl + Shift + I</kbd> to open DevTools window
-                4. Navigate to tab Console
-                5. Copy console window content.
-
-                \`\`\`console
-                (Please paste here console logs or attach a screenshot)
-                \`\`\`
-
-                ---
-
-                ### Info for Contributors:
-                
-                **Versions**
-                ${Dribbblish.config.getOptions("aboutDribbblishInfo").description}
-
-                **Extensions**
-                ${$(`script[src^="extensions/"]`)
-                    .toArray()
-                    .map((e) => `- ${e.src.split("/").slice(-1)[0]}`)
-                    .join("\n")}
-
-                **Settings**
-                \`\`\`json
-                ${JSON.stringify(Dribbblish.config.export(), null, 4)}
-                \`\`\`
-            `
+                    **Describe the bug**
+                    A clear and concise description of what the bug is.
+                    
+                    **To Reproduce**
+                    Steps to reproduce the behavior:
+                    
+                    **Screenshots**
+                    If applicable, add screenshots to help explain your problem.
+    
+                    **Logs**
+                    Add logs from console. To do that
+                    1. Run \`spicetify enable-devtool\` in terminal
+                    2. Spotify will be restarted
+                    3. Hit <kbd>Ctrl + Shift + I</kbd> to open DevTools window
+                    4. Navigate to tab Console
+                    5. Copy console window content.
+    
+                    \`\`\`console
+                    (Please paste here console logs or attach a screenshot)
+                    \`\`\`
+    
+                    ---
+    
+                    ### Info for Contributors:
+                    
+                    **Versions**
+                    ${Dribbblish.config.getOptions("aboutDribbblishInfo").description}
+    
+                    **Extensions**
+                    ${$(`script[src^="extensions/"]`)
+                        .toArray()
+                        .map((e) => `- ${e.src.split("/").slice(-1)[0]}`)
+                        .join("\n")}
+    
+                    **Settings**
+                    \`\`\`json
+                    ${JSON.stringify(Dribbblish.config.export(), null, 4)}
+                    \`\`\`
+                `
                 .split("\n")
                 .map((line) => line.replace(/^ {16}/, ""))
                 .join("\n");
@@ -380,397 +380,399 @@ waitForElement(["#main"], () => {
         data: "Open",
         onChange: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases", "_blank")
     });
-});
 
-/* js */
-async function getAlbumRelease(uri) {
-    const info = await Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
-    return { year: info.year, month: (info.month ?? 1) - 1, day: info.day ?? 1 };
-}
-
-function isLight(hex) {
-    return chroma(hex).luminance() > 0.5;
-}
-
-// From: https://stackoverflow.com/a/13763063/12126879
-function getImageLightness(img) {
-    var colorSum = 0;
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    var data = imageData.data;
-    var r, g, b, avg;
-
-    for (var x = 0, len = data.length; x < len; x += 4) {
-        r = data[x];
-        g = data[x + 1];
-        b = data[x + 2];
-
-        avg = Math.floor((r + g + b) / 3);
-        colorSum += avg;
+    /* js */
+    async function getAlbumRelease(uri) {
+        const info = await Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
+        return { year: info.year, month: (info.month ?? 1) - 1, day: info.day ?? 1 };
     }
 
-    var brightness = Math.floor(colorSum / (img.width * img.height));
-    return brightness;
-}
-
-// parse to hex because "--spice-sidebar" is `rgb()`
-let textColorBg = chroma($("html").css("--spice-main")).hex();
-
-function setRootColor(name, color) {
-    $("html").css(`--spice-${name}`, chroma(color).hex());
-    $("html").css(`--spice-rgb-${name}`, chroma(color).rgb().join(","));
-}
-
-function toggleDark(setDark) {
-    if (setDark === undefined) setDark = isLight(textColorBg);
-
-    $("html").css("--is_light", setDark ? 0 : 1);
-    textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
-
-    setRootColor("main", textColorBg);
-    setRootColor("player", textColorBg);
-    setRootColor("card", setDark ? "#040404" : "#ECECEC");
-    setRootColor("subtext", setDark ? "#EAEAEA" : "#3D3D3D");
-    setRootColor("notification", setDark ? "#303030" : "#DDDDDD");
-
-    updateColors(false);
-}
-
-function checkDarkLightMode() {
-    const theme = Dribbblish.config.get("theme");
-    if (theme == "time") {
-        const start = 60 * parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[0]) + parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[1]);
-        const end = 60 * parseInt(Dribbblish.config.get("darkModeOffTime").split(":")[0]) + parseInt(Dribbblish.config.get("darkModeOffTime").split(":")[1]);
-
-        const now = new Date();
-        const time = 60 * now.getHours() + now.getMinutes();
-
-        let dark;
-        if (end < start) dark = start <= time || time < end;
-        else dark = start <= time && time < end;
-        toggleDark(dark);
+    function isLight(hex) {
+        return chroma(hex).luminance() > 0.5;
     }
-}
 
-// Run every Minute to check time and set dark / light mode
-setInterval(checkDarkLightMode, 60000);
+    // From: https://stackoverflow.com/a/13763063/12126879
+    function getImageLightness(img) {
+        var colorSum = 0;
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
 
-Dribbblish.config.register({
-    area: "Theme",
-    type: "select",
-    key: "colorSelectionAlgorithm",
-    name: "Color Selection Algorithm",
-    description: `
-        Algorithm of selecting colors from the albumart
-        - **Colorthief [(see)](https://lokeshdhakar.com/projects/color-thief/):** Gets more fitting colors
-        - **Vibrant [(see)](https://jariz.github.io/vibrant.js/):** Gets more vibrant colors *(was the default up to v3.1.1)*
-        - **Static:** Select a static color to be used
-        {.muted}
-    `,
-    data: { colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
-    defaultValue: "colorthief",
-    onChange: () => updateColors(),
-    showChildren: (val) => {
-        if (val == "static") return ["colorOverride"];
-        return ["colorSelectionMode"];
-    },
-    children: [
-        {
-            type: "color",
-            key: "colorOverride",
-            name: "Color",
-            description: "The Color of the Theme",
-            defaultValue: "#1ed760",
-            fireInitialChange: false,
-            onChange: () => updateColors()
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = imageData.data;
+        var r, g, b, avg;
+
+        for (var x = 0, len = data.length; x < len; x += 4) {
+            r = data[x];
+            g = data[x + 1];
+            b = data[x + 2];
+
+            avg = Math.floor((r + g + b) / 3);
+            colorSum += avg;
+        }
+
+        var brightness = Math.floor(colorSum / (img.width * img.height));
+        return brightness;
+    }
+
+    // parse to hex because "--spice-sidebar" is `rgb()`
+    let textColorBg = chroma($("html").css("--spice-main")).hex();
+
+    function setRootColor(name, color) {
+        $("html").css(`--spice-${name}`, chroma(color).hex());
+        $("html").css(`--spice-rgb-${name}`, chroma(color).rgb().join(","));
+    }
+
+    function toggleDark(setDark) {
+        if (setDark === undefined) setDark = isLight(textColorBg);
+
+        $("html").css("--is_light", setDark ? 0 : 1);
+        textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
+
+        setRootColor("main", textColorBg);
+        setRootColor("player", textColorBg);
+        setRootColor("card", setDark ? "#040404" : "#ECECEC");
+        setRootColor("subtext", setDark ? "#EAEAEA" : "#3D3D3D");
+        setRootColor("notification", setDark ? "#303030" : "#DDDDDD");
+
+        updateColors(false);
+    }
+
+    function checkDarkLightMode() {
+        const theme = Dribbblish.config.get("theme");
+        if (theme == "time") {
+            const start = 60 * parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[0]) + parseInt(Dribbblish.config.get("darkModeOnTime").split(":")[1]);
+            const end = 60 * parseInt(Dribbblish.config.get("darkModeOffTime").split(":")[0]) + parseInt(Dribbblish.config.get("darkModeOffTime").split(":")[1]);
+
+            const now = new Date();
+            const time = 60 * now.getHours() + now.getMinutes();
+
+            let dark;
+            if (end < start) dark = start <= time || time < end;
+            else dark = start <= time && time < end;
+            toggleDark(dark);
+        }
+    }
+
+    // Run every Minute to check time and set dark / light mode
+    setInterval(checkDarkLightMode, 60000);
+
+    Dribbblish.config.register({
+        area: "Theme",
+        type: "select",
+        key: "colorSelectionAlgorithm",
+        name: "Color Selection Algorithm",
+        description: `
+            Algorithm of selecting colors from the albumart
+            - **Colorthief [(see)](https://lokeshdhakar.com/projects/color-thief/):** Gets more fitting colors
+            - **Vibrant [(see)](https://jariz.github.io/vibrant.js/):** Gets more vibrant colors *(was the default up to v3.1.1)*
+            - **Static:** Select a static color to be used
+            {.muted}
+        `,
+        data: { colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
+        defaultValue: "colorthief",
+        onChange: () => updateColors(),
+        showChildren: (val) => {
+            if (val == "static") return ["colorOverride"];
+            return ["colorSelectionMode"];
         },
-        {
-            area: "Theme",
-            type: "select",
-            key: "colorSelectionMode",
-            name: "Color Selection Mode",
-            description: `
-                Method of selecting colors from the albumart
-                - **Default:** Choose closest matching{.muted}
-                - **Luminance:** Choose matching current theme (lighter/darker){.muted}
-            `,
-            data: { default: "Default", luminance: "Luminance" },
-            defaultValue: "default",
-            onChange: () => updateColors(),
-            showChildren: (val) => {
-                if (val == "dynamicLuminance") return ["lightModeLuminance", "darkModeLuminance"];
-                return false;
+        children: [
+            {
+                type: "color",
+                key: "colorOverride",
+                name: "Color",
+                description: "The Color of the Theme",
+                defaultValue: "#1ed760",
+                fireInitialChange: false,
+                onChange: () => updateColors()
             },
-            children: [
-                {
-                    type: "number",
-                    key: "lightModeLuminance",
-                    name: "Desired Light Mode Luminance",
-                    description: `
-                        Set desired luminance in light mode.
-                        *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
-                    `,
-                    defaultValue: 0.6,
-                    data: { min: 0, max: 1, step: 0.05 },
-                    fireInitialChange: false,
-                    onChange: () => updateColors()
+            {
+                area: "Theme",
+                type: "select",
+                key: "colorSelectionMode",
+                name: "Color Selection Mode",
+                description: `
+                    Method of selecting colors from the albumart
+                    - **Default:** Choose closest matching{.muted}
+                    - **Luminance:** Choose matching current theme (lighter/darker){.muted}
+                `,
+                data: { default: "Default", luminance: "Luminance" },
+                defaultValue: "default",
+                onChange: () => updateColors(),
+                showChildren: (val) => {
+                    if (val == "dynamicLuminance") return ["lightModeLuminance", "darkModeLuminance"];
+                    return false;
                 },
-                {
-                    type: "number",
-                    key: "darkModeLuminance",
-                    name: "Desired Dark Mode Luminance",
-                    description: `
-                        Set desired luminance in dark mode.
-                        *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
-                    `,
-                    defaultValue: 0.2,
-                    data: { min: 0, max: 1, step: 0.05 },
-                    fireInitialChange: false,
-                    onChange: () => updateColors()
-                }
-            ]
-        }
-    ]
-});
+                children: [
+                    {
+                        type: "number",
+                        key: "lightModeLuminance",
+                        name: "Desired Light Mode Luminance",
+                        description: `
+                            Set desired luminance in light mode.
+                            *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
+                        `,
+                        defaultValue: 0.6,
+                        data: { min: 0, max: 1, step: 0.05 },
+                        fireInitialChange: false,
+                        onChange: () => updateColors()
+                    },
+                    {
+                        type: "number",
+                        key: "darkModeLuminance",
+                        name: "Desired Dark Mode Luminance",
+                        description: `
+                            Set desired luminance in dark mode.
+                            *the selected color will be the one who's luminance is closest to the desired luminance*{.muted}
+                        `,
+                        defaultValue: 0.2,
+                        data: { min: 0, max: 1, step: 0.05 },
+                        fireInitialChange: false,
+                        onChange: () => updateColors()
+                    }
+                ]
+            }
+        ]
+    });
 
-Dribbblish.config.register({
-    area: "Theme",
-    type: "select",
-    data: { dark: "Dark", light: "Light", time: "Based on Time" },
-    key: "theme",
-    name: "Theme",
-    description: "Select Dark / Bright mode",
-    defaultValue: "time",
-    showChildren: (val) => {
-        if (val == "time") return ["darkModeOnTime", "darkModeOffTime"];
-        return false;
-    },
-    onChange: (val) => {
-        switch (val) {
-            case "dark":
-                toggleDark(true);
-                break;
-            case "light":
-                toggleDark(false);
-                break;
-            case "time":
-                checkDarkLightMode();
-                break;
-        }
-    },
-    children: [
-        {
-            type: "time",
-            key: "darkModeOnTime",
-            name: "Dark Mode On Time",
-            description: "Beginning of Dark mode time",
-            defaultValue: "20:00",
-            fireInitialChange: false,
-            onChange: checkDarkLightMode
+    Dribbblish.config.register({
+        area: "Theme",
+        type: "select",
+        data: { dark: "Dark", light: "Light", time: "Based on Time" },
+        order: -1,
+        key: "theme",
+        name: "Theme",
+        description: "Select Dark / Bright mode",
+        defaultValue: "time",
+        showChildren: (val) => {
+            if (val == "time") return ["darkModeOnTime", "darkModeOffTime"];
+            return false;
         },
-        {
-            type: "time",
-            key: "darkModeOffTime",
-            name: "Dark Mode Off Time",
-            description: "End of Dark mode time",
-            defaultValue: "06:00",
-            fireInitialChange: false,
-            onChange: checkDarkLightMode
-        }
-    ]
-});
-
-function updateColors(checkDarkMode = true, sideColHex) {
-    if (sideColHex == undefined) return registerCoverListener();
-
-    let isLightBg = isLight(textColorBg);
-    let textColHex = sideColHex;
-    if (isLightBg && chroma(textColHex).luminance() > 0.2) {
-        textColHex = chroma(textColHex).luminance(0.2).hex();
-    } else if (!isLightBg && chroma(textColHex).luminance() < 0.1) {
-        textColHex = chroma(textColHex).luminance(0.1).hex();
-    }
-
-    let darkColHex = chroma(textColHex)
-        .brighten(isLightBg ? 0.12 : -0.2)
-        .hex();
-    let darkerColHex = chroma(textColHex)
-        .brighten(isLightBg ? 0.3 : -0.4)
-        .hex();
-    let buttonBgColHex = chroma(textColHex)
-        .set("hsl.l", isLightBg ? 0.9 : 0.14)
-        .hex();
-    setRootColor("text", textColHex);
-    setRootColor("button", darkerColHex);
-    setRootColor("button-active", darkColHex);
-    setRootColor("selected-row", darkerColHex);
-    setRootColor("tab-active", buttonBgColHex);
-    setRootColor("button-disabled", buttonBgColHex);
-    setRootColor("sidebar", sideColHex);
-    setRootColor("sidebar-text", isLight(sideColHex) ? "#000000" : "#FFFFFF");
-
-    if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
-}
-
-async function songchange() {
-    if (!document.querySelector(".main-trackInfo-container")) return setTimeout(songchange, 300);
-
-    try {
-        // warning popup
-        if (Spicetify.Platform.PlatformData.client_version_triple < "1.1.68") Spicetify.showNotification(`Your version of Spotify ${Spicetify.Platform.PlatformData.client_version_triple}) is un-supported`);
-    } catch (err) {
-        console.error(err);
-    }
-
-    if (!document.getElementById("main-trackInfo-year")) {
-        const el = document.createElement("div");
-        el.classList.add("main-trackInfo-release", "standalone-ellipsis-one-line", "main-type-finale");
-        el.setAttribute("as", "div");
-        el.id = "main-trackInfo-year";
-        document.querySelector(".main-trackInfo-container").append(el);
-    }
-    const albumInfoSpan = document.getElementById("main-trackInfo-year");
-
-    let album_uri = Spicetify.Player.data.track.metadata.album_uri;
-    let bgImage = Spicetify.Player.data.track.metadata.image_url;
-    if (bgImage === undefined) {
-        bgImage = "/images/tracklist-row-song-fallback.svg";
-    }
-
-    if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
-        moment.locale(Spicetify.Locale.getLocale());
-        const albumDate = moment(await getAlbumRelease(album_uri.replace("spotify:album:", "")));
-        const albumLinkElem = `
-            <span>
-                <span draggable="true">
-                    <a draggable="false" dir="auto" href="${album_uri}">${Spicetify.Player.data.track.metadata.album_title}</a>
-                </span>
-            </span>
-        `;
-        const albumDateElem = `<span> • <span title="${albumDate.format("L")}">${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
-        albumInfoSpan.innerHTML = `${albumLinkElem}${albumDateElem}`;
-    } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
-        // podcast
-        bgImage = bgImage.replace("spotify:image:", "https://i.scdn.co/image/");
-        albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
-    } else if (Spicetify.Player.data.track.metadata.is_local == "true") {
-        // local file
-        albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
-    } else if (Spicetify.Player.data.track.provider == "ad") {
-        // ad
-        albumInfoSpan.innerHTML = "Advertisement";
-        return;
-    } else {
-        // When clicking a song from the homepage, songChange is fired with half empty metadata
-        // todo: retry only once?
-        setTimeout(songchange, 200);
-    }
-
-    $("html").css("--image-url", `url("${bgImage}")`);
-    registerCoverListener();
-}
-
-Spicetify.Player.addEventListener("songchange", songchange);
-
-async function pickCoverColor(img) {
-    if (!img.currentSrc.startsWith("spotify:")) return;
-
-    $("html").css("--image-brightness", getImageLightness(img) / 255);
-
-    let color = "#509bf5";
-    if (img.complete) {
-        const colorSelectionAlgorithm = Dribbblish.config.get("colorSelectionAlgorithm");
-        const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
-        let palette = {};
-
-        if (colorSelectionAlgorithm == "colorthief") {
-            palette = Object.fromEntries([colorThief.getColor(img), ...colorThief.getPalette(img, 24, 5)].map((c) => chroma(c)).map((c) => [c.luminance(), c]));
-        } else if (colorSelectionAlgorithm == "vibrant") {
-            const swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
-            for (var col of ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]) {
-                if (swatches[col]) {
-                    const c = chroma(swatches[col].getHex());
-                    palette[c.luminance()] = c;
-                }
-            }
-        } else if (colorSelectionAlgorithm == "static") {
-            palette[1] = chroma(Dribbblish.config.get("colorOverride"));
-        }
-
-        if (colorSelectionMode == "default") {
-            color = Object.values(palette)[0];
-            for (const col of Object.values(palette)) {
-                if (col.luminance() > 0.05 && col.luminance() < 0.9) {
-                    color = col.hex();
+        onChange: (val) => {
+            switch (val) {
+                case "dark":
+                    toggleDark(true);
                     break;
-                }
+                case "light":
+                    toggleDark(false);
+                    break;
+                case "time":
+                    checkDarkLightMode();
+                    break;
             }
-        } else if (colorSelectionMode == "luminance") {
-            const wantedLuminance = $("html").css("--is_light") == "1" ? Dribbblish.config.get("lightModeLuminance") : Dribbblish.config.get("darkModeLuminance");
-            color = palette[getClosestToNum(Object.keys(palette), wantedLuminance)].hex();
+        },
+        children: [
+            {
+                type: "time",
+                key: "darkModeOnTime",
+                name: "Dark Mode On Time",
+                description: "Beginning of Dark mode time",
+                defaultValue: "20:00",
+                fireInitialChange: false,
+                onChange: checkDarkLightMode
+            },
+            {
+                type: "time",
+                key: "darkModeOffTime",
+                name: "Dark Mode Off Time",
+                description: "End of Dark mode time",
+                defaultValue: "06:00",
+                fireInitialChange: false,
+                onChange: checkDarkLightMode
+            }
+        ]
+    });
+
+    function updateColors(checkDarkMode = true, sideColHex) {
+        if (sideColHex == undefined) return registerCoverListener();
+
+        let isLightBg = isLight(textColorBg);
+        let textColHex = sideColHex;
+        if (isLightBg && chroma(textColHex).luminance() > 0.2) {
+            textColHex = chroma(textColHex).luminance(0.2).hex();
+        } else if (!isLightBg && chroma(textColHex).luminance() < 0.1) {
+            textColHex = chroma(textColHex).luminance(0.1).hex();
         }
+
+        let darkColHex = chroma(textColHex)
+            .brighten(isLightBg ? 0.12 : -0.2)
+            .hex();
+        let darkerColHex = chroma(textColHex)
+            .brighten(isLightBg ? 0.3 : -0.4)
+            .hex();
+        let buttonBgColHex = chroma(textColHex)
+            .set("hsl.l", isLightBg ? 0.9 : 0.14)
+            .hex();
+        setRootColor("text", textColHex);
+        setRootColor("button", darkerColHex);
+        setRootColor("button-active", darkColHex);
+        setRootColor("selected-row", darkerColHex);
+        setRootColor("tab-active", buttonBgColHex);
+        setRootColor("button-disabled", buttonBgColHex);
+        setRootColor("sidebar", sideColHex);
+        setRootColor("sidebar-text", isLight(sideColHex) ? "#000000" : "#FFFFFF");
+
+        if (checkDarkMode) checkDarkLightMode([textColHex, sideColHex]);
     }
 
-    updateColors(false, color);
-}
+    async function songchange() {
+        if (!document.querySelector(".main-trackInfo-container")) return setTimeout(songchange, 300);
 
-var coverListener;
-function registerCoverListener() {
-    const img = document.querySelector(".main-image-image.cover-art-image");
-    if (!img) return setTimeout(registerCoverListener, 250); // Check if image exists
-    if (!img.complete) return img.addEventListener("load", registerCoverListener); // Check if image is loaded
-    pickCoverColor(img);
+        try {
+            // warning popup
+            if (Spicetify.Platform.PlatformData.client_version_triple < "1.1.68") Spicetify.showNotification(`Your version of Spotify ${Spicetify.Platform.PlatformData.client_version_triple}) is un-supported`);
+        } catch (err) {
+            console.error(err);
+        }
 
-    if (coverListener != null) {
-        coverListener.disconnect();
-        coverListener = null;
+        if (!document.getElementById("main-trackInfo-year")) {
+            const el = document.createElement("div");
+            el.classList.add("main-trackInfo-release", "standalone-ellipsis-one-line", "main-type-finale");
+            el.setAttribute("as", "div");
+            el.id = "main-trackInfo-year";
+            document.querySelector(".main-trackInfo-container").append(el);
+        }
+        const albumInfoSpan = document.getElementById("main-trackInfo-year");
+
+        let album_uri = Spicetify.Player.data.track.metadata.album_uri;
+        let bgImage = Spicetify.Player.data.track.metadata.image_url;
+        if (bgImage === undefined) {
+            bgImage = "/images/tracklist-row-song-fallback.svg";
+        }
+
+        if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
+            moment.locale(Spicetify.Locale.getLocale());
+            const albumDate = moment(await getAlbumRelease(album_uri.replace("spotify:album:", "")));
+            const albumLinkElem = `
+                <span>
+                    <span draggable="true">
+                        <a draggable="false" dir="auto" href="${album_uri}">${Spicetify.Player.data.track.metadata.album_title}</a>
+                    </span>
+                </span>
+            `;
+            const albumDateElem = `<span> • <span title="${albumDate.format("L")}">${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
+            albumInfoSpan.innerHTML = `${albumLinkElem}${albumDateElem}`;
+        } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
+            // podcast
+            bgImage = bgImage.replace("spotify:image:", "https://i.scdn.co/image/");
+            albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
+        } else if (Spicetify.Player.data.track.metadata.is_local == "true") {
+            // local file
+            albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
+        } else if (Spicetify.Player.data.track.provider == "ad") {
+            // ad
+            albumInfoSpan.innerHTML = "Advertisement";
+            return;
+        } else {
+            // When clicking a song from the homepage, songChange is fired with half empty metadata
+            // todo: retry only once?
+            setTimeout(songchange, 200);
+        }
+
+        $("html").css("--image-url", `url("${bgImage}")`);
+        registerCoverListener();
     }
 
-    coverListener = new MutationObserver((muts) => {
+    Spicetify.Player.addEventListener("songchange", songchange);
+    songchange();
+
+    async function pickCoverColor(img) {
+        if (!img.currentSrc.startsWith("spotify:")) return;
+
+        $("html").css("--image-brightness", getImageLightness(img) / 255);
+
+        let color = "#509bf5";
+        if (img.complete) {
+            const colorSelectionAlgorithm = Dribbblish.config.get("colorSelectionAlgorithm");
+            const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
+            let palette = {};
+
+            if (colorSelectionAlgorithm == "colorthief") {
+                palette = Object.fromEntries([colorThief.getColor(img), ...colorThief.getPalette(img, 24, 5)].map((c) => chroma(c)).map((c) => [c.luminance(), c]));
+            } else if (colorSelectionAlgorithm == "vibrant") {
+                const swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
+                for (var col of ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]) {
+                    if (swatches[col]) {
+                        const c = chroma(swatches[col].getHex());
+                        palette[c.luminance()] = c;
+                    }
+                }
+            } else if (colorSelectionAlgorithm == "static") {
+                palette[1] = chroma(Dribbblish.config.get("colorOverride"));
+            }
+
+            if (colorSelectionMode == "default") {
+                color = Object.values(palette)[0];
+                for (const col of Object.values(palette)) {
+                    if (col.luminance() > 0.05 && col.luminance() < 0.9) {
+                        color = col.hex();
+                        break;
+                    }
+                }
+            } else if (colorSelectionMode == "luminance") {
+                const wantedLuminance = $("html").css("--is_light") == "1" ? Dribbblish.config.get("lightModeLuminance") : Dribbblish.config.get("darkModeLuminance");
+                color = palette[getClosestToNum(Object.keys(palette), wantedLuminance)].hex();
+            }
+        }
+
+        updateColors(false, color);
+    }
+
+    var coverListener;
+    function registerCoverListener() {
         const img = document.querySelector(".main-image-image.cover-art-image");
-        if (!img) return registerCoverListener();
+        if (!img) return setTimeout(registerCoverListener, 250); // Check if image exists
+        if (!img.complete) return img.addEventListener("load", registerCoverListener); // Check if image is loaded
         pickCoverColor(img);
-    });
-    coverListener.observe(img, {
-        attributes: true,
-        attributeFilter: ["src"]
-    });
-}
-registerCoverListener();
 
-// Check latest release every 10m
-function checkForUpdate() {
-    fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
-        .then((response) => response.json())
-        .then((data) => {
-            const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-            Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: iconArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
-            Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode } : null);
-        })
-        .catch(console.error);
-}
-
-setInterval(checkForUpdate, 10 * 60 * 1000);
-checkForUpdate();
-
-// Show "Offline info"
-window.addEventListener("offline", () =>
-    Dribbblish.info.set("offline", {
-        tooltip: "Offline",
-        icon: iconWifiSlash,
-        order: 998,
-        color: {
-            fg: "#ffffff",
-            bg: "#ff2323"
+        if (coverListener != null) {
+            coverListener.disconnect();
+            coverListener = null;
         }
-    })
-);
-window.addEventListener("online", () => Dribbblish.info.remove("offline"));
+
+        coverListener = new MutationObserver((muts) => {
+            const img = document.querySelector(".main-image-image.cover-art-image");
+            if (!img) return registerCoverListener();
+            pickCoverColor(img);
+        });
+        coverListener.observe(img, {
+            attributes: true,
+            attributeFilter: ["src"]
+        });
+    }
+    registerCoverListener();
+
+    // Check latest release every 10m
+    function checkForUpdate() {
+        fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
+            .then((response) => response.json())
+            .then((data) => {
+                const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
+                Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: iconArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode } : null);
+            })
+            .catch(console.error);
+    }
+
+    setInterval(checkForUpdate, 10 * 60 * 1000);
+    checkForUpdate();
+
+    // Show "Offline info"
+    window.addEventListener("offline", () =>
+        Dribbblish.info.set("offline", {
+            tooltip: "Offline",
+            icon: iconWifiSlash,
+            order: 998,
+            color: {
+                fg: "#ffffff",
+                bg: "#ff2323"
+            }
+        })
+    );
+    window.addEventListener("online", () => Dribbblish.info.remove("offline"));
+});
 
 $("html").css("--warning_message", " ");

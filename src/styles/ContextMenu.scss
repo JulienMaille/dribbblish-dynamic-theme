@@ -16,6 +16,7 @@
         backdrop-filter: blur(10px);
         border-radius: var(--main-corner-radius);
         box-shadow: 0px 0px 8px spiceColor("subtext", 0.1, 0.1);
+        @include spiceShadow();
     }
 
     .main-contextMenu-menuItem {

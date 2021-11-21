@@ -1,0 +1,73 @@
+// From https://codepen.io/mrrocks/pen/EiplA
+@use "sass:math";
+
+$offset: 187;
+$duration: 1.4s;
+
+#dribbblish-loader {
+    z-index: 999999;
+    position: fixed;
+    inset: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+
+    &[active] {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0px;
+        color: spiceColor("subtext");
+        background-color: spiceColor("main", 0.9, -0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    &::after {
+        content: attr(text);
+        position: absolute;
+        bottom: 40%;
+        @include spiceFont("glue", 32px, "Bold");
+    }
+
+    svg {
+        animation: rotator $duration linear infinite;
+
+        circle {
+            stroke: spiceColor("sidebar");
+            stroke-dasharray: $offset;
+            stroke-dashoffset: 0;
+            transform-origin: center;
+            animation: dash $duration ease-in-out infinite;
+        }
+    }
+}
+
+@keyframes rotator {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(270deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dashoffset: $offset;
+    }
+    50% {
+        stroke-dashoffset: math.div($offset, 4);
+        transform: rotate(135deg);
+    }
+    100% {
+        stroke-dashoffset: $offset;
+        transform: rotate(450deg);
+    }
+}

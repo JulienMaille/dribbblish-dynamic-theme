@@ -1,3 +1,6 @@
+Added:
+- A spinning loader at startup while spotify is not ready
+
 Fixed:
 - Checking for update every 10 Minutes not working
 - Background album art is cut off (#116)
