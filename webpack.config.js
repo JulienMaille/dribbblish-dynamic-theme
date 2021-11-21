@@ -1,8 +1,8 @@
 const webpack = require("webpack");
 const sass = require("sass");
-const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("path");
+const fs = require("fs");
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
@@ -34,7 +34,15 @@ module.exports = {
                         loader: "sass-loader",
                         options: {
                             implementation: sass,
-                            sourceMap: true
+                            sourceMap: true,
+                            sassOptions: {
+                                functions: {
+                                    "font64($font)": (font) => {
+                                        const file = path.resolve(__dirname, "./src/fonts", font.getValue());
+                                        return new sass.types.String(`"data:font/truetype;charset=utf-8;base64,${fs.readFileSync(file, { encoding: "base64" })}"`);
+                                    }
+                                }
+                            }
                         }
                     }
                 ]
@@ -57,9 +65,6 @@ module.exports = {
     },
     devtool: "inline-source-map",
     plugins: [
-        new CopyPlugin({
-            patterns: [{ from: "src/assets", to: "assets" }]
-        }),
         new webpack.DefinePlugin({
             "process.env.DRIBBBLISH_VERSION": JSON.stringify(process.env.DRIBBBLISH_VERSION || "Dev"),
             "process.env.COMMIT_HASH": JSON.stringify(process.env.COMMIT_HASH || "local")

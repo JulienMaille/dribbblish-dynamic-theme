@@ -20,7 +20,7 @@ $font-weights: (
             font-family: $font;
             font-weight: $weight;
             font-style: normal;
-            src: url("fonts/#{$font}-#{$style}.ttf") format("truetype");
+            src: url(font64("#{$font}-#{$style}.ttf")) format("truetype");
         }
     }
 }
