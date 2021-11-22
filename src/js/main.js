@@ -19,9 +19,17 @@ window.Dribbblish = Dribbblish;
 
 const colorThief = new ColorThief();
 
+Dribbblish.config.register({
+    type: "checkbox",
+    key: "showLoadingScreen",
+    name: "Show Loading Screen",
+    description: "Show a loading screen at startup while things are loaded in the background",
+    defaultValue: true
+});
+
 // In the future maybe have some useful info here
 const loadingHints = ["Getting things ready...", "Starting up...", "Just one moment..."];
-Dribbblish.loader.show(randomFromArray(loadingHints));
+if (Dribbblish.config.get("showLoadingScreen")) Dribbblish.loader.show(randomFromArray(loadingHints));
 
 Dribbblish.on("ready", () => {
     setTimeout(() => Dribbblish.loader.hide(), 3000);

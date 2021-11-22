@@ -1,5 +1,5 @@
 Added:
-- A spinning loader at startup while spotify is not ready
+- A spinning loader at startup while spotify is not ready (Can be disabled in settings)
 
 Fixed:
 - Checking for update every 10 Minutes not working

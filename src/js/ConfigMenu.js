@@ -442,7 +442,7 @@ export default class ConfigMenu {
         const val = JSON.parse(this.#config[key]?.storageCache ?? localStorage.getItem(`dribbblish:config:${key}`) ?? null); // Turn undefined into null because `JSON.parse()` dosen't like undefined
         if (val == null || val?.type != this.#config[key]?.type) {
             localStorage.removeItem(`dribbblish:config:${key}`);
-            return defaultValueOverride ?? this.#config[key].defaultValue;
+            return defaultValueOverride ?? this.#config[key]?.defaultValue;
         }
         return val.value;
     }
