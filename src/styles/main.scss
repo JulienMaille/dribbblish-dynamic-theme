@@ -70,6 +70,24 @@
     color: spiceColor("text") !important;
 }
 
+#dribbblish-search-box {
+    display: none;
+    order: 99;
+    height: 28px;
+    border-radius: var(--sidebar-icons-border-radius) !important;
+    @include spiceFont("info", 14px, "Regular");
+}
+
+#main[search-box] {
+    #dribbblish-search-box {
+        display: block;
+    }
+
+    [data-testid="search-input"] {
+        display: none;
+    }
+}
+
 .main-home-homeHeader,
 .x-entityHeader-overlay,
 .x-actionBarBackground-background,
@@ -468,11 +486,17 @@ html.sidebar-hide-text .GlueDropTarget span {
     display: none;
 }
 
-/** */
-.main-topBar-historyButtons .main-topBar-button {
-    background-color: unset;
-    width: 24px;
-    height: 24px;
+.main-topBar-historyButtons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .main-topBar-button {
+        margin: 0px;
+        background-color: unset;
+        width: 24px;
+        height: 24px;
+    }
 }
 
 .main-topBar-historyButtons svg {
@@ -743,6 +767,8 @@ li.GlueDropTarget {
 }
 
 .main-topBar-container {
+    display: flex;
+    gap: 8px;
     max-width: unset;
     padding: 16px 32px !important;
 }
@@ -992,7 +1018,7 @@ span.main-userWidget-displayName,
     left: -200%;
     opacity: 0.4;
     background-color: black;
-    border-radius: var(--image-radius);
+    border-radius: var(--sidebar-icons-border-radius);
     pointer-events: none;
     transition: all calc(var(--sidebar-icons-hover-animation) * 0.2s) ease;
     transition-property: left, opacity;

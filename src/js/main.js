@@ -4,7 +4,7 @@ import chroma from "chroma-js";
 import $ from "jquery";
 import moment from "moment";
 
-import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum, randomFromArray } from "./Util";
+import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum, randomFromArray, debounce } from "./Util";
 import { default as _Dribbblish } from "./Dribbblish";
 import "./Folders";
 
@@ -51,6 +51,44 @@ Dribbblish.on("ready", () => {
                 tooltip: "Open Dribbblish Settings",
                 onClick: () => Dribbblish.config.open()
             })
+    });
+
+    Dribbblish.config.register({
+        type: "checkbox",
+        key: "showSearchBox",
+        name: "Show Search Box",
+        description: "Show an search box in the top bar. Just like the good old times",
+        defaultValue: true,
+        onChange: (val) => $("#main").attr("search-box", val ? "" : null),
+        onAppended: () => {
+            const input = document.createElement("input");
+            input.id = "dribbblish-search-box";
+            input.type = "search";
+            input.placeholder = "Search";
+            input.setAttribute("maxlength", "80");
+            input.setAttribute("autocorrect", "off");
+            input.setAttribute("autocapitalize", "off");
+            input.setAttribute("spellcheck", "false");
+            input.addEventListener("click", (e) => {
+                if (!Spicetify.Platform.History.location.pathname.startsWith("/search")) Spicetify.Platform.History.push(`/search/${input.value}`);
+                waitForElement([`[data-testid="search-input"]`], ([defaultSearch]) => {
+                    input.focus();
+                });
+            });
+            input.addEventListener(
+                "input",
+                debounce((e) => {
+                    if (Spicetify.Platform.History.location.pathname.startsWith("/search")) {
+                        Spicetify.Platform.History.replace(`/search/${input.value}`);
+                    } else {
+                        Spicetify.Platform.History.push(`/search/${input.value}`);
+                    }
+                    input.focus();
+                }, 250)
+            );
+
+            $(".main-topBar-historyButtons").append(input);
+        }
     });
 
     Dribbblish.config.register({
@@ -224,17 +262,7 @@ Dribbblish.on("ready", () => {
         }
     });
 
-    (function Dribbblish() {
-        const progBar = document.querySelector(".playback-bar");
-        const root = document.querySelector(".Root");
-
-        if (!Spicetify.Player.origin || !progBar || !root) {
-            setTimeout(Dribbblish, 300);
-            return;
-        }
-
-        const progKnob = progBar.querySelector(".progress-bar__slider");
-
+    waitForElement([".Root", ".playback-bar .progress-bar__slider"], ([root, progKnob]) => {
         const tooltip = document.createElement("div");
         tooltip.className = "prog-tooltip";
         progKnob.append(tooltip);
@@ -263,7 +291,7 @@ Dribbblish.on("ready", () => {
                 root.classList.remove("is-connectBarVisible");
             }
         });
-    })();
+    });
 
     /* Config settings */
 
@@ -477,10 +505,11 @@ Dribbblish.on("ready", () => {
             Algorithm of selecting colors from the albumart
             - **Colorthief [(see)](https://lokeshdhakar.com/projects/color-thief/):** Gets more fitting colors
             - **Vibrant [(see)](https://jariz.github.io/vibrant.js/):** Gets more vibrant colors *(was the default up to v3.1.1)*
+            - **Spotify:** Basically Vibrant but internal
             - **Static:** Select a static color to be used
             {.muted}
         `,
-        data: { colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
+        data: { spotify: "Spotify", colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
         defaultValue: "colorthief",
         onChange: () => updateColors(),
         showChildren: (val) => {
@@ -504,8 +533,9 @@ Dribbblish.on("ready", () => {
                 name: "Color Selection Mode",
                 description: `
                     Method of selecting colors from the albumart
-                    - **Default:** Choose closest matching{.muted}
-                    - **Luminance:** Choose matching current theme (lighter/darker){.muted}
+                    - **Default:** Choose closest matching
+                    - **Luminance:** Choose matching current theme (lighter/darker)
+                    {.muted}
                 `,
                 data: { default: "Default", luminance: "Luminance" },
                 defaultValue: "default",
@@ -698,11 +728,17 @@ Dribbblish.on("ready", () => {
             const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
             let palette = {};
 
-            if (colorSelectionAlgorithm == "colorthief") {
+            if (colorSelectionAlgorithm == "spotify") {
+                const swatches = await Spicetify.colorExtractor(Spicetify.Player.data.track.uri);
+                for (const col of ["VIBRANT", "VIBRANT_NON_ALARMING", "PROMINENT", "DARK_VIBRANT", "LIGHT_VIBRANT", "DESATURATED"]) {
+                    const c = chroma(swatches[col]);
+                    palette[c.luminance()] = c;
+                }
+            } else if (colorSelectionAlgorithm == "colorthief") {
                 palette = Object.fromEntries([colorThief.getColor(img), ...colorThief.getPalette(img, 24, 5)].map((c) => chroma(c)).map((c) => [c.luminance(), c]));
             } else if (colorSelectionAlgorithm == "vibrant") {
                 const swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
-                for (var col of ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]) {
+                for (const col of ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"]) {
                     if (swatches[col]) {
                         const c = chroma(swatches[col].getHex());
                         palette[c.luminance()] = c;

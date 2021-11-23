@@ -1,5 +1,6 @@
 Added:
 - A spinning loader at startup while spotify is not ready (Can be disabled in settings)
+- The old search box in the top bar (Can be disabled in settings)
 
 Fixed:
 - Checking for update every 10 Minutes not working
