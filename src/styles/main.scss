@@ -548,12 +548,14 @@ html.sidebar-hide-text .GlueDropTarget span {
     opacity: 1;
 }
 
-.progress-bar:not(:active) .x-progressBar-progressBarBg > div:first-child > div {
-    transition: transform var(--playbar-movement-anim-speed) ease;
-}
+#main[playbar-transition] {
+    .progress-bar:not(:active) .x-progressBar-progressBarBg > div:first-child > div {
+        transition: transform var(--playbar-movement-anim-speed) ease;
+    }
 
-.progress-bar:not(:active) .progress-bar__slider {
-    transition-property: left, opacity;
+    .progress-bar:not(:active) .progress-bar__slider {
+        transition-property: left, opacity;
+    }
 }
 
 .playback-bar .prog-tooltip {

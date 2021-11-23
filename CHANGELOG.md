@@ -1,6 +1,7 @@
 Added:
 - A spinning loader at startup while spotify is not ready (Can be disabled in settings)
 - The old search box in the top bar (Can be disabled in settings)
+- Ability to disable the progress transition to improve performance `Playbar > Progress Transition` (#118)
 
 Fixed:
 - Checking for update every 10 Minutes not working

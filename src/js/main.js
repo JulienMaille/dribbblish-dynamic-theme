@@ -146,18 +146,6 @@ Dribbblish.on("ready", () => {
         onChange: (val) => $("html").css("--sidebar-gap-right", `${val}px`)
     });
 
-    waitForElement([".main-nowPlayingBar-container"], ([container]) => {
-        Dribbblish.config.register({
-            area: "Playbar",
-            type: "checkbox",
-            key: "playbarShadow",
-            name: "Playbar Shadow",
-            description: "Add a shadow effect underneath the playbar",
-            defaultValue: true,
-            onChange: (val) => $(container).toggleClass("with-shadow", val)
-        });
-    });
-
     Dribbblish.config.register({
         type: "select",
         data: { none: "None", "none-padding": "None (With Top Padding)", solid: "Solid", transparent: "Transparent" },
@@ -166,6 +154,31 @@ Dribbblish.on("ready", () => {
         description: "Have different top Bars (or none at all)",
         defaultValue: "none",
         onChange: (val) => $("#main").attr("top-bar", val)
+    });
+
+    waitForElement([".main-nowPlayingBar-container"], ([container]) => {
+        Dribbblish.config.register({
+            area: "Playbar",
+            type: "checkbox",
+            key: "playbarShadow",
+            name: "Shadow",
+            description: "Add a shadow effect underneath the playbar",
+            defaultValue: true,
+            onChange: (val) => $(container).toggleClass("with-shadow", val)
+        });
+    });
+
+    Dribbblish.config.register({
+        area: "Playbar",
+        type: "checkbox",
+        key: "playbarTransition",
+        name: "Progress Transition",
+        description: `
+            Have the player progress bar transition smoothly.
+            Turn this off if you're noticing high CPU utilization [(see)](https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/118){.muted}
+        `,
+        defaultValue: true,
+        onChange: (val) => $("#main").attr("playbar-transition", val ? "" : null)
     });
 
     Dribbblish.config.register({
