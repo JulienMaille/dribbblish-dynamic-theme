@@ -18,6 +18,31 @@ jobs:
       - name: Put version in env
         run: echo "DRIBBBLISH_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
+      - name: Get commit SHA
+        run: echo "LATEST_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Build Webpack
+        run: |
+          npm install
+          npm run build
+          echo "${{ env.DRIBBBLISH_VERSION }}" > dist/VERSION
+        env:
+          DRIBBBLISH_VERSION: ${{ env.DRIBBBLISH_VERSION }}
+          COMMIT_HASH: ${{ env.LATEST_SHA	}}
+
+      - name: Push to release branch
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: release
+          FOLDER: dist
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set package.json version
         run: |
           sed -i 's/"version":.*",/"version": "${{ env.DRIBBBLISH_VERSION }}",/' package.json
