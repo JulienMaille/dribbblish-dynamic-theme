@@ -1,11 +1,10 @@
 .main-contextMenu-menu {
+    $border-color: spiceColor("subtext", 0.1, 0.1);
+
     background-color: transparent !important;
+    border: 1px solid $border-color;
     border-radius: var(--main-corner-radius);
     padding: 8px;
-
-    &:not([data-depth="0"]) {
-        margin: -5px 0px;
-    }
 
     &::before {
         z-index: -1;
@@ -33,8 +32,9 @@
 
             &::before,
             &::after {
-                left: 5px;
-                right: 5px;
+                left: 8px;
+                right: 8px;
+                border-color: $border-color;
             }
         }
     }
