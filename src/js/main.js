@@ -175,7 +175,7 @@ Dribbblish.on("ready", () => {
         name: "Progress Transition",
         description: `
             Have the player progress bar transition smoothly.
-            Turn this off if you're noticing high CPU utilization [(see)](https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/118){.muted}
+            *Turn this off if you're noticing high CPU utilization [(see)](https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/118)*{.muted}
         `,
         defaultValue: true,
         onChange: (val) => $("#main").attr("playbar-transition", val ? "" : null)

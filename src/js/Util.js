@@ -1,6 +1,5 @@
 import MarkdownIt from "markdown-it";
 import MarkdownItAttrs from "markdown-it-attrs";
-import MarkdownItBracketedSpans from "markdown-it-bracketed-spans";
 
 /**
  * @callback waitForElCb
@@ -43,13 +42,12 @@ export function getClosestToNum(arr, num) {
 }
 
 export function renderMD(src, env) {
-    const md = MarkdownIt({
+    const md = MarkdownIt("commonmark", {
         html: true,
         breaks: true,
         linkify: true,
         typographer: true
     });
-    md.use(MarkdownItBracketedSpans);
     md.use(MarkdownItAttrs);
 
     return md.render(src, env);
