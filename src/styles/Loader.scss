@@ -24,7 +24,6 @@ $duration: 1.4s;
         content: "";
         position: absolute;
         inset: 0px;
-        color: spiceColor("subtext");
         background-color: spiceColor("main", 0.9, -0.1);
         backdrop-filter: blur(10px);
     }
@@ -33,6 +32,7 @@ $duration: 1.4s;
         content: attr(text);
         position: absolute;
         bottom: 40%;
+        color: spiceColor("subtext");
         @include spiceFont("glue", 32px, "Bold");
     }
 
