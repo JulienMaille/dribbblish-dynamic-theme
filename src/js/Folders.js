@@ -9,59 +9,44 @@ waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `
     root.classList.add("dribs-playlist-list");
 
     /** Replace Playlist name with their pictures */
-    function loadPlaylistImage() {
+    async function loadPlaylistImage() {
         for (const item of listElem.children) {
             let link = item.querySelector("a");
             if (!link) continue;
 
             let [_, app, uid] = link.pathname.split("/");
-            let uri;
+
+            if (link.querySelector("svg")) link.querySelector("svg").remove();
+            if (link.querySelector("img")) link.querySelector("img").remove();
+            const title = link.querySelector("span").innerText;
+            let elem;
+
             if (app === "playlist") {
-                uri = Spicetify.URI.playlistV2URI(uid);
+                const {
+                    metadata: { picture }
+                } = await Spicetify.CosmosAsync.get(`sp://core-playlist/v1/playlist/${Spicetify.URI.playlistV2URI(uid).toURI()}/metadata`, { policy: { picture: true } });
+
+                if (picture != null && picture.trim() != "") {
+                    if (!link.querySelector("img")) elem = document.createElement("img");
+                    elem.src = picture;
+                } else {
+                    if (!link.querySelector("svg")) elem = htmlToNode(iconNote.replace(/<\/svg>/, `<title>${title}</title>$1`));
+                }
             } else if (app === "folder") {
                 const base64 = localStorage.getItem("dribbblish:folder-image:" + uid);
                 if (base64 != null) {
-                    if (link.querySelector("svg")) link.querySelector("svg").remove();
-                    let img = link.querySelector("img");
-                    if (!img) {
-                        img = document.createElement("img");
-                        img.classList.add("playlist-picture");
-                        link.prepend(img);
-                    }
-                    img.src = base64;
+                    if (!link.querySelector("img")) elem = document.createElement("img");
+                    elem.src = base64;
                 } else {
-                    if (link.querySelector("img")) link.querySelector("img").remove();
-                    let svg = link.querySelector("svg");
-                    if (!svg) {
-                        svg = htmlToNode(iconFolder);
-                        svg.classList.add("playlist-picture");
-                        link.prepend(svg);
-                    }
+                    if (!link.querySelector("svg")) elem = htmlToNode(iconFolder.replace(/<\/svg>/, `<title>${title}</title>$1`));
                 }
+            } else {
                 continue;
             }
 
-            Spicetify.CosmosAsync.get(`sp://core-playlist/v1/playlist/${uri.toURI()}/metadata`, { policy: { picture: true } }).then((res) => {
-                const { picture } = res.metadata;
-                if (picture != null && picture.trim() != "") {
-                    if (link.querySelector("svg")) link.querySelector("svg").remove();
-                    let img = link.querySelector("img");
-                    if (!img) {
-                        img = document.createElement("img");
-                        img.classList.add("playlist-picture");
-                        link.prepend(img);
-                    }
-                    img.src = picture;
-                } else {
-                    if (link.querySelector("img")) link.querySelector("img").remove();
-                    let svg = link.querySelector("svg");
-                    if (!svg) {
-                        svg = htmlToNode(iconNote);
-                        svg.classList.add("playlist-picture");
-                        link.prepend(svg);
-                    }
-                }
-            });
+            elem.title = title;
+            elem.classList.add("playlist-picture");
+            link.prepend(elem);
         }
     }
     loadPlaylistImage();

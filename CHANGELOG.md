@@ -11,3 +11,4 @@ Fixed:
 
 Improved:
 - Moved `Hide Ads` into `Main Settings`
+- Added hover tooltips on playlist / folder images. Useful for collapsed sidebar
