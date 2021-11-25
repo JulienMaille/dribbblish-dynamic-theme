@@ -36,8 +36,9 @@
 
         .dribbblish-config-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            padding: 0px;
+            top: 24px;
+            right: 24px;
         }
 
         .dribbblish-config-areas {
@@ -62,15 +63,15 @@
 
                     .dribbblish-config-area-header {
                         svg {
-                            transform: rotate(270deg);
+                            transform: rotate(0deg);
                         }
 
                         &:hover svg {
-                            transform: rotate(270deg) scale(1.1);
+                            transform: rotate(0deg) scale(1.1);
                         }
 
                         &:active svg {
-                            transform: rotate(270deg) scale(0.9);
+                            transform: rotate(0deg) scale(0.9);
                         }
                     }
                 }
@@ -94,15 +95,15 @@
                         padding: 0px;
                         height: 100%;
                         stroke-width: 2px;
-                        transform: rotate(90deg);
+                        transform: rotate(180deg);
                     }
 
                     &:hover svg {
-                        transform: rotate(90deg) scale(1.1);
+                        transform: rotate(180deg) scale(1.1);
                     }
 
                     &:active svg {
-                        transform: rotate(90deg) scale(0.9);
+                        transform: rotate(180deg) scale(0.9);
                     }
                 }
 

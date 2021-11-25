@@ -2,6 +2,8 @@ import $ from "jquery";
 
 import { renderMD } from "./Util";
 
+import iconTimesLight from "icon/times.light";
+import iconChevronDown from "icon/chevron-down";
 import iconUndo from "icon/undo";
 
 export default class ConfigMenu {
@@ -77,9 +79,7 @@ export default class ConfigMenu {
         container.id = "dribbblish-config";
         container.innerHTML = /* html */ `
             <div class="dribbblish-config-container">
-                <button aria-label="Close" class="dribbblish-config-close main-trackCreditsModal-closeBtn">
-                    <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M31.098 29.794L16.955 15.65 31.097 1.51 29.683.093 15.54 14.237 1.4.094-.016 1.508 14.126 15.65-.016 29.795l1.414 1.414L15.54 17.065l14.144 14.143" fill="currentColor" fill-rule="evenodd"></path></svg>
-                </button>
+                <button aria-label="Close" class="dribbblish-config-close main-trackCreditsModal-closeBtn">${iconTimesLight({ size: 24 })}</button>
                 <h1>Dribbblish Settings</h1>
                 <div class="dribbblish-config-areas"></div>
             </div>
@@ -122,7 +122,7 @@ export default class ConfigMenu {
                         <div class="dribbblish-config-item-header">
                             <h2 class="x-settings-title main-type-cello" as="h2" empty="${options.name == null}">
                                 ${options.name}
-                                ${options.resetButton ? /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${iconUndo}</button>` : ""}
+                                ${options.resetButton ? /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${iconUndo()}</button>` : ""}
                             </h2>
                             <label class="main-type-mesto" empty="${options.description == null}" markdown>${renderMD(options.description)}</label>
                         </div>
@@ -411,7 +411,7 @@ export default class ConfigMenu {
             areaElem.innerHTML = /* html */ `
                 <h2 class="dribbblish-config-area-header">
                     ${area.name}
-                    ${!area.toggleable ? "" : /* html */ `<svg height="24" width="24" viewBox="0 0 24 24" class="main-topBar-icon"><polyline points="16 4 7 12 16 20" fill="none" stroke="currentColor"></polyline></svg>`}
+                    ${!area.toggleable ? "" : iconChevronDown({ size: 18 })}
                 </h2>
                 <div class="dribbblish-config-area-items"></div>
             `;

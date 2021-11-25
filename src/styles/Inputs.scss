@@ -140,25 +140,6 @@ input {
         padding: 0px 10px;
     }
 
-    &[type="search"] {
-        &::-webkit-search-cancel-button {
-            -webkit-appearance: none;
-            height: 1em;
-            width: 1em;
-            border-radius: 50em;
-            background: url(icon64("times")) no-repeat 50% 50%;
-            background-size: contain;
-            opacity: 0;
-            pointer-events: none;
-            filter: invert(lightOffset(1, -1));
-        }
-
-        &:focus::-webkit-search-cancel-button {
-            opacity: lightOffset(0.8, 0.1);
-            pointer-events: all;
-        }
-    }
-
     &[type="time"] {
         &::-webkit-calendar-picker-indicator {
             filter: invert(var(--is_dark));

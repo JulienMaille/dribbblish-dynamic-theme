@@ -30,7 +30,7 @@ waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `
                     if (!link.querySelector("img")) elem = document.createElement("img");
                     elem.src = picture;
                 } else {
-                    if (!link.querySelector("svg")) elem = htmlToNode(iconNote.replace(/<\/svg>/, `<title>${title}</title>$1`));
+                    if (!link.querySelector("svg")) elem = htmlToNode(iconNote().replace(/<\/svg>/, `<title>${title}</title>$1`));
                 }
             } else if (app === "folder") {
                 const base64 = localStorage.getItem("dribbblish:folder-image:" + uid);
@@ -38,7 +38,7 @@ waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `
                     if (!link.querySelector("img")) elem = document.createElement("img");
                     elem.src = base64;
                 } else {
-                    if (!link.querySelector("svg")) elem = htmlToNode(iconFolder.replace(/<\/svg>/, `<title>${title}</title>$1`));
+                    if (!link.querySelector("svg")) elem = htmlToNode(iconFolder().replace(/<\/svg>/, `<title>${title}</title>$1`));
                 }
             } else {
                 continue;

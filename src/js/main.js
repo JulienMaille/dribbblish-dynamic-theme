@@ -42,7 +42,7 @@ Dribbblish.on("ready", () => {
         defaultValue: true,
         onChange: (val) =>
             Dribbblish.info[val ? "set" : "remove"]("settings", {
-                icon: iconCog,
+                icon: iconCog(),
                 color: {
                     fg: "var(--spice-subtext)",
                     bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
@@ -808,8 +808,8 @@ Dribbblish.on("ready", () => {
             .then((response) => response.json())
             .then((data) => {
                 const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-                Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: iconArrowDown, onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
-                Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode } : null);
+                Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: iconArrowDown(), onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode() } : null);
             })
             .catch(console.error);
     }
@@ -821,7 +821,7 @@ Dribbblish.on("ready", () => {
     window.addEventListener("offline", () =>
         Dribbblish.info.set("offline", {
             tooltip: "Offline",
-            icon: iconWifiSlash,
+            icon: iconWifiSlash(),
             order: 998,
             color: {
                 fg: "#ffffff",

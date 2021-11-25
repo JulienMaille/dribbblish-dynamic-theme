@@ -38,12 +38,6 @@ module.exports = {
                             sourceMap: true,
                             sassOptions: {
                                 functions: {
-                                    'icon64($icon, $query: "")': (icon, query) => {
-                                        query = new URLSearchParams(query);
-                                        query.set("base64", "");
-                                        const content = fs.readFileSync(path.resolve(__dirname, "./src/icons", `${icon.getValue()}.svg`), "utf8");
-                                        return new sass.types.String(`"${iconLoader.call({ resourceQuery: query.toString() }, content)}"`);
-                                    },
                                     "font64($font)": (font) => {
                                         const file = path.resolve(__dirname, "./src/fonts", font.getValue());
                                         return new sass.types.String(`"data:font/truetype;charset=utf-8;base64,${fs.readFileSync(file, { encoding: "base64" })}"`);
@@ -64,8 +58,6 @@ module.exports = {
             },
             {
                 test: /\.svg/,
-                type: "asset/source",
-                resourceQuery: /.?/,
                 use: [path.resolve(__dirname, "./src/loaders/icon-loader.js")]
             }
         ]
