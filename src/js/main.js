@@ -8,10 +8,11 @@ import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum
 import { default as _Dribbblish } from "./Dribbblish";
 import "./Folders";
 
-import iconArrowDown from "icon/arrow-down";
+import iconPalette from "icon/palette";
 import iconCode from "icon/code";
 import iconWifiSlash from "icon/wifi-slash";
 import iconCog from "icon/cog";
+import iconSpotify from "icon/spotify";
 
 // To expose to external scripts
 const Dribbblish = new _Dribbblish();
@@ -41,16 +42,21 @@ Dribbblish.on("ready", () => {
         description: "Show an icon next to your profile image to open the dribbblish settings",
         defaultValue: true,
         onChange: (val) =>
-            Dribbblish.info[val ? "set" : "remove"]("settings", {
-                icon: iconCog(),
-                color: {
-                    fg: "var(--spice-subtext)",
-                    bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
-                },
-                order: 999,
-                tooltip: "Open Dribbblish Settings",
-                onClick: () => Dribbblish.config.open()
-            })
+            Dribbblish.info.set(
+                "settings",
+                val
+                    ? {
+                          icon: iconCog(),
+                          color: {
+                              fg: "var(--spice-subtext)",
+                              bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
+                          },
+                          order: 999,
+                          tooltip: "Open Dribbblish Settings",
+                          onClick: () => Dribbblish.config.open()
+                      }
+                    : null
+            )
     });
 
     Dribbblish.config.register({
@@ -334,7 +340,7 @@ Dribbblish.on("ready", () => {
         description: `
                 OS: \`${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}\`
                 Spotify: \`v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}\`
-                Spicetify: \`${Spicetify.version != null ? `v${Spicetify.version}` : "<= v2.7.2"}\`
+                Spicetify: \`${Spicetify.version != null ? `v${Spicetify.version}` : "< v2.7.3"}\`
                 Dribbblish: \`v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}\`
             `,
         data: "Copy",
@@ -807,9 +813,14 @@ Dribbblish.on("ready", () => {
         fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
             .then((response) => response.json())
             .then((data) => {
-                const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-                Dribbblish.info.set("update", isDev || data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Open Release page to download", icon: iconArrowDown(), onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
-                Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode() } : null);
+                Dribbblish.info.set("dribbblish-update", data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Nev Dribbblish version available", icon: iconPalette(), onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+            })
+            .catch(console.error);
+
+        fetch("https://api.github.com/repos/khanhas/spicetify-cli/releases/latest")
+            .then((response) => response.json())
+            .then((data) => {
+                Dribbblish.info.set("spicetify-update", data.tag_name.substring(1) > (Spicetify.version ?? "2.7.2") ? { text: data.tag_name, tooltip: "New Spicetify version available", icon: iconSpotify(), onClick: () => window.open("https://github.com/khanhas/spicetify-cli/releases/latest", "_blank") } : null);
             })
             .catch(console.error);
     }
@@ -817,7 +828,7 @@ Dribbblish.on("ready", () => {
     setInterval(checkForUpdate, 10 * 60 * 1000);
     checkForUpdate();
 
-    // Show "Offline info"
+    // Show "Offline" info
     window.addEventListener("offline", () =>
         Dribbblish.info.set("offline", {
             tooltip: "Offline",
@@ -830,6 +841,10 @@ Dribbblish.on("ready", () => {
         })
     );
     window.addEventListener("online", () => Dribbblish.info.remove("offline"));
+
+    // Show "Dev" info
+    const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
+    Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode(), order: 997 } : null);
 });
 
 $("html").css("--warning_message", " ");

@@ -58,6 +58,7 @@ export default class Info {
         }
 
         this.remove(key);
+        if (info == null) return;
         if (info.text == null && info.icon == null) throw new Error("invalid info");
 
         const elem = document.createElement("div");
