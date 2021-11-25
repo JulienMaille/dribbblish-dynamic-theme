@@ -60,8 +60,18 @@
                     min-height: 38px; //for some reason height alone isn't enough
                     height: 38px;
 
-                    .dribbblish-config-area-header svg {
-                        transform: rotate(270deg);
+                    .dribbblish-config-area-header {
+                        svg {
+                            transform: rotate(270deg);
+                        }
+
+                        &:hover svg {
+                            transform: rotate(270deg) scale(1.1);
+                        }
+
+                        &:active svg {
+                            transform: rotate(270deg) scale(0.9);
+                        }
                     }
                 }
 
@@ -85,6 +95,14 @@
                         height: 100%;
                         stroke-width: 2px;
                         transform: rotate(90deg);
+                    }
+
+                    &:hover svg {
+                        transform: rotate(90deg) scale(1.1);
+                    }
+
+                    &:active svg {
+                        transform: rotate(90deg) scale(0.9);
                     }
                 }
 
