@@ -829,18 +829,25 @@ Dribbblish.on("ready", () => {
     checkForUpdate();
 
     // Show "Offline" info
-    window.addEventListener("offline", () =>
-        Dribbblish.info.set("offline", {
-            tooltip: "Offline",
-            icon: iconWifiSlash(),
-            order: 998,
-            color: {
-                fg: "#ffffff",
-                bg: "#ff2323"
-            }
-        })
-    );
-    window.addEventListener("online", () => Dribbblish.info.remove("offline"));
+    function offlineInfo(show) {
+        Dribbblish.info.set(
+            "offline",
+            show
+                ? {
+                      tooltip: "Offline",
+                      icon: iconWifiSlash(),
+                      order: 998,
+                      color: {
+                          fg: "#ffffff",
+                          bg: "#ff2323"
+                      }
+                  }
+                : null
+        );
+    }
+    window.addEventListener("offline", () => offlineInfo(true));
+    window.addEventListener("online", () => offlineInfo(false));
+    offlineInfo(!navigator.onLine);
 
     // Show "Dev" info
     const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
