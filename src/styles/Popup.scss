@@ -1,0 +1,50 @@
+.GenericModal__overlay {
+    backdrop-filter: blur(3px) brightness(60%);
+    background-color: transparent;
+
+    .GenericModal {
+        z-index: 1;
+        position: relative;
+        width: clamp(500px, 50%, 650px);
+        background-color: spiceColor("main", 0.95);
+        backdrop-filter: blur(3px);
+        padding: 24px 16px;
+        border-radius: var(--main-corner-radius);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        @include spiceShadow();
+
+        .main-trackCreditsModal-container {
+            display: flex;
+            gap: 16px;
+            background-color: transparent;
+            width: 100%;
+
+            .main-trackCreditsModal-header {
+                display: flex;
+                gap: 16px;
+                padding: 0px;
+                width: 100%;
+                border: none;
+
+                h1 {
+                    text-align: center;
+                    width: 100%;
+                    @include spiceFont("glue", 2em, "Bold");
+                }
+
+                button {
+                    position: absolute;
+                    top: 16px;
+                    right: 16px;
+                }
+            }
+
+            .main-trackCreditsModal-mainSection {
+                padding: 0px 26px;
+            }
+        }
+    }
+}
