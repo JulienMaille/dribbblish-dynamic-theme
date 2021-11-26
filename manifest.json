@@ -1,19 +1,10 @@
-[
-    {
-        "name": "Dribbblish Dynamic (Beta) Theme",
-        "description": "A mod of Dribbblish theme for Spicetify with support for light/dark modes and album art based colors.",
-        "preview": "showcase-images/preview.gif",
-        "readme": "README.md",
-        "branch": "beta-release",
-        "usercss": "user.css",
-        "schemes": "color.ini"
-    },
-    {
-        "name": "Dribbblish Dynamic (Beta) Extension",
-        "description": "Extension for Dribbblish Dynamic (Beta)",
-        "preview": "showcase-images/preview.gif",
-        "readme": "README.md",
-        "branch": "beta-release",
-        "main": "dribbblish-dynamic.js"
-    }
-]
+{
+    "name": "Dribbblish Dynamic (Beta) Theme",
+    "description": "A mod of Dribbblish theme for Spicetify with support for light/dark modes and album art based colors.",
+    "preview": "showcase-images/preview.gif",
+    "readme": "README.md",
+    "branch": "beta-release",
+    "usercss": "user.css",
+    "schemes": "color.ini",
+    "include": ["https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/beta-release/dribbblish-dynamic.js"]
+}
