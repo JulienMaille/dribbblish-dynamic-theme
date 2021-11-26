@@ -84,7 +84,7 @@
         display: block;
     }
 
-    [data-testid="search-input"] {
+    .main-topBar-topbarContent form[role="search"] {
         display: none;
     }
 }

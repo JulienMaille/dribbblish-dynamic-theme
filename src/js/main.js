@@ -67,6 +67,7 @@ Dribbblish.on("ready", () => {
         defaultValue: true,
         onChange: (val) => $("#main").attr("search-box", val ? "" : null),
         onAppended: () => {
+            if ($("#dribbblish-search-box").length != 0) return;
             const input = document.createElement("input");
             input.id = "dribbblish-search-box";
             input.type = "search";
