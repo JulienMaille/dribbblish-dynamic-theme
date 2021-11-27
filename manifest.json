@@ -6,5 +6,5 @@
     "readme": "README.md",
     "usercss": "user.css",
     "schemes": "color.ini",
-    "include": ["https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/beta-release/dribbblish-dynamic.js"]
+    "include": ["https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/release-beta/dribbblish-dynamic.js"]
 }
