@@ -367,12 +367,6 @@ Dribbblish.on("ready", () => {
                 **Screenshots**
                 <!-- If applicable, add screenshots to help explain your problem. -->
                 
-                **Desktop Setup**
-                - Operating System: <!-- [e.g. Windows 10, MacOS 10.14] -->
-                - Spotify: <!-- [e.g. 1.1.71.560] from \`Menu (Three dots top left) > Help > About\` -->
-                - Spicetify: <!-- [e.g. 2.4.1] run \`spicetify -v\` -->
-                - Dribbblish: <!-- [e.g. 3.0.1] from \`Dribblish Settings > About\` -->
-                
                 **Logs**
                 <!--
                     Add logs from console. To do that
