@@ -50,23 +50,24 @@ export default class Icons {
         svg.attributes.width = options.size;
         svg.attributes.height = options.size;
 
+        // Create CSSStyleDeclaration by creating an element since there is no constructor for it
+        const styles = document.createElement("a").style;
         if (options.scale != 1) {
-            svg.children = svg.children.map((child) => {
-                child.attributes.style = `transform: scale(${options.scale}); transform-origin: center;`;
-                return child;
-            });
+            styles.transform = `scale(${options.scale})`;
+            styles.transformOrigin = "center";
         }
+        svg.children = svg.children.map((child) => {
+            child.attributes.style = styles.cssText;
+            return child;
+        });
 
         if (options.title != null) {
-            console.log(options);
-            console.log(svg);
             svg.children.push({
                 name: "title",
                 type: "element",
                 value: "",
                 children: [{ name: "", type: "text", value: options.title, attributes: {}, children: [] }]
             });
-            console.log(svg);
         }
 
         if (options.base64) {
