@@ -26,6 +26,7 @@ jobs:
           npm run build
           echo "Dev" > dist/VERSION
         env:
+          DRIBBBLISH_VERSION: Beta
           COMMIT_HASH: ${{ env.LATEST_SHA	}}
 
       - name: Push to beta-release branch

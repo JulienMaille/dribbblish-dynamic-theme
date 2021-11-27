@@ -822,7 +822,7 @@ Dribbblish.on("ready", () => {
         fetch("https://api.github.com/repos/khanhas/spicetify-cli/releases/latest")
             .then((response) => response.json())
             .then((data) => {
-                Dribbblish.info.set("spicetify-update", data.tag_name.substring(1) > (Spicetify.version ?? "2.7.2") ? { text: data.tag_name, tooltip: "New Spicetify version available", icon: "spotify", onClick: () => window.open("https://github.com/khanhas/spicetify-cli/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("spicetify-update", data.tag_name.substring(1) > (Spicetify.version ?? "2.7.2") ? { text: data.tag_name, tooltip: "New Spicetify version available", icon: "spicetify", onClick: () => window.open("https://github.com/khanhas/spicetify-cli/releases/latest", "_blank") } : null);
             })
             .catch(console.error);
     }
@@ -851,7 +851,15 @@ Dribbblish.on("ready", () => {
     window.addEventListener("online", () => offlineInfo(false));
     offlineInfo(!navigator.onLine);
 
-    // Show "Dev" info
-    const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-    Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: "code", order: 997 } : null);
+    // Show "Dev / Beta" info
+    switch (process.env.DRIBBBLISH_VERSION) {
+        case "Dev":
+            Dribbblish.info.set("dev", { tooltip: "Dev build", icon: "code", order: 997 });
+            break;
+        case "Beta":
+            Dribbblish.info.set("beta", { tooltip: "Beta build", icon: "info", order: 997 });
+            break;
+        default:
+            break;
+    }
 });
