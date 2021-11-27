@@ -34,7 +34,7 @@ jobs:
         run: |
           npm install
           npm run build
-          echo "${{ github.event.inputs.version }}" > dist/VERSION
+          echo "${{ github.event.inputs.version }}-${{ env.LATEST_SHA	}}" > dist/VERSION
         env:
           DRIBBBLISH_VERSION: ${{ github.event.inputs.version }}
           COMMIT_HASH: ${{ env.LATEST_SHA	}}

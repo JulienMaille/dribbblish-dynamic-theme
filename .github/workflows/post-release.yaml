@@ -30,7 +30,7 @@ jobs:
         run: |
           npm install
           npm run build
-          echo "${{ env.DRIBBBLISH_VERSION }}" > dist/VERSION
+          echo "${{ env.DRIBBBLISH_VERSION }}-${{ env.LATEST_SHA }}" > dist/VERSION
         env:
           DRIBBBLISH_VERSION: ${{ env.DRIBBBLISH_VERSION }}
           COMMIT_HASH: ${{ env.LATEST_SHA	}}
