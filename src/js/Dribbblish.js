@@ -1,6 +1,7 @@
 import ConfigMenu from "./ConfigMenu";
 import Info from "./Info";
 import Loader from "./Loader";
+import { icons } from "./Icons";
 
 export default class Dribbblish {
     /**
@@ -22,6 +23,9 @@ export default class Dribbblish {
     /** @type {Loader} */
     loader;
 
+    /** @type {Icons} */
+    icons;
+
     /** @type {Object.<string, listener[]>} */
     #listeners = {};
 
@@ -32,6 +36,7 @@ export default class Dribbblish {
         this.config = new ConfigMenu();
         this.info = new Info();
         this.loader = new Loader();
+        this.icons = icons;
 
         const interval = setInterval(() => {
             if (document.querySelector("#main") == null || Spicetify?.showNotification == undefined || !this.info.isReady()) return;

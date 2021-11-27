@@ -1,10 +1,7 @@
 import $ from "jquery";
 
 import { renderMD } from "./Util";
-
-import iconTimesLight from "icon/times.light";
-import iconChevronDown from "icon/chevron-down";
-import iconUndo from "icon/undo";
+import { icons } from "./Icons";
 
 export default class ConfigMenu {
     /**
@@ -79,7 +76,7 @@ export default class ConfigMenu {
         container.id = "dribbblish-config";
         container.innerHTML = /* html */ `
             <div class="dribbblish-config-container">
-                <button aria-label="Close" class="dribbblish-config-close main-trackCreditsModal-closeBtn">${iconTimesLight({ size: 24 })}</button>
+                <button aria-label="Close" class="dribbblish-config-close main-trackCreditsModal-closeBtn">${icons.get("close", { size: 24 })}</button>
                 <h1>Dribbblish Settings</h1>
                 <div class="dribbblish-config-areas"></div>
             </div>
@@ -122,7 +119,7 @@ export default class ConfigMenu {
                         <div class="dribbblish-config-item-header">
                             <h2 class="x-settings-title main-type-cello" as="h2" empty="${options.name == null}">
                                 ${options.name}
-                                ${options.resetButton ? /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${iconUndo()}</button>` : ""}
+                                ${options.resetButton ? /* html */ `<button aria-label="Reset" class="dribbblish-config-item-reset main-trackCreditsModal-closeBtn">${icons.get("delete-outline", { size: 20, title: "Reset Setting" })}</button>` : ""}
                             </h2>
                             <label class="main-type-mesto" empty="${options.description == null}" markdown>${renderMD(options.description)}</label>
                         </div>
@@ -411,7 +408,7 @@ export default class ConfigMenu {
             areaElem.innerHTML = /* html */ `
                 <h2 class="dribbblish-config-area-header">
                     ${area.name}
-                    ${!area.toggleable ? "" : iconChevronDown({ size: 18 })}
+                    ${!area.toggleable ? "" : icons.get("expand-more", { size: 24, scale: 1.2 })}
                 </h2>
                 <div class="dribbblish-config-area-items"></div>
             `;

@@ -1,8 +1,5 @@
 import { waitForElement, htmlToNode } from "./Util";
-
-import iconFolder from "icon/folder.light";
-import iconFolderOpen from "icon/folder-open.light";
-import iconNote from "icon/note";
+import { icons } from "./Icons";
 
 waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"] li`], ([root, firstItem]) => {
     const listElem = firstItem.parentElement;
@@ -30,7 +27,7 @@ waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `
                     if (!link.querySelector("img")) elem = document.createElement("img");
                     elem.src = picture;
                 } else {
-                    if (!link.querySelector("svg")) elem = htmlToNode(iconNote().replace(/<\/svg>/, `<title>${title}</title>$1`));
+                    if (!link.querySelector("svg")) elem = htmlToNode(icons.get("note", { title }));
                 }
             } else if (app === "folder") {
                 const base64 = localStorage.getItem("dribbblish:folder-image:" + uid);
@@ -38,7 +35,7 @@ waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `
                     if (!link.querySelector("img")) elem = document.createElement("img");
                     elem.src = base64;
                 } else {
-                    if (!link.querySelector("svg")) elem = htmlToNode(iconFolder().replace(/<\/svg>/, `<title>${title}</title>$1`));
+                    if (!link.querySelector("svg")) elem = htmlToNode(icons.get("folder", { title }));
                 }
             } else {
                 continue;

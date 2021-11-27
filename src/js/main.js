@@ -8,11 +8,8 @@ import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum
 import { default as _Dribbblish } from "./Dribbblish";
 import "./Folders";
 
-import iconPalette from "icon/palette";
-import iconCode from "icon/code";
-import iconWifiSlash from "icon/wifi-slash";
-import iconCog from "icon/cog";
-import iconSpotify from "icon/spotify";
+// Remove not installed message
+$("html").attr("dribbblish-js-installed", " ");
 
 // To expose to external scripts
 const Dribbblish = new _Dribbblish();
@@ -46,7 +43,7 @@ Dribbblish.on("ready", () => {
                 "settings",
                 val
                     ? {
-                          icon: iconCog(),
+                          icon: "settings",
                           color: {
                               fg: "var(--spice-subtext)",
                               bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
@@ -288,7 +285,7 @@ Dribbblish.on("ready", () => {
         progKnob.append(tooltip);
 
         function updateProgTime(timeOverride) {
-            const newText = Spicetify.Player.formatTime(timeOverride || Spicetify.Player.getProgress()) + " / " + Spicetify.Player.formatTime(Spicetify.Player.getDuration());
+            const newText = Spicetify.Player.formatTime(timeOverride ?? Spicetify.Player.getProgress()) + " / " + Spicetify.Player.formatTime(Spicetify.Player.getDuration());
             // To reduce DOM Updates when the Song is Paused
             if (tooltip.innerText != newText) tooltip.innerText = newText;
         }
@@ -814,14 +811,14 @@ Dribbblish.on("ready", () => {
         fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
             .then((response) => response.json())
             .then((data) => {
-                Dribbblish.info.set("dribbblish-update", data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Nev Dribbblish version available", icon: iconPalette(), onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("dribbblish-update", data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Nev Dribbblish version available", icon: "palette", onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
             })
             .catch(console.error);
 
         fetch("https://api.github.com/repos/khanhas/spicetify-cli/releases/latest")
             .then((response) => response.json())
             .then((data) => {
-                Dribbblish.info.set("spicetify-update", data.tag_name.substring(1) > (Spicetify.version ?? "2.7.2") ? { text: data.tag_name, tooltip: "New Spicetify version available", icon: iconSpotify(), onClick: () => window.open("https://github.com/khanhas/spicetify-cli/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("spicetify-update", data.tag_name.substring(1) > (Spicetify.version ?? "2.7.2") ? { text: data.tag_name, tooltip: "New Spicetify version available", icon: "spotify", onClick: () => window.open("https://github.com/khanhas/spicetify-cli/releases/latest", "_blank") } : null);
             })
             .catch(console.error);
     }
@@ -836,7 +833,7 @@ Dribbblish.on("ready", () => {
             show
                 ? {
                       tooltip: "Offline",
-                      icon: iconWifiSlash(),
+                      icon: "cloud-off",
                       order: 998,
                       color: {
                           fg: "#ffffff",
@@ -852,7 +849,5 @@ Dribbblish.on("ready", () => {
 
     // Show "Dev" info
     const isDev = process.env.DRIBBBLISH_VERSION == "Dev";
-    Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: iconCode(), order: 997 } : null);
+    Dribbblish.info.set("dev", isDev ? { tooltip: "Dev build", icon: "code", order: 997 } : null);
 });
-
-$("html").css("--warning_message", " ");

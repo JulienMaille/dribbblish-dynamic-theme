@@ -1,4 +1,5 @@
 import $ from "jquery";
+import { icons } from "./Icons";
 
 import { waitForElement } from "./Util";
 
@@ -7,7 +8,7 @@ export default class Info {
      * @typedef {Object} DribbblishInfo
      * @property {String} [text]
      * @property {String} [tooltip]
-     * @property {String} [icon]
+     * @property {String} [icon] svg string or icon name
      * @property {DribbblishInfoColor} [color]
      * @property {Number} [order=0] order < 0 = More to the Left | order > 0 = More to the Right
      * @property {onClick} [onClick]
@@ -74,6 +75,7 @@ export default class Info {
             if (bg != null) elem.style.backgroundColor = bg;
         }
         if (info.order != 0) elem.style.order = info.order;
+        if (!info.icon.startsWith("<svg")) info.icon = icons.get(info.icon);
         elem.innerHTML = `${info.text ?? ""}${info.icon ?? ""}`;
 
         this.#container.appendChild(elem);

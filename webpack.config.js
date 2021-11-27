@@ -3,7 +3,21 @@ const sass = require("sass");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("path");
 const fs = require("fs");
-const iconLoader = require("./src/loaders/icon-loader");
+
+const icons = {};
+// Add Material Icons
+let iconDir = path.resolve(__dirname, "./node_modules/@material-icons/svg/svg");
+for (const dir of fs.readdirSync(iconDir)) {
+    icons[dir.replace("_", "-")] = {};
+    for (const file of fs.readdirSync(path.resolve(iconDir, dir))) {
+        icons[dir.replace("_", "-")][file.replace(/\..*?$/, "")] = fs.readFileSync(path.resolve(iconDir, dir, file), { encoding: "utf8" });
+    }
+}
+// Add Custom Icons
+iconDir = path.resolve(__dirname, "./src/icons");
+for (const icon of fs.readdirSync(iconDir)) {
+    icons[icon.replace(/\..*?$/, "")] = fs.readFileSync(path.resolve(iconDir, icon), { encoding: "utf8" });
+}
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
@@ -11,12 +25,6 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "dribbblish-dynamic.js"
-    },
-    resolve: {
-        extensions: [".js", ".svg"],
-        alias: {
-            icon: path.resolve(__dirname, "./src/icons")
-        }
     },
     module: {
         rules: [
@@ -55,18 +63,15 @@ module.exports = {
                     filename: "color.ini"
                 },
                 use: [path.resolve(__dirname, "./src/loaders/color-loader.js")]
-            },
-            {
-                test: /\.svg/,
-                use: [path.resolve(__dirname, "./src/loaders/icon-loader.js")]
             }
         ]
     },
     devtool: "inline-source-map",
     plugins: [
         new webpack.DefinePlugin({
-            "process.env.DRIBBBLISH_VERSION": JSON.stringify(process.env.DRIBBBLISH_VERSION || "Dev"),
-            "process.env.COMMIT_HASH": JSON.stringify(process.env.COMMIT_HASH || "local")
+            "process.env.DRIBBBLISH_ICONS": JSON.stringify(icons),
+            "process.env.DRIBBBLISH_VERSION": JSON.stringify(process.env.DRIBBBLISH_VERSION ?? "Dev"),
+            "process.env.COMMIT_HASH": JSON.stringify(process.env.COMMIT_HASH ?? "local")
         }),
         new CleanWebpackPlugin({
             protectWebpackAssets: false,

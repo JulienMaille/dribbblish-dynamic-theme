@@ -6,6 +6,7 @@
         "url": "https://github.com/JulienMaille/dribbblish-dynamic-theme/issues"
     },
     "devDependencies": {
+        "@material-icons/svg": "^1.0.22",
         "clean-webpack-plugin": "^4.0.0",
         "sass": "^1.43.4",
         "sass-loader": "^12.2.0",
