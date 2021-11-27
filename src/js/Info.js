@@ -75,7 +75,7 @@ export default class Info {
             if (bg != null) elem.style.backgroundColor = bg;
         }
         if (info.order != 0) elem.style.order = info.order;
-        if (!info.icon.startsWith("<svg")) info.icon = icons.get(info.icon);
+        if (!info.icon.startsWith("<svg")) info.icon = icons.get(info.icon, { size: 18 });
         elem.innerHTML = `${info.text ?? ""}${info.icon ?? ""}`;
 
         this.#container.appendChild(elem);
