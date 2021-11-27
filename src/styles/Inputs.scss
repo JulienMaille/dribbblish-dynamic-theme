@@ -1,24 +1,48 @@
-button.main-button-primary {
-    background-color: spiceColor("selected-row", 0.4) !important;
+button.main-button {
+    &-primary {
+        $color: spiceColor("subtext");
+        color: $color;
+        background-color: spiceColor("selected-row", 0.4) !important;
 
-    &:hover,
-    &:active {
-        background-color: spiceColor("selected-row", 0.6) !important;
+        &:hover,
+        &:active {
+            background-color: spiceColor("selected-row", 0.6) !important;
+        }
+
+        span {
+            color: $color !important;
+        }
     }
 
-    span {
-        color: spiceColor("subtext") !important;
-    }
-}
+    // ? Don't know if this exists
+    // &-secondary {
+    //      $color: spiceColor("subtext");
+    //      color: $color;
+    //     background-color: spiceColor("selected-row", 0.4) !important;
 
-// Modals
-.GenericModal button.main-button-primary {
-    background-color: spiceColor("subtext", 0.6) !important;
-    color: spiceColor("main") !important;
+    //     &:hover,
+    //     &:active {
+    //         background-color: spiceColor("selected-row", 0.6) !important;
+    //     }
 
-    &:hover,
-    &:active {
-        background-color: spiceColor("subtext") !important;
+    //     span {
+    //         color: $color !important;
+    //     }
+    // }
+
+    &-tertiary {
+        $color: spiceColor("subtext");
+        color: $color;
+        background-color: spiceColor("selected-row", 0.2, 0.05) !important;
+
+        &:hover,
+        &:active {
+            background-color: spiceColor("selected-row", 0.6) !important;
+        }
+
+        span {
+            color: $color !important;
+        }
     }
 }
 

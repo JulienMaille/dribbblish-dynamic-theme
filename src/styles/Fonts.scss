@@ -49,7 +49,7 @@ $font-weights: (
 }
 
 // set font variables
-body {
+:root {
     --glue-font-family: #{map-get($font-names, "glue")}, #{map-get($font-names, "info")}, spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
     --info-font-family: #{map-get($font-names, "info")}, spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
     font-family: var(--glue-font-family);
