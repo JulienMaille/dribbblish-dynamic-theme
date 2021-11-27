@@ -14,3 +14,4 @@ Improved:
 - Added hover tooltips on playlist / folder images. Useful for collapsed sidebar
 - Now also shows if a new spicetify-cli update is available (Requires spicetify-cli > 2.7.2)
 - Popups (like lyrics-plus settings) styles are now consistent with the Dribbblish settings styles
+- Only display option to reset setting if it was changed

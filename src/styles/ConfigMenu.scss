@@ -182,6 +182,10 @@
                                 bottom: -4px;
                                 border-bottom-left-radius: 0px;
                             }
+
+                            .dribbblish-config-item-reset {
+                                display: block !important;
+                            }
                         }
 
                         .dribbblish-config-item-header {
@@ -197,7 +201,7 @@
 
                                 .x-settings-title {
                                     display: flex;
-                                    gap: 10px;
+                                    gap: 5px;
                                     align-items: center;
                                     grid-area: header;
                                     margin: 0px;
@@ -206,10 +210,11 @@
                                     bottom: 0px;
 
                                     .dribbblish-config-item-reset {
+                                        display: none;
+                                        width: 20px;
+                                        height: 20px;
                                         padding: 0px;
                                         color: spiceColor("text");
-                                        width: 1em;
-                                        height: 1em;
                                     }
                                 }
 
