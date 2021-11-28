@@ -4,12 +4,14 @@ import chroma from "chroma-js";
 import $ from "jquery";
 import moment from "moment";
 
+// Break if Dribbblish has already been initialized
+if ($("html").attr("dribbblish-js-installed") != undefined) throw new Error("Dribbblish has already been initialized");
+// Remove not installed message
+$("html").attr("dribbblish-js-installed", " ");
+
 import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum, randomFromArray, debounce } from "./Util";
 import { default as _Dribbblish } from "./Dribbblish";
 import "./Folders";
-
-// Remove not installed message
-$("html").attr("dribbblish-js-installed", " ");
 
 // To expose to external scripts
 const Dribbblish = new _Dribbblish();
@@ -64,7 +66,6 @@ Dribbblish.on("ready", () => {
         defaultValue: true,
         onChange: (val) => $("#main").attr("search-box", val ? "" : null),
         onAppended: () => {
-            if ($("#dribbblish-search-box").length != 0) return;
             const input = document.createElement("input");
             input.id = "dribbblish-search-box";
             input.type = "search";
