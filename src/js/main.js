@@ -831,6 +831,41 @@ Dribbblish.on("ready", () => {
     setInterval(checkForUpdate, 10 * 60 * 1000);
     checkForUpdate();
 
+    function registerCastingListener() {
+        if (!document.querySelector(".main-nowPlayingBar-container")) return setTimeout(registerCastingListener, 250);
+
+        function setInfo() {
+            if (!document.querySelector(".main-connectBar-connectBar svg > path")) return;
+            Dribbblish.info.set("casting", {
+                icon: $(".main-connectBar-connectBar svg > path").attr("d").includes("1.48 1.48") ? "cast-connected" : "cast",
+                text: $(".main-connectBar-connectBar").text(),
+                // TODO: make onClick act like clicking on the connect to device button
+                // onClick: () => ,
+                order: -999
+            });
+        }
+        setInfo();
+
+        const castingListener = new MutationObserver((muts) => {
+            let action;
+            for (const mut of muts) {
+                if (mut.target instanceof HTMLElement && (mut.target.classList.contains("main-connectBar-connectBar") || mut.target.querySelector(".main-connectBar-connectBar"))) action = "change";
+                for (const el of mut.addedNodes) if (el instanceof HTMLElement && el.querySelector(".main-connectBar-connectBar")) action = "add";
+                for (const el of mut.removedNodes) if (el instanceof HTMLElement && el.querySelector(".main-connectBar-connectBar")) action = "remove";
+            }
+            if (["add", "change"].includes(action)) {
+                setInfo();
+            } else if (action == "remove") {
+                Dribbblish.info.remove("casting");
+            }
+        });
+        castingListener.observe(document.querySelector(".main-nowPlayingBar-container"), {
+            childList: true,
+            subtree: true
+        });
+    }
+    registerCastingListener();
+
     // Show "Offline" info
     function offlineInfo(show) {
         Dribbblish.info.set(

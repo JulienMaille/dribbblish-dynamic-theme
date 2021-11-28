@@ -1,0 +1,48 @@
+.connect-device-list-container {
+    $border-color: spiceColor("subtext", 0.1, 0.1);
+
+    border: 1px solid $border-color;
+    border-radius: var(--main-corner-radius);
+    padding: 8px;
+    background-color: spiceColor("main", 0.75, -0.1) !important;
+    backdrop-filter: blur(10px);
+    border-radius: var(--main-corner-radius);
+    @include spiceShadow();
+
+    &::before {
+        display: none;
+    }
+
+    .connect-device-list-content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+
+        .connect-header {
+            padding: 0px;
+            filter: invert(var(--is_light));
+        }
+
+        .connect-device-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+
+            .connect-device-list-item {
+                background-color: transparent;
+                border-radius: var(--main-corner-radius);
+
+                &:hover,
+                &:active {
+                    background-color: spiceColor("subtext", 0.1, 0.1);
+                }
+
+                &--active {
+                    background-color: spiceColor("selected-row", 0.2) !important;
+                }
+            }
+        }
+    }
+}

@@ -8,12 +8,13 @@
 @import "Fonts";
 @import "Inputs";
 @import "ConfigMenu";
-@import "ContextMenu.scss";
+@import "ContextMenu";
 @import "NoAds";
 @import "Markdown";
 @import "Info";
 @import "Loader";
-@import "Popup";
+@import "Modals";
+@import "ConnectDeviceList";
 
 :root {
     --bar-height: 70px;
@@ -27,6 +28,18 @@
     --sidebar-icons-border-radius: 50vh; // 50vh = round / pill
     --song-transition-speed: 3s;
     --is_dark: calc(1 - var(--is_light));
+
+    // Display warning for incorrectly installed js
+    &:not([dribbblish-js-installed])::after {
+        content: "dribbblish-dynamic.js not installed correctly";
+        position: fixed;
+        inset: 0px;
+        color: red;
+        background-color: black;
+        text-align: center;
+        line-height: 100vh;
+        @include spiceFont("glue", 32px, "Bold");
+    }
 }
 
 ::-webkit-scrollbar {
@@ -103,15 +116,6 @@
     color: white;
 }
 
-.connect-title,
-.connect-header {
-    display: none;
-}
-
-.connect-device-list {
-    margin: 0px -5px;
-}
-
 /* Remove Topbar background colour */
 .main-topBar-background {
     background-color: unset !important;
@@ -120,8 +124,7 @@
     background-color: spiceColor("main");
 }
 
-.main-entityHeader-shadow,
-.connect-device-list-container {
+.main-entityHeader-shadow {
     box-shadow: 0 4px 20px #21212130;
 }
 
@@ -305,6 +308,7 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .main-nowPlayingBar-container {
+    position: relative;
     border-radius: 0 0 var(--main-corner-radius) var(--main-corner-radius);
     background-color: spiceColor("main");
     border-top: 0;
@@ -320,11 +324,27 @@ span.artist-artistVerifiedBadge-badge svg > path:last-of-type {
 }
 
 .main-connectBar-connectBar {
-    border-radius: 0 0 var(--main-corner-radius) var(--main-corner-radius);
-    border: 2px solid spiceColor("main");
-    border-top: 0;
-    background-color: spiceColor("button") !important;
-    color: spiceColor("text") !important;
+    // These styles are useless, but maybe we'll change this back to the way it was before so I'll leave them
+    display: none;
+
+    // position: absolute;
+    // display: flex;
+    // flex-direction: row-reverse;
+    // gap: 8px;
+    // height: fit-content;
+    // right: 4px;
+    // bottom: 4px;
+    // padding: 2px 8px;
+    // background-color: spiceColor("text", 0.2) !important;
+    // border-radius: var(--main-corner-radius);
+
+    // &::after {
+    //     display: none;
+    // }
+
+    // svg {
+    //     margin: 0px;
+    // }
 }
 
 .Root__nav-bar {
@@ -513,13 +533,9 @@ html.sidebar-hide-text .GlueDropTarget span {
 
 .playback-bar {
     position: absolute;
-    width: var(--main-view-width);
-    left: var(--sidebar-width);
-    bottom: calc(var(--main-gap) + var(--bar-height) - 12px / 2);
-}
-
-.Root.is-connectBarVisible .playback-bar {
-    bottom: calc(var(--main-gap) + var(--bar-height) + 24px - 12px / 2);
+    left: 0px;
+    right: 0px;
+    top: calc(0px - 12px / 2);
 }
 
 .main-nowPlayingWidget-coverArt .cover-art {
@@ -557,6 +573,10 @@ html.sidebar-hide-text .GlueDropTarget span {
     .progress-bar:not(:active) .progress-bar__slider {
         transition-property: left, opacity;
     }
+
+    .playback-bar:not(:active) .prog-tooltip {
+        transition: transform var(--playbar-movement-anim-speed) ease;
+    }
 }
 
 .playback-bar .prog-tooltip {
@@ -566,15 +586,15 @@ html.sidebar-hide-text .GlueDropTarget span {
     left: 50%;
     transform: translateX(calc(-50%));
     padding: 0 5px;
-    border-radius: 4px;
     text-align: center;
-    color: spiceColor("text");
-    background-color: spiceColor("button");
     pointer-events: none;
-}
-
-.playback-bar:not(:active) .prog-tooltip {
-    transition: transform var(--playbar-movement-anim-speed) ease;
+    border: 1px solid spiceColor("subtext", 0.1, 0.1);
+    border-radius: var(--main-corner-radius);
+    color: spiceColor("subtext");
+    background-color: spiceColor("main", 0.75, -0.1) !important;
+    backdrop-filter: blur(10px);
+    border-radius: var(--main-corner-radius);
+    @include spiceShadow();
 }
 
 .minimal-player .player-controls__buttons {
@@ -1078,10 +1098,6 @@ div.GlueDropTarget.personal-library > *.active {
     left: calc(var(--sidebar-width) + 10px);
 }
 
-.Root.is-connectBarVisible .main-coverSlotExpanded-container {
-    bottom: calc(var(--main-gap) + var(--bar-height) + 24px + 10px);
-}
-
 html.right-expanded-cover .main-coverSlotExpanded-container {
     right: calc(var(--main-gap) * 2);
     left: unset;
@@ -1140,11 +1156,6 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     border-radius: 5px;
 }
 
-.connect-device-list-item:focus,
-.connect-device-list-item:hover {
-    background-color: spiceColor("selected-row", 0.3);
-}
-
 /* 1.1.56 */
 .main-navBar-navBar {
     width: var(--sidebar-width) !important;
@@ -1189,10 +1200,6 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 /* explicit icon */
 .main-tag-container {
     background-color: spiceColor("text");
-}
-/* progressbar tooltip text color */
-.playback-bar .prog-tooltip {
-    color: spiceColor("sidebar-text") !important;
 }
 
 /* edit button of CustomApps */
@@ -1263,6 +1270,10 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 // Hide default Sporify "Offline" notice
 .main-noConnection {
     display: none;
+}
+
+svg[type="dribbblish-icon"] {
+    overflow: visible;
 }
 
 // ! WORKAROUNDS / TEMP FIXES
