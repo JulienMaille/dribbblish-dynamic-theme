@@ -600,7 +600,7 @@ Dribbblish.on("ready", () => {
     Dribbblish.config.register({
         area: "Theme",
         type: "select",
-        data: { dark: "Dark", light: "Light", time: "Based on Time" },
+        data: { dark: "Dark", light: "Light", time: "Based on Time", system: "Based on System Theme" },
         order: -1,
         key: "theme",
         name: "Theme",
@@ -619,6 +619,9 @@ Dribbblish.on("ready", () => {
                     toggleDark(false);
                     break;
                 case "time":
+                    checkDarkLightMode();
+                    break;
+                case "system":
                     checkDarkLightMode();
                     break;
             }
