@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve (After v3.1.1, preferably open this report from inside the dribbblish settings `About > Report Bugs` as it adds additional info automatically)
+about: Create a report to help us improve (After v3.1.1, preferably open this report from inside the Dribbblish settings `About > Report Bugs` as it adds additional info automatically)
 title: ""
 labels: ["bug"]
 assignees: ""
@@ -18,10 +18,10 @@ Steps to reproduce the behavior:
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 **Desktop Setup**
- - Operating System: <!-- [e.g. Windows 10, MacOS 10.14] -->
- - Spotify: <!-- [e.g. 1.1.71.560] from `Menu (Three dots top left) > Help > About` -->
- - Spicetify: <!-- [e.g. 2.4.1] run `spicetify -v` -->
- - Dribbblish: <!-- [e.g. 3.0.1] from `Dribblish Settings > About` -->
+- Operating System: <!-- [e.g. Windows 10, MacOS 10.14] -->
+- Spotify: <!-- [e.g. 1.1.71.560] from `Menu (Three dots top left) > Help > About` -->
+- Spicetify: <!-- [e.g. 2.4.1] run `spicetify -v` -->
+- Dribbblish: <!-- [e.g. 3.0.1] from `Dribbblish Settings > About` -->
 
 **Logs**
 <!--
@@ -35,5 +35,5 @@ Steps to reproduce the behavior:
 
 <!-- Paste logs below or attach a screenshot -->
 ```console
-
+[paste logs here]
 ```

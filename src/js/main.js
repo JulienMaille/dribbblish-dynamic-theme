@@ -358,31 +358,9 @@ Dribbblish.on("ready", () => {
         data: "Create Report",
         onChange: () => {
             const reportBody = `
-                **Describe the bug**
-                <!-- A clear and concise description of what the bug is. -->
-                
-                **To Reproduce**
-                Steps to reproduce the behavior:
-                1. 
-                
-                **Screenshots**
-                <!-- If applicable, add screenshots to help explain your problem. -->
-                
-                **Logs**
-                <!--
-                    Add logs from console. To do that
-                    1. Run \`spicetify enable-devtool\` in terminal
-                    2. Spotify will be restarted
-                    3. Hit <kbd>Ctrl + Shift + I</kbd> to open DevTools window
-                    4. Navigate to tab Console
-                    5. Copy console window content.
-                -->
-                
-                <!-- Paste logs below or attach a screenshot -->
-                \`\`\`console
-                
-                \`\`\`
+                ${process.env.BUG_REPORT}
 
+                <!-- Leave the lines below as they are -->
                 ---
 
                 ### Info for Contributors:
