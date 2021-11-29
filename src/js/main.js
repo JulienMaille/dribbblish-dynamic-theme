@@ -485,9 +485,20 @@ Dribbblish.on("ready", () => {
 
     function toggleDark(setDark) {
         if (setDark === undefined) setDark = isLight(textColorBg);
-
         $("html").css("--is_light", setDark ? 0 : 1);
-        textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
+
+        switch (Dribbblish.config.get("bgTheme")) {
+            case "grey":
+                textColorBg = setDark ? "#202020" : "#C0C0C0";
+                break;
+            case "nord":
+                textColorBg = setDark ? "#3B4252" : "#D8DEE9";
+                break;
+            case "bw":
+            default:
+                textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
+                break;
+        }
 
         setRootColor("main", textColorBg);
         setRootColor("player", textColorBg);
@@ -643,6 +654,17 @@ Dribbblish.on("ready", () => {
                 onChange: checkDarkLightMode
             }
         ]
+    });
+
+    Dribbblish.config.register({
+        area: "Theme",
+        type: "select",
+        data: { bw: "Black/white", nord: "Nord polar night/snow storm", grey: "Dark/light grey" },
+        key: "bgTheme",
+        name: "Background Theme",
+        description: "Select Dark / Bright background colors",
+        defaultValue: "bw",
+        onChange: () => toggleDark($("html").css("--is_light") == "0")
     });
 
     function updateColors(checkDarkMode = true, sideColHex) {
