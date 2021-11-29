@@ -518,7 +518,7 @@ Dribbblish.on("ready", () => {
     }
 
     // Run every Minute to check time and set dark / light mode
-    setInterval(checkDarkLightMode, 60000);
+    setInterval(checkDarkLightMode, 1000);
 
     Dribbblish.config.register({
         area: "Theme",
