@@ -518,6 +518,7 @@ Dribbblish.on("ready", () => {
     setInterval(checkDarkLightMode, 60000);
     
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+        const theme = Dribbblish.config.get("theme");
         if (theme === "system") toggleDark(e.matches);
      });
 
