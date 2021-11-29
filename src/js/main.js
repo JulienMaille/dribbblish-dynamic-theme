@@ -7,7 +7,7 @@ import moment from "moment";
 // Break if Dribbblish has already been initialized
 if ($("html").attr("dribbblish-js-installed") != undefined) throw new Error("Dribbblish has already been initialized");
 // Remove not installed message
-$("html").attr("dribbblish-js-installed", " ");
+$("html").attr("dribbblish-js-installed", "");
 
 import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum, randomFromArray, debounce } from "./Util";
 import { default as _Dribbblish } from "./Dribbblish";

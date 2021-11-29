@@ -30,6 +30,12 @@
     --is_dark: calc(1 - var(--is_light));
 
     // Display warning for incorrectly installed js
+    @keyframes noJsShow {
+        to {
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
     &:not([dribbblish-js-installed])::after {
         content: "dribbblish-dynamic.js not installed correctly";
         position: fixed;
@@ -38,6 +44,9 @@
         background-color: black;
         text-align: center;
         line-height: 100vh;
+        opacity: 0;
+        pointer-events: none;
+        animation: noJsShow 0s ease-in 3s forwards;
         @include spiceFont("glue", 32px, "Bold");
     }
 }
