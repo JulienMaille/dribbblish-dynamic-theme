@@ -329,6 +329,27 @@ Dribbblish.on("ready", () => {
         onChange: (val) => $("html").css("--song-transition-speed", `${val}s`)
     });
 
+    Dribbblish.config.registerArea({ name: "Advanced", order: 998 });
+
+    Dribbblish.config.register({
+        area: "Advanced",
+        type: "textarea",
+        key: "customCss",
+        name: "Custom CSS",
+        description: `
+            Put custom CSS here. It is recommended that you use some kind of online editor like [CodePen](https://codepen.io/pen/), or even an IDE like [VS Code](https://code.visualstudio.com/) and paste the CSS here.
+        `,
+        onChange: (val) => {
+            let styleElem = document.querySelector("#dribbblish-custom-styles");
+            if (!styleElem) {
+                styleElem = document.createElement("style");
+                styleElem.id = "dribbblish-custom-styles";
+                document.body.appendChild(styleElem);
+            }
+            styleElem.innerHTML = val;
+        }
+    });
+
     Dribbblish.config.registerArea({ name: "About", order: 999 });
 
     Dribbblish.config.register({
