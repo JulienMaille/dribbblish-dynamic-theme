@@ -62,7 +62,7 @@ Dribbblish.on("ready", () => {
         type: "checkbox",
         key: "showSearchBox",
         name: "Show Search Box",
-        description: "Show an search box in the top bar. Just like the good old times",
+        description: "Show a search box in the top bar. Just like the good old times",
         defaultValue: true,
         onChange: (val) => $("#main").attr("search-box", val ? "" : null),
         onAppended: () => {
