@@ -512,6 +512,9 @@ Dribbblish.on("ready", () => {
             else dark = start <= time && time < end;
             toggleDark(dark);
         }
+        if (theme === "system") {
+            toggleDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
+        }
     }
 
     // Run every Minute to check time and set dark / light mode
