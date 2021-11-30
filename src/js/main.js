@@ -627,7 +627,7 @@ Dribbblish.on("ready", () => {
                     checkDarkLightMode();
                     break;
                 case "system":
-                    checkDarkLightMode();
+                    toggleDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
                     break;
             }
         },
