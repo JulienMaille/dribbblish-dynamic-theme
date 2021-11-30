@@ -485,9 +485,19 @@ Dribbblish.on("ready", () => {
 
     function toggleDark(setDark) {
         if (setDark === undefined) setDark = isLight(textColorBg);
-
         $("html").css("--is_light", setDark ? 0 : 1);
-        textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
+
+        switch (Dribbblish.config.get("bgTheme")) {
+            case "bw":
+                textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
+                break;
+            case "nord":
+                textColorBg = setDark ? "#3B4252" : "#D8DEE9";
+                break;
+            case "grey":
+                textColorBg = setDark ? "#202020" : "#C0C0C0";
+                break;
+        }
 
         setRootColor("main", textColorBg);
         setRootColor("player", textColorBg);
@@ -607,8 +617,8 @@ Dribbblish.on("ready", () => {
         description: "Select Dark / Bright mode",
         defaultValue: "time",
         showChildren: (val) => {
-            if (val == "time") return ["darkModeOnTime", "darkModeOffTime"];
-            return false;
+            if (val == "time") return ["darkModeOnTime", "darkModeOffTime", "bgTheme"];
+            return ["bgTheme"];
         },
         onChange: (val) => {
             switch (val) {
@@ -641,6 +651,16 @@ Dribbblish.on("ready", () => {
                 defaultValue: "06:00",
                 fireInitialChange: false,
                 onChange: checkDarkLightMode
+            },
+            {
+                area: "Theme",
+                type: "select",
+                data: { bw: "Black / White", nord: "Nord", grey: "Greyish" },
+                key: "bgTheme",
+                name: "Background Theme",
+                description: "Select which colors should be used as main background colors",
+                defaultValue: "bw",
+                onChange: () => toggleDark($("html").css("--is_light") == "0")
             }
         ]
     });
