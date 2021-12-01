@@ -1,3 +1,8 @@
+// SASS overwrites the CSS invert function so we overwrite it back
+@function invert($v) {
+    @return #{"invert("}$v#{")"};
+}
+
 // returns $n and adds $offset when the theme is light
 @function lightOffset($n, $offset) {
     @return calc($n + $offset * var(--is_light));

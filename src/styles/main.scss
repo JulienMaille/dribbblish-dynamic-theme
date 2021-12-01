@@ -1,8 +1,3 @@
-// SASS overwrites the CSS invert function so we overwrite it back
-@function invert($v) {
-    @return #{"invert("}$v#{")"};
-}
-
 @import "Util";
 @import "Colors";
 @import "Fonts";
