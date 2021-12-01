@@ -155,8 +155,8 @@ Dribbblish.on("ready", () => {
         type: "select",
         data: { none: "None", "none-padding": "None (With Top Padding)", solid: "Solid", transparent: "Transparent" },
         key: "winTopBar",
-        name: "Windows Top Bar",
-        description: "Have different top Bars (or none at all)",
+        name: "Windows Top Bar / Padding",
+        description: "Have different top bars / padding (or none at all)",
         defaultValue: "none",
         onChange: (val) => $("#main").attr("top-bar", val)
     });
@@ -192,7 +192,12 @@ Dribbblish.on("ready", () => {
         data: { dribbblish: "Dribbblish", spotify: "Spotify" },
         key: "playerControlsStyle",
         name: "Player Controls Style",
-        description: "Style of the Player Controls. Selecting Spotify basically changes Play / Pause back to the center",
+        description: `
+            Change the layout of the player controls
+            - **Dribbblish:** Default look
+            - **Spotify:** Have Play / Pause back in the center
+            {.muted}
+        `,
         defaultValue: "dribbblish",
         onChange: (val) => {
             $("#main").attr("player-controls", val);
