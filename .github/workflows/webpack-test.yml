@@ -24,12 +24,13 @@ jobs:
         run: |
           npm install
           npm run build
-          echo "Dev-${{ env.LATEST_SHA }}" > dist/VERSION
+          echo "Beta-${{ env.LATEST_SHA }}" > dist/VERSION
         env:
           DRIBBBLISH_VERSION: Beta
           COMMIT_HASH: ${{ env.LATEST_SHA	}}
 
       - name: Push to beta-release branch
+        if: github.event_name == 'push'
         uses: s0/git-publish-subdir-action@develop
         env:
           REPO: self
@@ -40,5 +41,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: DribbblishDynamic_vDev-${{ env.LATEST_SHA	}}
+          name: DribbblishDynamic_vBeta-${{ env.LATEST_SHA	}}
           path: dist/**
