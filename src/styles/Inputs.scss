@@ -172,19 +172,11 @@ input {
 
     &[type="color"] {
         position: relative;
-        padding: 0px;
+        padding: 1px 3px;
+        background-color: spiceColor("selected-row", 0.4);
 
-        &::before {
-            z-index: -1;
-            content: "";
-            position: absolute;
-            inset: -5px;
-            border-radius: 4px;
-            background-color: spiceColor("selected-row", 0.4);
-        }
-
-        &:hover::before,
-        &:active::before {
+        &:hover,
+        &:active {
             background-color: spiceColor("selected-row", 0.6);
         }
     }
