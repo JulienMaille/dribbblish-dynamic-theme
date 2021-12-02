@@ -24,7 +24,7 @@ export default class ConfigMenu {
      * @property {onAppended} [onAppended]
      * @property {onChange} [onChange]
      * @property {DribbblishConfigItem[]} [children=[]]
-     * @property {String} [childOf=null] key of parent (set automatically)
+     * @property {String} [parent=null] key of parent (set automatically)
      */
 
     /**
@@ -78,6 +78,7 @@ export default class ConfigMenu {
             <div class="dribbblish-config-container">
                 <button aria-label="Close" class="dribbblish-config-close main-trackCreditsModal-closeBtn">${icons.get("close", { size: 24 })}</button>
                 <h1>Dribbblish Settings</h1>
+                <input type="search" placeholder="Search" class="dribbblish-config-search">
                 <div class="dribbblish-config-areas"></div>
             </div>
             <div class="dribbblish-config-backdrop"></div>
@@ -86,6 +87,7 @@ export default class ConfigMenu {
         document.body.appendChild(container);
         $(".dribbblish-config-close").on("click", () => this.close());
         $(".dribbblish-config-backdrop").on("click", () => this.close());
+        $(".dribbblish-config-search").on("input", (e) => this.#search(e.target.value));
     }
 
     open() {
@@ -110,7 +112,7 @@ export default class ConfigMenu {
         elem.setAttribute("key", options.key);
         elem.setAttribute("type", options.type);
         if (options.hidden) elem.setAttribute("hidden", true);
-        if (options.childOf) elem.setAttribute("parent", options.childOf);
+        if (options.parent) elem.setAttribute("parent", options.parent);
         if (options.children.length > 0) elem.setAttribute("children", options.children.map((c) => c.key).join(" "));
         elem.innerHTML = /* html */ `
             ${
@@ -179,7 +181,7 @@ export default class ConfigMenu {
             onAppended: () => {},
             onChange: () => {},
             children: [],
-            childOf: null
+            parent: null
         };
         // Set Defaults
         options = { ...defaultOptions, ...options };
@@ -201,7 +203,7 @@ export default class ConfigMenu {
             options.children.forEach((child) => this.#setHidden(child.key, Array.isArray(show) ? !show.includes(child.key) : !show));
         };
         options.children = options.children.map((child) => {
-            return { ...child, area: options.area, childOf: options.key, order: options.order ?? 0 + child.order ?? 0 };
+            return { ...child, area: options.area, parent: options.key, order: options.order ?? 0 + child.order ?? 0 };
         });
 
         this.#config[options.key] = options;
@@ -416,6 +418,8 @@ export default class ConfigMenu {
 
             if (area.toggleable) {
                 areaElem.querySelector("h2").addEventListener("click", () => {
+                    if (document.querySelector(".dribbblish-config-search").value.trim() != "") return;
+
                     areaElem.toggleAttribute("collapsed");
                     let uncollapsedAreas = JSON.parse(localStorage.getItem("dribbblish:config-areas:uncollapsed") ?? "[]");
                     if (areaElem.hasAttribute("collapsed")) {
@@ -436,7 +440,7 @@ export default class ConfigMenu {
      * @returns {any}
      */
     get(key, defaultValueOverride) {
-        const val = JSON.parse(this.#config[key]?.storageCache ?? localStorage.getItem(`dribbblish:config:${key}`) ?? null); // Turn undefined into null because `JSON.parse()` dosen't like undefined
+        const val = JSON.parse(this.#config[key]?.storageCache ?? localStorage.getItem(`dribbblish:config:${key}`) ?? null); // Turn undefined into null because `JSON.parse()` doesn't like undefined
         if (val == null || val?.type != this.#config[key]?.type) {
             localStorage.removeItem(`dribbblish:config:${key}`);
             return defaultValueOverride ?? this.#config[key]?.defaultValue;
@@ -471,10 +475,10 @@ export default class ConfigMenu {
      * @param {Boolean} hidden
      * @private
      */
-    #setHidden(key, hidden) {
+    #setHidden(key, hidden, search = false) {
         this.#config[key].hidden = hidden;
         const $elem = $(`.dribbblish-config-item[key="${key}"]`);
-        $elem.attr("hidden", hidden ? "" : null);
+        $elem.attr(search ? "hidden-override" : "hidden", hidden ? "" : null);
 
         // If element has children or a parent
         if ($elem.attr("parent") != null || $elem.attr("children") != null) {
@@ -483,7 +487,7 @@ export default class ConfigMenu {
             const $nextChildren = $parent.nextAll(`[parent="${$parent.attr("key")}"]`);
 
             // Make parent connect on bottom when children are visible
-            $parent.attr("connect-bottom", $nextChildren.filter(":not([hidden])").length > 0 ? "" : null);
+            $parent.attr("connect-bottom", $nextChildren.filter(":not([hidden]):not([hidden-override])").length > 0 ? "" : null);
 
             // Reset all children's bottom connection
             $nextChildren.each(function () {
@@ -491,7 +495,7 @@ export default class ConfigMenu {
             });
             // Add bottom connection to all but the last visible child
             $nextChildren
-                .filter(":not([hidden])")
+                .filter(":not([hidden]):not([hidden-override])")
                 .slice(0, -1)
                 .each(function () {
                     $(this).attr("connect-bottom", "");
@@ -499,6 +503,48 @@ export default class ConfigMenu {
 
             //* NOTE: All children automatically have a top connection
         }
+    }
+
+    /**
+     * @param {String} text
+     */
+    #search(text) {
+        text = text.trim().toLowerCase();
+        $(".dribbblish-config-area-header svg").css("display", text != "" ? "none" : "");
+        $(".dribbblish-config-area").attr("search", text != "" ? "" : null);
+
+        const cmp = (s) => s.trim().toLowerCase().includes(text.trim().toLowerCase());
+        /**
+         * @param {DribbblishConfigItem} options
+         */
+        function cmpOpts(options) {
+            let matches = cmp(options.name) || cmp($(`.dribbblish-config-item[key="${options.key}"] .dribbblish-config-item-header label`).text());
+            if (!matches && options.type == "select") matches = Object.values(options.data).some(cmp);
+            return matches;
+        }
+
+        // Check every item
+        for (const [key, options] of Object.entries(this.#config)) {
+            this.#setHidden(key, false, true);
+            if (text == "") continue;
+
+            const show = cmpOpts(options);
+            this.#setHidden(key, !show, true);
+        }
+
+        // Check every item's children and show it when any child is visible
+        for (const [key, options] of Object.entries(this.#config)) {
+            if (options.children.length != 0 && $(`.dribbblish-config-item[parent="${options.key}"]`).filter(":not([hidden]):not([hidden-override])").length != 0) this.#setHidden(key, false, true);
+        }
+
+        // Hide areas without visible children
+        for (const area of $(".dribbblish-config-area").toArray()) {
+            const $area = $(area);
+            const itemsVisible = $area.children(".dribbblish-config-area-items").children(":not([hidden]):not([hidden-override])").length;
+            $area.css("display", text != "" && itemsVisible == 0 ? "none" : "");
+        }
+
+        $(`.dribbblish-config-item`).filter(":not([hidden]):not([hidden-override])").length;
     }
 
     getOptions(key) {

@@ -41,6 +41,10 @@
             right: 24px;
         }
 
+        .dribbblish-config-search {
+            // TODO: improve styles
+        }
+
         .dribbblish-config-areas {
             display: flex;
             width: 100%;
@@ -56,7 +60,7 @@
                 align-items: center;
                 gap: 8px;
 
-                &[collapsed] {
+                &[collapsed]:not([search]) {
                     overflow: hidden;
                     min-height: 38px; //for some reason height alone isn't enough
                     height: 38px;
@@ -124,7 +128,8 @@
                         padding: 8px 16px;
                         user-select: text;
 
-                        &[hidden] {
+                        &[hidden],
+                        &[hidden-override] {
                             display: none;
                         }
 

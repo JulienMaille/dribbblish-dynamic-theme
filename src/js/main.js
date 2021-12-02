@@ -730,14 +730,14 @@ Dribbblish.on("ready", () => {
         if (album_uri !== undefined && !album_uri.includes("spotify:show")) {
             moment.locale(Spicetify.Locale.getLocale());
             const albumDate = moment(await getAlbumRelease(album_uri.replace("spotify:album:", "")));
-            const albumLinkElem = `
+            const albumLinkElem = /* html */ `
                 <span>
                     <span draggable="true">
                         <a draggable="false" dir="auto" href="${album_uri}">${Spicetify.Player.data.track.metadata.album_title}</a>
                     </span>
                 </span>
             `;
-            const albumDateElem = `<span> • <span title="${albumDate.format("L")}">${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
+            const albumDateElem = /* html */ `<span> • <span title="${albumDate.format("L")}">${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
             albumInfoSpan.innerHTML = `${albumLinkElem}${albumDateElem}`;
         } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
             // podcast
