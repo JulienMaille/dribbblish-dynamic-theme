@@ -624,7 +624,10 @@ Dribbblish.on("ready", () => {
         order: -1,
         key: "theme",
         name: "Theme",
-        description: "Select Dark / Bright mode",
+        description: `Select Dark / Bright mode 
+            **Based on System Theme** should work on MacOs and Linux
+            On Windows you will need to patch Spotify.exe using this [(script)](https://github.com/khanhas/spicetify-cli/issues/1095#issuecomment-980473116){.muted}
+        `,
         defaultValue: "time",
         showChildren: (val) => {
             if (val == "time") return ["darkModeOnTime", "darkModeOffTime", "bgTheme"];
