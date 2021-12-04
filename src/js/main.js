@@ -334,7 +334,7 @@ Dribbblish.on("ready", () => {
         onChange: (val) => $("html").css("--song-transition-speed", `${val}s`)
     });
 
-    Dribbblish.config.registerArea({ name: "Advanced", order: 998 });
+    Dribbblish.config.registerArea({ name: "Advanced", order: 997 });
 
     Dribbblish.config.register({
         area: "Advanced",
@@ -526,16 +526,15 @@ Dribbblish.on("ready", () => {
             if (end < start) dark = start <= time || time < end;
             else dark = start <= time && time < end;
             toggleDark(dark);
+        } else if (theme == "system") {
+            toggleDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
         }
     }
 
     // Run every Minute to check time and set dark / light mode
     setInterval(checkDarkLightMode, 60000);
-
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-        const theme = Dribbblish.config.get("theme");
-        if (theme === "system") toggleDark(e.matches);
-    });
+    // Run on System Theme change
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => checkDarkLightMode());
 
     Dribbblish.config.register({
         area: "Theme",
@@ -620,13 +619,17 @@ Dribbblish.on("ready", () => {
     Dribbblish.config.register({
         area: "Theme",
         type: "select",
-        data: { dark: "Dark", light: "Light", time: "Based on Time", system: "Based on System Theme" },
+        data: { dark: "Dark", light: "Light", system: "System", time: "Based on Time" },
         order: -1,
         key: "theme",
         name: "Theme",
-        description: `Select Dark / Bright mode 
-            **Based on System Theme** should work on MacOs and Linux
-            On Windows you will need to patch Spotify.exe using this [(script)](https://github.com/khanhas/spicetify-cli/issues/1095#issuecomment-980473116){.muted}
+        description: `
+            Select Dark / Bright mode
+            - **Dark**
+            - **Light**
+            - **System:** Should work on macOS and Linux out of the box. Windows users read [this](https://github.com/JulienMaille/dribbblish-dynamic-theme#follow-system-darklight-theme-powershell)
+            - **Based on Time:** Automatically change Theme at specific Times
+            {.muted}
         `,
         defaultValue: "time",
         showChildren: (val) => {
