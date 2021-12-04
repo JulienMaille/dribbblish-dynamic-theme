@@ -66,13 +66,20 @@ xpui.js_repl_8008 = ,${1}58,
 
 ## Hide Window Controls
 Windows user, please edit your Spotify shortcut and add flag `--transparent-window-controls` after the Spotify.exe:
-To edit an taskbar shortcut, right click it, then right click Spotify in the list again.
+To edit a taskbar shortcut, right click it, then right click Spotify in the list again.
 
 <img src="https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/main/showcase-images/windows-shortcut-instruction.png" alt="img"> 
 
 In addition to `--transparent-window-controls` you can set `Windows Top Bars` to `Solid` or `Transparent` to look like this:
 
 <img src="https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/main/showcase-images/top-bars.png" alt="img" width="500px"> 
+
+## Follow system dark/light theme (Powershell)
+Automatic dark mode should work on MacOs and Linux out of the box.
+From Spotify > v1.1.70, dark mode is forced in Windows builds. You will need to patch Spotify.exe using this script:
+```powershell
+Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/master/patch-dark-mode.ps1" | Invoke-Expression
+```
 
 ## Uninstall
 ### Windows (PowerShell)
