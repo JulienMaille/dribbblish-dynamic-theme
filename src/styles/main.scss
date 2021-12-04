@@ -1241,6 +1241,10 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     color: spiceColor("sidebar-text") !important;
 }
 
+.main-shelf-title {
+    @include spiceFont("glue");
+}
+
 /* translucent background cover */
 .Root__top-container::before {
     z-index: 3;
@@ -1271,7 +1275,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     padding-bottom: 0px;
 }
 
-// Hide default Sporify "Offline" notice
+// Hide default Spotify "Offline" notice
 .main-noConnection {
     display: none;
 }
