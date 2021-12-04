@@ -20,3 +20,4 @@ Improved:
 - `Connect to Device` interface / selection is now more inline with other context menus
 - When casting to a device it shows up as info (next to your profile picture)
 - Confirmation modal styles are now more inline with other popups
+- Made `System` the default theme. Windows users see [this](https://github.com/JulienMaille/dribbblish-dynamic-theme#follow-system-darklight-theme-powershell)

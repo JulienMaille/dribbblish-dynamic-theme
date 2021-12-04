@@ -619,19 +619,17 @@ Dribbblish.on("ready", () => {
     Dribbblish.config.register({
         area: "Theme",
         type: "select",
-        data: { dark: "Dark", light: "Light", system: "System", time: "Based on Time" },
+        data: { system: "System", dark: "Dark", light: "Light", time: "Based on Time" },
         order: -1,
         key: "theme",
         name: "Theme",
         description: `
             Select Dark / Bright mode
-            - **Dark**
-            - **Light**
-            - **System:** Should work on macOS and Linux out of the box. Windows users read [this](https://github.com/JulienMaille/dribbblish-dynamic-theme#follow-system-darklight-theme-powershell)
+            - **System:** Use the current system Theme. Should work on macOS and Linux out of the box. Windows users read [this](https://github.com/JulienMaille/dribbblish-dynamic-theme#follow-system-darklight-theme-powershell)
             - **Based on Time:** Automatically change Theme at specific Times
             {.muted}
         `,
-        defaultValue: "time",
+        defaultValue: "system",
         showChildren: (val) => {
             if (val == "time") return ["darkModeOnTime", "darkModeOffTime", "bgTheme"];
             return ["bgTheme"];
