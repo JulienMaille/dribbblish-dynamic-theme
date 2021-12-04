@@ -19,6 +19,22 @@ export default class Icons {
         this.#icons = process.env.DRIBBBLISH_ICONS;
     }
 
+    getRawSVG(name, style = "round") {
+        if (!this.#icons.hasOwnProperty(name)) throw new Error(`Icon "${name}" does not exist`);
+
+        if (typeof this.#icons[name] == "string") {
+            return this.#icons[name];
+        } else {
+            if (!this.#icons[name].hasOwnProperty(style)) {
+                const styles = Object.keys(this.#icons[name])
+                    .map((s) => `"${s}"`)
+                    .join(", ");
+                throw new Error(`Icon "${name}" does not have style "${style}". It is available in styles [${styles}].`);
+            }
+            return this.#icons[name][style];
+        }
+    }
+
     /**
      * @param {String} name icon name lowercase with dashes like `ac-unit`
      * @param {IconOptions} options
@@ -36,14 +52,7 @@ export default class Icons {
         };
         options = { ...defaultOptions, ...options };
 
-        if (!this.#icons.hasOwnProperty(name)) throw new Error(`Icon "${name}" does not exist`);
-        let svg;
-        if (typeof this.#icons[name] == "string") {
-            svg = parseSVG(this.#icons[name]);
-        } else {
-            if (!this.#icons[name].hasOwnProperty(options.style)) throw new Error(`Icon "${name}" does not have style "${options.style}"`);
-            svg = parseSVG(this.#icons[name][options.style]);
-        }
+        const svg = parseSVG(this.getRawSVG(name, options.style));
 
         svg.attributes.type = "dribbblish-icon";
         svg.attributes.fill = options.fill;
