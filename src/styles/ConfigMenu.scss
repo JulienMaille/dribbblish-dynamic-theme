@@ -28,11 +28,16 @@
         padding: 20px 15px;
         border-radius: var(--main-corner-radius);
         display: flex;
-        gap: 5px;
+        gap: 8px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         @include spiceShadow();
+
+        > h2 {
+            font-size: 32px;
+            line-height: 32px;
+        }
 
         .dribbblish-config-close {
             position: absolute;

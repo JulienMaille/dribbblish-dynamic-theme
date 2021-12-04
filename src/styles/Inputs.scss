@@ -50,7 +50,7 @@ button.main-button {
 .x-toggle-indicatorWrapper {
     background-color: spiceColor("subtext", 0.1);
 
-    input:hover ~ & {
+    input:not(:disabled):hover ~ & {
         background-color: spiceColor("subtext", 0.15) !important;
     }
 
@@ -58,7 +58,7 @@ button.main-button {
         background-color: spiceColor("selected-row", 0.4) !important;
     }
 
-    input:hover:checked ~ & {
+    input:not(:disabled):hover:checked ~ & {
         background-color: spiceColor("selected-row", 0.6) !important;
     }
 }
@@ -72,9 +72,16 @@ input {
     outline: none;
     border: none;
 
-    &:hover,
-    &:active {
-        background-color: spiceColor("selected-row", 0.6) !important;
+    &:not(:disabled) {
+        &:hover,
+        &:active {
+            background-color: spiceColor("selected-row", 0.6) !important;
+        }
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5 !important;
     }
 
     &::placeholder {
@@ -87,22 +94,16 @@ textarea {
     padding: 6px 10px;
 }
 
-select {
-    background-color: spiceColor("selected-row", 0.4) !important;
-    color: spiceColor("subtext");
-
-    &:hover,
-    &:active {
-        background-color: spiceColor("selected-row", 0.6) !important;
-    }
-
-    option {
-        background: spiceColor("main") !important;
-    }
+select > option {
+    background: spiceColor("main") !important;
 }
 
 input {
     padding: 6px 10px 6px 48px;
+
+    &[type="checkbox"] {
+        opacity: 0 !important;
+    }
 
     &[type="range"] {
         -webkit-appearance: none;
@@ -173,11 +174,5 @@ input {
     &[type="color"] {
         position: relative;
         padding: 1px 3px;
-        background-color: spiceColor("selected-row", 0.4);
-
-        &:hover,
-        &:active {
-            background-color: spiceColor("selected-row", 0.6);
-        }
     }
 }

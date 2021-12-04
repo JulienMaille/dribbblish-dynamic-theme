@@ -4,9 +4,11 @@ import { renderMD } from "./Util";
 import { icons } from "./Icons";
 
 export default class ConfigMenu {
+    /** @typedef {"checkbox" | "select" | "button" | "slider" | "number" | "text" | "textarea" | "time" | "color"} DribbblishConfigType */
+
     /**
      * @typedef {Object} DribbblishConfigItem
-     * @property {"checkbox" | "select" | "button" | "slider" | "number" | "text" | "textarea" | "time" | "color"} type
+     * @property {DribbblishConfigType} type
      * @property {String | DribbblishConfigArea} [area={name: "Main Settings", order: 0}]
      * @property {any} [data={}]
      * @property {Number} [order=0] order < 0 = Higher up | order > 0 = Lower Down
@@ -159,29 +161,28 @@ export default class ConfigMenu {
             return isValid;
         }
 
+        let elem;
+        let input;
         if (options.type == "checkbox") {
-            const frag = document.createDocumentFragment();
+            elem = document.createDocumentFragment();
 
-            const input = document.createElement("input");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("input");
+            input.classList.add("dribbblish-config-input");
             input.type = "checkbox";
             input.classList.add("x-toggle-input");
             input.checked = this.get(options.key);
             input.addEventListener("change", (e) => {
                 options.onChange(e.target.checked);
             });
+            elem.appendChild(input);
 
             const indicator = document.createElement("span");
             indicator.classList.add("x-toggle-indicatorWrapper");
             indicator.innerHTML = /* html */ `<span class="x-toggle-indicator"></span>`;
-
-            frag.appendChild(input);
-            frag.appendChild(indicator);
-
-            options.input = frag;
+            elem.appendChild(indicator);
         } else if (options.type == "select") {
-            const input = document.createElement("select");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("select");
+            input.classList.add("dribbblish-config-input");
             input.classList.add("main-dropDown-dropDown");
             input.innerHTML = Object.entries(options.data)
                 .map(([key, name]) => `<option value="${key}"${this.get(options.key) == key ? " selected" : ""}>${name}</option>`)
@@ -189,24 +190,20 @@ export default class ConfigMenu {
             input.addEventListener("change", (e) => {
                 options.onChange(e.target.value);
             });
-
-            options.input = input;
         } else if (options.type == "button") {
             if (typeof options.data != "string") options.data = options.name;
             options.fireInitialChange = false;
             options.resetButton = false;
             options.save = false;
 
-            const input = document.createElement("button");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("button");
+            input.classList.add("dribbblish-config-input");
             input.type = "button";
             input.classList.add("main-buttons-button", "main-button-primary");
             input.innerHTML = /* html */ `<div class="x-settings-buttonContainer"><span>${options.data}</span></div>`;
             input.addEventListener("click", (e) => {
                 options.onChange(true);
             });
-
-            options.input = input;
         } else if (options.type == "number") {
             // Validate
             if (options.defaultValue == null) options.defaultValue = 0;
@@ -214,8 +211,8 @@ export default class ConfigMenu {
             if (options.data.min != null && _val < options.data.min) this.set(options.key, options.data.min, options.save);
             if (options.data.max != null && _val > options.data.max) this.set(options.key, options.data.max, options.save);
 
-            const input = document.createElement("input");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("input");
+            input.classList.add("dribbblish-config-input");
             input.type = "number";
             input.value = this.get(options.key);
             input.step = options.data.step ?? 1;
@@ -231,31 +228,25 @@ export default class ConfigMenu {
 
                 options.onChange(Number(e.target.value));
             });
-
-            options.input = input;
         } else if (options.type == "text") {
             if (options.defaultValue == null) options.defaultValue = "";
 
-            const input = document.createElement("input");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("input");
+            input.classList.add("dribbblish-config-input");
             input.type = "text";
             input.value = this.get(options.key);
             input.addEventListener("input", (e) => {
                 options.onChange(e.target.value);
             });
-
-            options.input = input;
         } else if (options.type == "textarea") {
             if (options.defaultValue == null) options.defaultValue = "";
 
-            const input = document.createElement("textarea");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("textarea");
+            input.classList.add("dribbblish-config-input");
             input.value = this.get(options.key);
             input.addEventListener("input", (e) => {
                 options.onChange(e.target.value);
             });
-
-            options.input = input;
         } else if (options.type == "slider") {
             // Validate
             if (options.defaultValue == null) options.defaultValue = 0;
@@ -263,8 +254,8 @@ export default class ConfigMenu {
             if (options.data.min != null && val < options.data.min) this.set(options.key, options.data.min, options.save);
             if (options.data.max != null && val > options.data.max) this.set(options.key, options.data.max, options.save);
 
-            const input = document.createElement("input");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("input");
+            input.classList.add("dribbblish-config-input");
             input.type = "range";
             input.step = options.data.step ?? 1;
             input.min = options.data.min ?? 0;
@@ -275,39 +266,34 @@ export default class ConfigMenu {
                 options.onChange(Number(e.target.value));
                 $(`#dribbblish-config-input-${options.key}`).attr("tooltip", `${e.target.value}${options.data?.suffix ?? ""}`);
             });
-
-            options.input = input;
         } else if (options.type == "time") {
             // Validate
             if (options.defaultValue == null) options.defaultValue = "00:00";
 
-            const input = document.createElement("input");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("input");
+            input.classList.add("dribbblish-config-input");
             input.type = "time";
             input.value = this.get(options.key);
             input.addEventListener("input", (e) => {
                 options.onChange(e.target.value);
             });
-
-            options.input = input;
         } else if (options.type == "color") {
             // Validate
             if (options.defaultValue == null) options.defaultValue = "#000000";
 
-            const input = document.createElement("input");
-            input.id = `dribbblish-config-input-${options.key}`;
+            input = document.createElement("input");
+            input.classList.add("dribbblish-config-input");
             input.type = "color";
             input.value = this.get(options.key);
             input.addEventListener("input", (e) => {
                 options.onChange(e.target.value);
             });
-
-            options.input = input;
         } else {
             throw new Error(`Config Type "${options.type}" invalid`);
         }
 
-        this.#addInputHTML(options);
+        this.#addInputHTML({ ...options, input: elem ?? input });
+        options.input = input;
 
         // Re-write internal config since some values may have changed
         this.#config[options.key] = options;
@@ -420,6 +406,10 @@ export default class ConfigMenu {
 
             //* NOTE: All children automatically have a top connection
         }
+    }
+
+    setDisabled(key, disabled) {
+        this.#config[key].input.disabled = disabled;
     }
 
     getOptions(key) {
