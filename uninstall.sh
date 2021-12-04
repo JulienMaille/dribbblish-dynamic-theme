@@ -5,7 +5,7 @@
 set -e
 
 echo "UN-INSTALLING"
-cd "$(dirname "$(spicetify -c)")/Themes/DribbblishDynamic"
+cd "$(dirname "$(spicetify -c)")"
 spicetify config current_theme " " extensions dribbblish-dynamic.js-
 
 echo "UN-PATCHING"
