@@ -4,7 +4,6 @@ A theme for [Spicetify](https://github.com/khanhas/spicetify-cli)
 <a href="https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest"><img src="https://img.shields.io/github/release/JulienMaille/dribbblish-dynamic-theme/all.svg"></a>
 <a href="https://github.com/JulienMaille/dribbblish-dynamic-theme/releases"><img src="https://img.shields.io/github/downloads/JulienMaille/dribbblish-dynamic-theme/total.svg"></a>
 
-
 ### Preview
 
 <img src="https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-theme/main/showcase-images/preview.gif" alt="img" width="500px"> 
@@ -46,7 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-the
 1. Download the latest [DribbblishDynamic_vX.X.X.zip](https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest)
 2. Extract the files to your [Spicetify/Themes folder](https://github.com/khanhas/spicetify-cli/wiki/Customization#themes)
 3. Copy `dribbblish-dynamic.js` to your [Spicetify/Extensions folder](https://github.com/khanhas/spicetify-cli/wiki/Extensions#installing)
-4. Add the 2 lines in Patch section of the config file (see details below)
+4. Add the 2 lines in `[Patch]` section of the config file (see details below)
 5. Run:
      ```
      spicetify config extensions dribbblish-dynamic.js
@@ -96,6 +95,6 @@ curl -fsSL https://raw.githubusercontent.com/JulienMaille/dribbblish-dynamic-the
 1. Remove Patch lines you added in config file earlier.
 2. Run:
     ```
-    spicetify config extensions dribbblish-dynamic.js-
+    spicetify config current_theme " " extensions dribbblish-dynamic.js-
     spicetify apply
     ```
