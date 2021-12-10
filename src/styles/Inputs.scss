@@ -30,7 +30,8 @@ button.main-button {
     //     }
     // }
 
-    &-tertiary {
+    // ? the `:not(...)` is to fix #137
+    &-tertiary:not(.main-entityHeader-titleButton) {
         $color: spiceColor("subtext");
         color: $color;
         background-color: spiceColor("selected-row", 0.2, 0.05) !important;
