@@ -5,17 +5,20 @@ export default class Loader {
     constructor() {
         this.#container = document.createElement("div");
         this.#container.id = "dribbblish-loader";
-        this.#container.innerHTML = `
-            <svg width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-                <circle fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
-            </svg>
+        this.#container.innerHTML = /* html */ `
+            <div>
+                <svg width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                    <circle fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+                </svg>
+                <span>Loading...</span>
+            </div>
         `;
 
         document.body.appendChild(this.#container);
     }
 
     show(text) {
-        this.#container.setAttribute("text", text ?? "");
+        this.#container.querySelector("span").innerText = text ?? "";
         this.#container.setAttribute("active", "");
     }
 

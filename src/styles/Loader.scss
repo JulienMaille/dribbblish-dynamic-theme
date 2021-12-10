@@ -14,6 +14,8 @@ $duration: 1.4s;
     pointer-events: none;
     opacity: 0;
     transition: opacity 1s ease-in;
+    color: spiceColor("subtext");
+    @include spiceFont("glue", 32px, "Bold");
 
     &[active] {
         opacity: 1;
@@ -21,6 +23,7 @@ $duration: 1.4s;
     }
 
     &::before {
+        z-index: -1;
         content: "";
         position: absolute;
         inset: 0px;
@@ -28,23 +31,22 @@ $duration: 1.4s;
         backdrop-filter: blur(10px);
     }
 
-    &::after {
-        content: attr(text);
-        position: absolute;
-        bottom: 40%;
-        color: spiceColor("subtext");
-        @include spiceFont("glue", 32px, "Bold");
-    }
+    & > div {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
 
-    svg {
-        animation: rotator $duration linear infinite;
+        svg {
+            animation: rotator $duration linear infinite;
 
-        circle {
-            stroke: spiceColor("sidebar");
-            stroke-dasharray: $offset;
-            stroke-dashoffset: 0;
-            transform-origin: center;
-            animation: dash $duration ease-in-out infinite;
+            circle {
+                stroke: spiceColor("text");
+                stroke-dasharray: $offset;
+                stroke-dashoffset: 0;
+                transform-origin: center;
+                animation: dash $duration ease-in-out infinite;
+            }
         }
     }
 }
