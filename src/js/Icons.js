@@ -1,7 +1,7 @@
 import { parseSync as parseSVG, stringify as stringifySVG } from "svgson";
 
 export default class Icons {
-    /** @typedef {"baseline" | "outline" | "round" | "sharp" | "twotone"} IconStyle */
+    /** @typedef {"custom" | "material:baseline" | "material:outline" | "material:round" | "material:sharp" | "material:twotone"} IconStyle */
 
     /**
      * @typedef {Object} IconOptions
@@ -19,20 +19,41 @@ export default class Icons {
         this.#icons = process.env.DRIBBBLISH_ICONS;
     }
 
-    getRawSVG(name, style = "round") {
+    /**
+     * @param {String} name
+     * @param {IconStyle} style
+     * @returns {String}
+     */
+    getRawSVG(name, style) {
+        if (style == null) style = this.#getDefaultStyle(name);
         if (!this.#icons.hasOwnProperty(name)) throw new Error(`Icon "${name}" does not exist`);
 
-        if (typeof this.#icons[name] == "string") {
-            return this.#icons[name];
-        } else {
-            if (!this.#icons[name].hasOwnProperty(style)) {
-                const styles = Object.keys(this.#icons[name])
-                    .map((s) => `"${s}"`)
-                    .join(", ");
-                throw new Error(`Icon "${name}" does not have style "${style}". It is available in styles [${styles}].`);
-            }
-            return this.#icons[name][style];
+        if (!this.#icons[name].hasOwnProperty(style)) {
+            const styles = Object.keys(this.#icons[name])
+                .map((s) => `"${s}"`)
+                .join(", ");
+            throw new Error(`Icon "${name}" does not have style "${style}". It is available in styles [${styles}].`);
         }
+
+        return this.#icons[name][style];
+    }
+
+    getAvailableStyles(name) {
+        if (!this.#icons.hasOwnProperty(name)) throw new Error(`Icon "${name}" does not exist`);
+        return Object.keys(this.#icons[name]);
+    }
+
+    /**
+     * @param {String} name
+     * @returns
+     */
+    #getDefaultStyle(name) {
+        const styles = this.getAvailableStyles(name);
+        for (const s of ["custom", "material:round"]) {
+            if (styles.includes(s)) return s;
+        }
+
+        return styles[0];
     }
 
     /**
@@ -44,7 +65,7 @@ export default class Icons {
     get(name, options) {
         /** @type {IconOptions} */
         const defaultOptions = {
-            style: "round",
+            style: this.#getDefaultStyle(name),
             size: 16,
             scale: 1,
             fill: "currentColor",
@@ -54,7 +75,8 @@ export default class Icons {
 
         const svg = parseSVG(this.getRawSVG(name, options.style));
 
-        svg.attributes.type = "dribbblish-icon";
+        svg.attributes["icon-type"] = "dribbblish";
+        svg.attributes["icon-style"] = options.style;
         svg.attributes.fill = options.fill;
         svg.attributes.width = options.size;
         svg.attributes.height = options.size;
@@ -66,7 +88,7 @@ export default class Icons {
             styles.transformOrigin = "center";
         }
         svg.children = svg.children.map((child) => {
-            child.attributes.style = styles.cssText;
+            if (styles.cssText != "") child.attributes.style = styles.cssText;
             return child;
         });
 

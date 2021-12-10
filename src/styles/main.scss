@@ -10,6 +10,7 @@
 @import "Loader";
 @import "Modals";
 @import "ConnectDeviceList";
+@import "Icons";
 
 :root {
     --bar-height: 70px;
@@ -591,6 +592,7 @@ html.sidebar-hide-text .GlueDropTarget span {
     transform: translateX(calc(-50%));
     padding: 0 5px;
     text-align: center;
+    white-space: nowrap;
     pointer-events: none;
     border: 1px solid spiceColor("subtext", 0.1, 0.1);
     border-radius: var(--main-corner-radius);
@@ -1278,10 +1280,6 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 // Hide default Spotify "Offline" notice
 .main-noConnection {
     display: none;
-}
-
-svg[type="dribbblish-icon"] {
-    overflow: visible;
 }
 
 // ! WORKAROUNDS / TEMP FIXES

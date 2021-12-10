@@ -5,18 +5,22 @@ const path = require("path");
 const fs = require("fs");
 
 const icons = {};
+function addIcon(name, style, path) {
+    name = name.replace(/_/g, "-");
+    if (!icons.hasOwnProperty(name)) icons[name] = {};
+    icons[name][style] = fs.readFileSync(path, { encoding: "utf8" });
+}
 // Add Material Icons
 let iconDir = path.resolve(__dirname, "node_modules/@material-icons/svg/svg");
 for (const dir of fs.readdirSync(iconDir)) {
-    icons[dir.replace("_", "-")] = {};
     for (const file of fs.readdirSync(path.resolve(iconDir, dir))) {
-        icons[dir.replace("_", "-")][file.replace(/\..*?$/, "")] = fs.readFileSync(path.resolve(iconDir, dir, file), { encoding: "utf8" });
+        addIcon(dir, `material:${file.replace(/\..*?$/, "")}`, path.resolve(iconDir, dir, file));
     }
 }
 // Add Custom Icons
 iconDir = path.resolve(__dirname, "src/icons");
 for (const icon of fs.readdirSync(iconDir)) {
-    icons[icon.replace(/\..*?$/, "")] = fs.readFileSync(path.resolve(iconDir, icon), { encoding: "utf8" });
+    addIcon(icon.replace(/\..*?$/, ""), "custom", path.resolve(iconDir, icon));
 }
 
 /** @type {import('webpack').Configuration} */
