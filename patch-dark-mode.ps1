@@ -1,3 +1,6 @@
+Get-Process -Name Spotify -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process -Name SpotifyWebHelper -ErrorAction SilentlyContinue | Stop-Process -Force
+
 $sp = "$env:APPDATA\Spotify\Spotify.exe"
 Copy-Item $sp ($sp + ".backup")
 
