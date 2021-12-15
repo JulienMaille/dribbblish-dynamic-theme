@@ -30,34 +30,40 @@
             }
         }
 
-        .main-trackCreditsModal-container {
-            display: flex;
-            gap: 16px;
-            background-color: transparent;
-            width: 100%;
-
-            .main-trackCreditsModal-header {
-                display: flex;
-                gap: 16px;
-                padding: 0px;
-                width: 100%;
-                border: none;
-
-                h1 {
-                    text-align: center;
+        .main- {
+            &trackCreditsModal,
+            &embedWidgetGenerator {
+                &-container {
+                    display: flex;
+                    gap: 16px;
+                    background-color: transparent;
                     width: 100%;
-                    @include spiceFont("glue", 2em, "Bold");
+                    box-shadow: none;
                 }
 
-                button {
-                    position: absolute;
-                    top: 16px;
-                    right: 16px;
-                }
-            }
+                &-header {
+                    display: flex;
+                    gap: 16px;
+                    padding: 0px;
+                    width: 100%;
+                    border: none;
 
-            .main-trackCreditsModal-mainSection {
-                padding: 0px 26px;
+                    h1 {
+                        text-align: center;
+                        width: 100%;
+                        @include spiceFont("glue", 2em, "Bold");
+                    }
+
+                    button {
+                        position: absolute;
+                        top: 16px;
+                        right: 16px;
+                    }
+                }
+
+                &-mainSection {
+                    padding: 0px 26px;
+                }
             }
         }
     }
