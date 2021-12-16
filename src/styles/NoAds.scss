@@ -1,17 +1,31 @@
-#main[hide-ads="true"] {
-    /* Remove upgrade button*/
+// Hide ads
+#main[hide-ads~="ads"] {
+    // Remove ad placeholder in main screen
+    .main-leaderboardComponent-container {
+        display: none;
+    }
+}
+
+// Hide premium features
+#main[hide-ads~="premium"] {
+    // Remove upgrade button
     .main-topBar-UpgradeButton {
         display: none;
     }
 
-    /* Remove upgrade to premium button in user menu */
-    .main-contextMenu-menuItemButton[href="https://www.spotify.com/premium/"]
-    {
+    // Remove upgrade to premium button in user menu
+    // prettier-ignore
+    .main-contextMenu-menuItemButton[href="https://www.spotify.com/premium/"] {
         display: none;
     }
 
-    /* Remove ad placeholder in main screen */
-    .main-leaderboardComponent-container {
+    // Hide fullscreen button
+    .volume-bar + .control-button {
+        display: none;
+    }
+
+    // Hide download buttons
+    .main-playButton-PlayButton.main-playButton-primary + button[role="switch"] {
         display: none;
     }
 }

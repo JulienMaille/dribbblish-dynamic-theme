@@ -217,12 +217,17 @@ Dribbblish.on("ready", () => {
 
     Dribbblish.config.register({
         order: 999,
-        type: "checkbox",
-        key: "hideAds",
-        name: "Hide Ads",
-        description: `Hide ads / premium features (see: [SpotifyNoPremium](https://github.com/Daksh777/SpotifyNoPremium))`,
-        defaultValue: false,
-        onChange: (val) => $("#main").attr("hide-ads", val)
+        type: "select",
+        data: { none: "Hide Nothing", ads: "Hide Ads", premium: "Hide Premium Features", both: "Hide Both" },
+        key: "hideAdsOrPremium",
+        name: "Hide Ads / Premium Features",
+        description: `Hide ads / premium features like Fullscreen and Download Buttons (see: [SpotifyNoPremium](https://github.com/Daksh777/SpotifyNoPremium))`,
+        defaultValue: "none",
+        onChange: (val) => {
+            if (val == "none") return $("#main").attr("hide-ads", null);
+            if (val == "both") return $("#main").attr("hide-ads", "ads premium");
+            $("#main").attr("hide-ads", val);
+        }
     });
 
     waitForElement([".main-rootlist-rootlist", ".main-rootlist-wrapper > :nth-child(2) > :first-child", "#spicetify-show-list"], ([rootlist]) => {
