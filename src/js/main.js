@@ -368,11 +368,11 @@ Dribbblish.on("ready", () => {
         key: "aboutDribbblishInfo",
         name: "Info",
         description: `
-                OS: \`${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}\`
-                Spotify: \`v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}\`
-                Spicetify: \`${Spicetify.version != null ? `v${Spicetify.version}` : "< v2.7.3"}\`
-                Dribbblish: \`v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}\`
-            `,
+            OS: \`${capitalizeFirstLetter(Spicetify.Platform.PlatformData.os_name)} v${Spicetify.Platform.PlatformData.os_version}\`
+            Spotify: \`v${Spicetify.Platform.PlatformData.event_sender_context_information?.client_version_string ?? Spicetify.Platform.PlatformData.client_version_triple}\`
+            Spicetify: \`${Spicetify.version != null ? `v${Spicetify.version}` : "< v2.7.3"}\`
+            Dribbblish: \`v${process.env.DRIBBBLISH_VERSION}-${process.env.COMMIT_HASH}\`
+        `,
         data: "Copy",
         onChange: function () {
             copyToClipboard(this.description.replace(/\`/g, ""));
@@ -550,11 +550,10 @@ Dribbblish.on("ready", () => {
             Algorithm of selecting colors from the albumart
             - **Colorthief [(see)](https://lokeshdhakar.com/projects/color-thief/):** Gets more fitting colors
             - **Vibrant [(see)](https://jariz.github.io/vibrant.js/):** Gets more vibrant colors *(was the default up to v3.1.1)*
-            - **Spotify:** Basically Vibrant but internal and without support of local files
             - **Static:** Select a static color to be used
             {.muted}
         `,
-        data: { spotify: "Spotify", colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
+        data: { colorthief: "Colorthief", vibrant: "Vibrant", static: "Static" },
         defaultValue: "colorthief",
         onChange: () => updateColors(),
         showChildren: (val) => {
@@ -791,13 +790,7 @@ Dribbblish.on("ready", () => {
             const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
             let palette = {};
 
-            if (colorSelectionAlgorithm == "spotify") {
-                const swatches = await Spicetify.colorExtractor(Spicetify.Player.data.track.uri);
-                for (const col of ["VIBRANT", "VIBRANT_NON_ALARMING", "PROMINENT", "DARK_VIBRANT", "LIGHT_VIBRANT", "DESATURATED"]) {
-                    const c = chroma(swatches[col]);
-                    palette[c.luminance()] = c;
-                }
-            } else if (colorSelectionAlgorithm == "colorthief") {
+            if (colorSelectionAlgorithm == "colorthief") {
                 palette = Object.fromEntries([colorThief.getColor(img), ...colorThief.getPalette(img, 24, 5)].map((c) => chroma(c)).map((c) => [c.luminance(), c]));
             } else if (colorSelectionAlgorithm == "vibrant") {
                 const swatches = await new Promise((resolve, reject) => new Vibrant(img, 5).getPalette().then(resolve).catch(reject));
