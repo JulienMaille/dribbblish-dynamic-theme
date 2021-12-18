@@ -76,7 +76,7 @@ Dribbblish.on("ready", () => {
             input.setAttribute("spellcheck", "false");
             input.addEventListener("click", (e) => {
                 if (!Spicetify.Platform.History.location.pathname.startsWith("/search")) Spicetify.Platform.History.push(`/search/${input.value}`);
-                waitForElement([`[data-testid="search-input"]`], ([defaultSearch]) => {
+                waitForElement([`.main-topBar-topbarContent form[role="search"]`], ([defaultSearch]) => {
                     input.focus();
                 });
             });
