@@ -38,7 +38,9 @@ export default class Dribbblish {
         this.loader = new Loader();
         this.icons = icons;
 
+        let tries = 0;
         const interval = setInterval(() => {
+            if (++tries > 50) throw new Error("ready timeout");
             if (document.querySelector("#main") == null || Spicetify?.showNotification == undefined || !this.info.isReady()) return;
             this.#ready = true;
             this.emit("ready");
