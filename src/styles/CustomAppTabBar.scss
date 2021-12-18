@@ -1,0 +1,32 @@
+.main-topBar-topbarContent {
+    height: 100%;
+
+    & > nav[class*="-tabBar"][class*="-tabBar-nav"] {
+        height: 100%;
+
+        & > ul {
+            display: flex;
+            gap: 8px;
+            height: 100%;
+
+            li[class*="-tabBar-headerItem"] {
+                height: 100%;
+
+                & > a {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0px;
+                    height: 100%;
+                    padding: 0px 8px;
+                    border-radius: var(--sidebar-icons-border-radius);
+
+                    & > span {
+                        line-height: 13px;
+                        @include spiceFont("glue", 14px, "Medium");
+                    }
+                }
+            }
+        }
+    }
+}

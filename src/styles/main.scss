@@ -11,6 +11,7 @@
 @import "Modals";
 @import "ConnectDeviceList";
 @import "Icons";
+@import "CustomAppTabBar";
 
 :root {
     --bar-height: 70px;
@@ -800,6 +801,10 @@ li.GlueDropTarget {
     gap: 8px;
     max-width: unset;
     padding: 16px 32px !important;
+
+    & > * {
+        height: 100%;
+    }
 }
 
 /** Custom elements */
@@ -1268,13 +1273,14 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     }
 }
 
-// Fix lyrics-plus having a scrollbar when top-bar is `solid` or `transparent`
-.lyrics-lyricsContainer-LyricsContainer {
-    height: 100% !important;
-}
+// Fix main-view-containers having a scrollbar when top-bar is `solid` or `transparent`
 .main-view-container__scroll-node-child {
     height: 100%;
     padding-bottom: 0px;
+
+    & > * {
+        height: 100% !important;
+    }
 }
 
 // Hide default Spotify "Offline" notice
