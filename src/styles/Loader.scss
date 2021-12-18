@@ -1,9 +1,3 @@
-// From https://codepen.io/mrrocks/pen/EiplA
-@use "sass:math";
-
-$offset: 187;
-$duration: 1.4s;
-
 #dribbblish-loader {
     z-index: 999999;
     position: fixed;
@@ -38,38 +32,7 @@ $duration: 1.4s;
         align-items: center;
 
         svg {
-            animation: rotator $duration linear infinite;
-
-            circle {
-                stroke: spiceColor("text");
-                stroke-dasharray: $offset;
-                stroke-dashoffset: 0;
-                transform-origin: center;
-                animation: dash $duration ease-in-out infinite;
-            }
+            color: spiceColor("text");
         }
-    }
-}
-
-@keyframes rotator {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(270deg);
-    }
-}
-
-@keyframes dash {
-    0% {
-        stroke-dashoffset: $offset;
-    }
-    50% {
-        stroke-dashoffset: math.div($offset, 4);
-        transform: rotate(135deg);
-    }
-    100% {
-        stroke-dashoffset: $offset;
-        transform: rotate(450deg);
     }
 }

@@ -1,3 +1,5 @@
+import { icons } from "./Icons";
+
 export default class Loader {
     /** @type {HTMLDivElement} */
     #container;
@@ -7,10 +9,8 @@ export default class Loader {
         this.#container.id = "dribbblish-loader";
         this.#container.innerHTML = /* html */ `
             <div>
-                <svg width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-                    <circle fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
-                </svg>
-                <span>Loading...</span>
+                ${icons.get("loading", { size: 64 })}
+                <span></span>
             </div>
         `;
 
@@ -18,7 +18,7 @@ export default class Loader {
     }
 
     show(text) {
-        this.#container.querySelector("span").innerText = text ?? "";
+        this.#container.querySelector("span").innerText = text ?? "Loading...";
         this.#container.setAttribute("active", "");
     }
 

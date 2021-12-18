@@ -6,6 +6,7 @@ export default class Icons {
     /**
      * @typedef {Object} IconOptions
      * @property {IconStyle} [style="round"]
+     * @property {String} [className=""]
      * @property {Number} [size=16]
      * @property {Number} [scale=1]
      * @property {String} [fill="currentColor"]
@@ -66,6 +67,7 @@ export default class Icons {
         /** @type {IconOptions} */
         const defaultOptions = {
             style: this.#getDefaultStyle(name),
+            className: "",
             size: 16,
             scale: 1,
             fill: "currentColor",
@@ -75,12 +77,18 @@ export default class Icons {
 
         const svg = parseSVG(this.getRawSVG(name, options.style));
 
+        // Add general / required attributes
         svg.attributes["icon-type"] = "dribbblish";
+        svg.attributes["icon-name"] = name;
         svg.attributes["icon-style"] = options.style;
         svg.attributes.fill = options.fill;
         svg.attributes.width = options.size;
         svg.attributes.height = options.size;
 
+        // Add className
+        if (options.className != "") svg.attributes.class = options.className;
+
+        // Add Styles
         // Create CSSStyleDeclaration by creating an element since there is no constructor for it
         const styles = document.createElement("a").style;
         if (options.scale != 1) {
@@ -92,6 +100,7 @@ export default class Icons {
             return child;
         });
 
+        // Add title
         if (options.title != null) {
             svg.children.push({
                 name: "title",
