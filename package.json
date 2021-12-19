@@ -20,6 +20,8 @@
         "chroma-js": "^2.1.2",
         "colorthief": "^2.3.2",
         "jquery": "^3.6.0",
+        "lodash.debounce": "^4.0.8",
+        "lodash.defaultsdeep": "^4.6.1",
         "markdown-it": "^12.2.0",
         "markdown-it-attrs": "^4.1.0",
         "moment": "^2.29.1",

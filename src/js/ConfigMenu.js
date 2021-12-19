@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-import { renderMD } from "./Util";
+import { renderMD, defaults } from "./Util";
 import { icons } from "./Icons";
 
 export default class ConfigMenu {
@@ -125,7 +125,7 @@ export default class ConfigMenu {
             parent: null
         };
         // Set Defaults
-        options = { ...defaultOptions, ...options };
+        options = defaults(options, defaultOptions);
         if (typeof options.area == "string") options.area = { name: options.area, order: 0 };
         options.description = options.description
             .split("\n")

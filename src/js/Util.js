@@ -1,5 +1,7 @@
 import MarkdownIt from "markdown-it";
 import MarkdownItAttrs from "markdown-it-attrs";
+import defaultsDeep from "lodash.defaultsdeep";
+import { default as _debounce } from "lodash.debounce";
 
 /**
  * @callback waitForElCb
@@ -69,22 +71,25 @@ export function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * @template T
+ * @param {T[]} arr
+ * @returns {T}
+ */
 export function randomFromArray(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function debounce(func, wait, immediate) {
-    var timeout;
-    return function () {
-        var context = this,
-            args = arguments;
-        var later = function () {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
+/** @type {_debounce} */
+export function debounce(fn, wait, opts) {
+    return _debounce(fn, wait, opts);
+}
+
+/**
+ * @param {Object} options
+ * @param  {...Object} defaults
+ * @returns {Object}
+ */
+export function defaults(options, ...defaults) {
+    return defaultsDeep(options, ...defaults);
 }

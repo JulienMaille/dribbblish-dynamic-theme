@@ -1,3 +1,4 @@
+import { defaults } from "./Util";
 import { parseSync as parseSVG, stringify as stringifySVG } from "svgson";
 
 export default class Icons {
@@ -73,7 +74,7 @@ export default class Icons {
             fill: "currentColor",
             base64: false
         };
-        options = { ...defaultOptions, ...options };
+        options = defaults(options, defaultOptions);
 
         const svg = parseSVG(this.getRawSVG(name, options.style));
 
