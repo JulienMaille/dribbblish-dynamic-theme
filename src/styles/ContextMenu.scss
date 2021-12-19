@@ -1,6 +1,8 @@
 .main-contextMenu-menu {
     $border-color: spiceColor("subtext", 0.1, 0.1);
 
+    position: relative;
+    overflow: visible;
     background-color: transparent !important;
     border: 1px solid $border-color;
     border-radius: var(--main-corner-radius);
