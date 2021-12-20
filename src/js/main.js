@@ -389,30 +389,29 @@ Dribbblish.on("ready", () => {
         data: "Create Report",
         onChange: () => {
             const reportBody = `
-                ${process.env.BUG_REPORT}
+            ${process.env.BUG_REPORT}
 
-                <!-- Leave the lines below as they are -->
-                ---
+            <!-- Leave the lines below as they are -->
+            ---
 
-                ### Info for Contributors:
-                
-                **Versions**
-                ${Dribbblish.config.getOptions("aboutDribbblishInfo").description}
+            <details>
+              <summary>Info for Contributors</summary>
 
-                **Extensions**
-                ${$(`script[src^="extensions/"]`)
-                    .toArray()
-                    .map((e) => `- ${e.src.split("/").slice(-1)[0]}`)
-                    .join("\n")}
+              **Versions**
+              ${Dribbblish.config.getOptions("aboutDribbblishInfo").description.split("\n").join("\n              ")}
 
-                **Settings**
-                \`\`\`json
-                ${JSON.stringify(Dribbblish.config.export(), null, 4)}
-                \`\`\`
-            `
-                .split("\n")
-                .map((line) => line.replace(/^ {16}/, ""))
-                .join("\n");
+              **Extensions**
+              ${$(`script[src^="extensions/"]`)
+                  .toArray()
+                  .map((e) => `- ${e.src.split("/").slice(-1)[0]}`)
+                  .join("\n              ")}
+
+              **Settings**
+              \`\`\`json
+              ${JSON.stringify(Dribbblish.config.export(), null, 4).split("\n").join("\n              ")}
+              \`\`\`
+            </details>
+            `.replace(/^ {12}/gm, "");
 
             const reportURL = new URL("https://github.com/JulienMaille/dribbblish-dynamic-theme/issues/new");
             reportURL.searchParams.set("labels", "bug");
