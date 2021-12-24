@@ -5,15 +5,12 @@
     .GenericModal {
         z-index: 1;
         position: relative;
-        background-color: spiceColor("main", 0.95);
-        backdrop-filter: blur(3px);
         padding: 24px 16px;
-        border-radius: var(--main-corner-radius);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        @include spiceShadow();
+        @include spiceGlass();
 
         // Popups (`Spicetify.PopupModal.display()`)
         generic-modal & {

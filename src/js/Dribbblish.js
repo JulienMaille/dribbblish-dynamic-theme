@@ -1,7 +1,8 @@
 import ConfigMenu from "./ConfigMenu";
 import Info from "./Info";
 import Loader from "./Loader";
-import { icons } from "./Icons";
+import Overlay from "./Overlay";
+import Icon, { icons } from "./Icons";
 
 export default class Dribbblish {
     /**
@@ -23,7 +24,10 @@ export default class Dribbblish {
     /** @type {Loader} */
     loader;
 
-    /** @type {Icons} */
+    /** @type {Overlay} */
+    overlay;
+
+    /** @type {Icon} */
     icons;
 
     /** @type {Object.<string, listener[]>} */
@@ -36,6 +40,7 @@ export default class Dribbblish {
         this.config = new ConfigMenu();
         this.info = new Info();
         this.loader = new Loader();
+        this.overlay = new Overlay();
         this.icons = icons;
 
         let tries = 0;

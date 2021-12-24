@@ -7,10 +7,11 @@
 @import "NoAds";
 @import "Markdown";
 @import "Info";
-@import "Loader";
 @import "Modals";
 @import "ConnectDeviceList";
+@import "Lyrics";
 @import "Icons";
+@import "Overlay";
 @import "CustomAppTabBar";
 
 :root {
@@ -595,13 +596,8 @@ html.sidebar-hide-text .GlueDropTarget span {
     text-align: center;
     white-space: nowrap;
     pointer-events: none;
-    border: 1px solid spiceColor("subtext", 0.1, 0.1);
-    border-radius: var(--main-corner-radius);
     color: spiceColor("subtext");
-    background-color: spiceColor("main", 0.75, -0.1) !important;
-    backdrop-filter: blur(10px);
-    border-radius: var(--main-corner-radius);
-    @include spiceShadow();
+    @include spiceGlass();
 }
 
 .minimal-player .player-controls__buttons {
@@ -1286,6 +1282,14 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 // Hide default Spotify "Offline" notice
 .main-noConnection {
     display: none;
+}
+
+// Notifications
+.main-notificationBubbleContainer-NotificationBubbleContainer {
+    .main-notificationBubble-NotificationBubble {
+        color: spiceColor("subtext");
+        @include spiceGlass();
+    }
 }
 
 // ! WORKAROUNDS / TEMP FIXES

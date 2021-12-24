@@ -1,28 +1,18 @@
-import { icons } from "./Icons";
+import Overlay from "./Overlay";
 
 export default class Loader {
-    /** @type {HTMLDivElement} */
-    #container;
+    /** @type {Overlay} */
+    #overlay;
 
     constructor() {
-        this.#container = document.createElement("div");
-        this.#container.id = "dribbblish-loader";
-        this.#container.innerHTML = /* html */ `
-            <div>
-                ${icons.get("loading", { size: 64 })}
-                <span></span>
-            </div>
-        `;
-
-        document.body.appendChild(this.#container);
+        this.#overlay = new Overlay();
     }
 
     show(text) {
-        this.#container.querySelector("span").innerText = text ?? "Loading...";
-        this.#container.setAttribute("active", "");
+        this.#overlay.show({ icon: "loading", text });
     }
 
     hide() {
-        this.#container.removeAttribute("active");
+        this.#overlay.hide();
     }
 }

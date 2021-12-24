@@ -1,13 +1,6 @@
 .connect-device-list-container {
-    $border-color: spiceColor("subtext", 0.1, 0.1);
-
-    border: 1px solid $border-color;
-    border-radius: var(--main-corner-radius);
     padding: 8px;
-    background-color: spiceColor("main", 0.75, -0.1) !important;
-    backdrop-filter: blur(10px);
-    border-radius: var(--main-corner-radius);
-    @include spiceShadow();
+    @include spiceGlass(lightOffset(0.8, -0.1));
 
     &::before {
         display: none;

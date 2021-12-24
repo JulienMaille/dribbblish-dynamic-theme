@@ -23,16 +23,13 @@
         z-index: 1;
         position: relative;
         width: clamp(500px, 50%, 650px);
-        background-color: spiceColor("main", 0.95);
-        backdrop-filter: blur(3px);
         padding: 20px 15px;
-        border-radius: var(--main-corner-radius);
         display: flex;
         gap: 8px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        @include spiceShadow();
+        @include spiceGlass();
 
         > h2 {
             font-size: 32px;

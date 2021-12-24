@@ -1,4 +1,4 @@
-#dribbblish-loader {
+#dribbblish-overlay {
     z-index: 999999;
     position: fixed;
     inset: 0px;
@@ -31,8 +31,12 @@
         gap: 16px;
         align-items: center;
 
-        svg {
-            color: spiceColor("text");
+        & > * {
+            color: var(--color);
+
+            &:empty {
+                display: none;
+            }
         }
     }
 }

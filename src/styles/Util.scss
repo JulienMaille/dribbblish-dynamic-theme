@@ -11,3 +11,11 @@
 @mixin spiceShadow() {
     box-shadow: 0px 0px 8px spiceColor("subtext", 0.1, 0.1);
 }
+
+@mixin spiceGlass($opacity: 0.95) {
+    background-color: spiceColor("main", $opacity);
+    backdrop-filter: blur(10px);
+    border: 1px solid spiceColor("subtext", 0.1, 0.1);
+    border-radius: var(--main-corner-radius);
+    @include spiceShadow();
+}
