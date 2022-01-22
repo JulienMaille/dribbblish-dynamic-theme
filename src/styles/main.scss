@@ -561,6 +561,7 @@ html.sidebar-hide-text .GlueDropTarget span {
 
 .progress-bar {
     --progress-bar-height: 2px;
+    --is-active-fg-color: #{spiceColor("subtext")};
     --fg-color: #{spiceColor("button")};
     --bg-color: #{spiceColor("text", 0.2)};
 }
