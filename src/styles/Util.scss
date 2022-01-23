@@ -3,11 +3,6 @@
     @return #{"invert("}$v#{")"};
 }
 
-// returns $n and adds $offset when the theme is light
-@function lightOffset($n, $offset) {
-    @return calc($n + $offset * var(--is_light));
-}
-
 @mixin spiceShadow() {
     box-shadow: 0px 0px 8px spiceColor("subtext", 0.1, 0.1);
 }

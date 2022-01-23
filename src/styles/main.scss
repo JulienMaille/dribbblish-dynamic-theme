@@ -135,9 +135,15 @@
     box-shadow: 0 4px 20px #21212130;
 }
 
+.main-trackList-rowMarker {
+    color: spiceColor("text");
+}
+
 .main-trackList-playingIcon {
+    -webkit-mask-image: url(icon64("equaliser", '{"size": 14}'));
+    background-color: currentColor;
+    content-visibility: hidden;
     image-rendering: pixelated;
-    filter: grayscale(1);
 }
 
 .main-trackList-trackListRowGrid {

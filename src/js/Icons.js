@@ -17,8 +17,8 @@ export default class Icons {
     /** @type {Object.<String, Object.<IconStyle, String>>} */
     #icons;
 
-    constructor() {
-        this.#icons = process.env.DRIBBBLISH_ICONS;
+    constructor(icons) {
+        this.#icons = icons ?? process.env.DRIBBBLISH_ICONS;
     }
 
     /**
@@ -90,14 +90,16 @@ export default class Icons {
         if (options.className != "") svg.attributes.class = options.className;
 
         // Add Styles
-        // Create CSSStyleDeclaration by creating an element since there is no constructor for it
-        const styles = document.createElement("a").style;
+        const styles = {};
         if (options.scale != 1) {
-            styles.transform = `scale(${options.scale})`;
-            styles.transformOrigin = "center";
+            styles["transform"] = `scale(${options.scale})`;
+            styles["transform-origin"] = "center";
         }
+        const styleStr = Object.entries(styles)
+            .map(([prop, val]) => `${prop}: ${val};`)
+            .join(" ");
         svg.children = svg.children.map((child) => {
-            if (styles.cssText != "") child.attributes.style = styles.cssText;
+            if (styleStr != "") child.attributes.style = styleStr;
             return child;
         });
 

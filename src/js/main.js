@@ -12,6 +12,7 @@ $("html").attr("dribbblish-js-installed", "");
 import { waitForElement, copyToClipboard, capitalizeFirstLetter, getClosestToNum, randomFromArray, debounce } from "./Util";
 import { default as _Dribbblish } from "./Dribbblish";
 import "./Folders";
+import { spiceColor } from "./SassUtil";
 
 // To expose to external scripts
 const Dribbblish = new _Dribbblish();
@@ -47,8 +48,8 @@ Dribbblish.on("ready", () => {
                     ? {
                           icon: "settings",
                           color: {
-                              fg: "var(--spice-subtext)",
-                              bg: "rgba(var(--spice-rgb-subtext), calc(0.1 + var(--is_light) * 0.05))"
+                              fg: spiceColor("subtext"),
+                              bg: spiceColor("subtext", 0.1, 0.05)
                           },
                           order: 999,
                           tooltip: "Open Dribbblish Settings",
