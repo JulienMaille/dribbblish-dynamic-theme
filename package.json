@@ -6,6 +6,8 @@
         "url": "https://github.com/JulienMaille/dribbblish-dynamic-theme/issues"
     },
     "devDependencies": {
+        "@babel/preset-env": "^7.16.5",
+        "@babel/register": "^7.16.5",
         "@material-icons/svg": "^1.0.22",
         "clean-webpack-plugin": "^4.0.0",
         "sass": "^1.43.5",
@@ -14,7 +16,7 @@
         "webpack-cli": "^4.9.0"
     },
     "scripts": {
-        "build": "webpack --mode=development"
+        "build": "webpack"
     },
     "dependencies": {
         "chroma-js": "^2.1.2",

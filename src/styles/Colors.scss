@@ -44,16 +44,3 @@ $props-to-transition: ("sidebar", "main", "text", "button");
     transition: all var(--song-transition-speed) linear;
     transition-property: $props;
 }
-
-// $key: the key of the color, e.g. "main"
-// $alpha: tha alpha in rgba()
-// $light-offset: added when in light mode
-@function spiceColor($key, $alpha: 1, $light-offset: 0) {
-    @if $alpha == 1 {
-        @return var(--spice-#{$key});
-    } @else if $light-offset == 0 {
-        @return rgba(var(--spice-rgb-#{$key}), $alpha);
-    } @else {
-        @return rgba(var(--spice-rgb-#{$key}), lightOffset($alpha, $light-offset));
-    }
-}
