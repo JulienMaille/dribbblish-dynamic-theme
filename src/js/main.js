@@ -221,8 +221,8 @@ Dribbblish.on("ready", () => {
         type: "checkbox",
         key: "showGenreInfoInPlaybar",
         name: "Show Genre Info in Playbar",
-        description: "Show genres associated to the current song in the Playbar",
-        defaultValue: true,
+        description: "Show artist's genres in the Playbar",
+        defaultValue: false,
         onChange: (val) => $("#main").attr("playbar-genre-info", val)
     });
 
