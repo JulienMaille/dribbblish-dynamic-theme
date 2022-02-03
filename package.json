@@ -6,6 +6,7 @@
         "url": "https://github.com/JulienMaille/dribbblish-dynamic-theme/issues"
     },
     "devDependencies": {
+        "@babel/core": "^7.17.0",
         "@babel/preset-env": "^7.16.5",
         "@babel/register": "^7.16.5",
         "@material-icons/svg": "^1.0.22",
