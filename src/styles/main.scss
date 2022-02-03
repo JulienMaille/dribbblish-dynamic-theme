@@ -668,6 +668,12 @@ html.sidebar-hide-text .GlueDropTarget span {
     }
 }
 
+#main-trackInfo-genre {
+    #main[playbar-genre-info="false"] & {
+        display: none;
+    }
+}
+
 .main-topBar-topbarContent .main-playButton-PlayButton {
     --size: 35px !important;
 }
