@@ -12,6 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          repository: ${{ github.event.repository.full_name }}
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
 
