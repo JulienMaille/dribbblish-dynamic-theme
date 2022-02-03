@@ -217,6 +217,16 @@ Dribbblish.on("ready", () => {
     });
 
     Dribbblish.config.register({
+        area: "Playbar",
+        type: "checkbox",
+        key: "showGenreInfoInPlaybar",
+        name: "Show Genre Info in Playbar",
+        description: "Show artist's genres in the Playbar",
+        defaultValue: false,
+        onChange: (val) => $("#main").attr("playbar-genre-info", val)
+    });
+
+    Dribbblish.config.register({
         order: 999,
         type: "select",
         data: { none: "Hide Nothing", ads: "Hide Ads", premium: "Hide Premium Features", both: "Hide Both" },
@@ -452,6 +462,11 @@ Dribbblish.on("ready", () => {
     async function getAlbumRelease(uri) {
         const info = await Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
         return { year: info.year, month: (info.month ?? 1) - 1, day: info.day ?? 1 };
+    }
+
+    async function getGenres(uri) {
+        const res = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/artists/${uri}`);
+        return res.genres.slice(0, 3);
     }
 
     function isLight(hex) {
@@ -737,7 +752,17 @@ Dribbblish.on("ready", () => {
         }
         const albumInfoSpan = document.getElementById("main-trackInfo-year");
 
+        if (!document.getElementById("main-trackInfo-genre")) {
+            const el = document.createElement("div");
+            el.classList.add("standalone-ellipsis-one-line", "main-type-finale");
+            el.setAttribute("as", "div");
+            el.id = "main-trackInfo-genre";
+            document.querySelector(".main-trackInfo-container").append(el);
+        }
+        const genreInfoSpan = document.getElementById("main-trackInfo-genre");
+
         let album_uri = Spicetify.Player.data.track.metadata.album_uri;
+        let artist_uri = Spicetify.Player.data.track.metadata.artist_uri;
         let bgImage = Spicetify.Player.data.track.metadata.image_url;
         if (bgImage === undefined) {
             bgImage = "/images/tracklist-row-song-fallback.svg";
@@ -755,16 +780,28 @@ Dribbblish.on("ready", () => {
             `;
             const albumDateElem = /* html */ `<span> • <span title="${albumDate.format("L")}">${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
             albumInfoSpan.innerHTML = `${albumLinkElem}${albumDateElem}`;
+
+            const genres = await getGenres(artist_uri.replace("spotify:artist:", ""));
+            genreInfoSpan.innerHTML = `
+                <span>
+                    <span draggable="true">
+                        <span draggable="false" dir="auto">${genres.join(", ")}</span>
+                    </span>
+                </span>
+            `;
         } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
             // podcast
             bgImage = bgImage.replace("spotify:image:", "https://i.scdn.co/image/");
             albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
+            genreInfoSpan.innerHTML = "";
         } else if (Spicetify.Player.data.track.metadata.is_local == "true") {
             // local file
             albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
+            genreInfoSpan.innerHTML = "";
         } else if (Spicetify.Player.data.track.provider == "ad") {
             // ad
             albumInfoSpan.innerHTML = "Advertisement";
+            genreInfoSpan.innerHTML = "";
             return;
         } else {
             // When clicking a song from the homepage, songChange is fired with half empty metadata
