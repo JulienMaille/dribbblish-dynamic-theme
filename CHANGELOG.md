@@ -1,5 +1,6 @@
 Added:
 - Ability to hide premium features in addition to ads
+- Ability to show current artist's genres
 
 Fixed:
 - Custom search input not being focussed after clicking
