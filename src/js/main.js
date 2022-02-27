@@ -821,8 +821,8 @@ Dribbblish.on("ready", () => {
 
         $("html").css("--image-brightness", getImageLightness(img) / 255);
 
-        let color = "#509bf5";
         if (img.complete) {
+            let color = "#1ed760";
             const colorSelectionAlgorithm = Dribbblish.config.get("colorSelectionAlgorithm");
             const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
             let palette = {};
@@ -853,9 +853,9 @@ Dribbblish.on("ready", () => {
                 const wantedLuminance = $("html").css("--is_light") == "1" ? Dribbblish.config.get("lightModeLuminance") : Dribbblish.config.get("darkModeLuminance");
                 color = palette[getClosestToNum(Object.keys(palette), wantedLuminance)].hex();
             }
-        }
 
-        updateColors(false, color);
+            updateColors(false, color);
+        }
     }
 
     var coverListener;

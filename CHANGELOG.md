@@ -4,6 +4,7 @@ Added:
 
 Fixed:
 - Custom search input not being focussed after clicking
+- When changing songs, the color shifts to blue for a second (#179)
 
 Improved:
 - Add `embedWidgetGenerator` modals to custom modal styles. (Things like the [spicetify-marketplace](https://github.com/CharlieS1103/spicetify-marketplace) options)
