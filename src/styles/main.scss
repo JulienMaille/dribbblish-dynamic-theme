@@ -1324,3 +1324,14 @@ canvas[width="250"][height="250"] {
     display: flex;
     justify-content: center;
 }
+
+// fix albumn name font size (#171)
+.main-trackInfo-release {
+    font-size: 10px;
+}
+
+// fix play buttons color going green
+.encore-bright-accent-set {
+    --background-highlight: var(--spice-button) !important;
+    --background-press: var(--spice-button-active) !important;
+}
