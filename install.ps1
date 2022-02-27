@@ -117,12 +117,12 @@ xpui.js_repl_8008=,`${1}58,
 
   Write-Part "APPLYING";
   $backupVer = $configFile -match "^version"
-  $version = ConvertFrom-StringData $backupVer[0]
-  if ($version.version.Length -gt 0) {
+  if ($backupVer.Length -gt 0) {
     spicetify apply
   } else {
     spicetify backup apply
   }
+  Write-Done
 }
 else {
   Write-Part "`nYour Powershell version is less than "; Write-Emphasized "$PSMinVersion";
