@@ -1330,7 +1330,7 @@ canvas[width="250"][height="250"] {
     font-size: 10px;
 }
 
-// fix play buttons color going green
+// fix play buttons color going green (#174)
 .encore-bright-accent-set {
     --background-highlight: var(--spice-button) !important;
     --background-press: var(--spice-button-active) !important;
