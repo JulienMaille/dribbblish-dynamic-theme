@@ -25,7 +25,7 @@
     }
 
     // Hide download buttons
-    .main-playButton-PlayButton.main-playButton-primary + button[role="switch"] {
+    .main-actionBar-ActionBarRow button[role="switch"] {
         display: none;
     }
 }

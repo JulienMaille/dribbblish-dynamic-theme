@@ -1324,3 +1324,19 @@ canvas[width="250"][height="250"] {
     display: flex;
     justify-content: center;
 }
+
+// fix albumn name font size (#171)
+.main-trackInfo-release {
+    font-size: 10px;
+}
+
+// fix play buttons color going green (#174)
+.encore-bright-accent-set {
+    --background-highlight: var(--spice-button) !important;
+    --background-press: var(--spice-button-active) !important;
+}
+
+// hide the triangle under the connect button
+.control-button--active::after {
+    display: none;
+}
