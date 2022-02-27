@@ -1335,3 +1335,8 @@ canvas[width="250"][height="250"] {
     --background-highlight: var(--spice-button) !important;
     --background-press: var(--spice-button-active) !important;
 }
+
+// hide the triangle under the connect button
+.control-button--active::after {
+    display: none;
+}
