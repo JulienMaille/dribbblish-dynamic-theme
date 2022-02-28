@@ -887,7 +887,7 @@ Dribbblish.on("ready", () => {
         fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
             .then((response) => response.json())
             .then((data) => {
-                Dribbblish.info.set("dribbblish-update", data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "Nev Dribbblish version available", icon: "palette", onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
+                Dribbblish.info.set("dribbblish-update", data.tag_name > process.env.DRIBBBLISH_VERSION ? { text: `v${data.tag_name}`, tooltip: "New Dribbblish version available", icon: "palette", onClick: () => window.open("https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest", "_blank") } : null);
             })
             .catch(console.error);
 
