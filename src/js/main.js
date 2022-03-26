@@ -761,9 +761,10 @@ Dribbblish.on("ready", () => {
         }
         const genreInfoSpan = document.getElementById("main-trackInfo-genre");
 
-        let album_uri = Spicetify.Player.data.track.metadata.album_uri;
-        let artist_uri = Spicetify.Player.data.track.metadata.artist_uri;
-        let bgImage = Spicetify.Player.data.track.metadata.image_url;
+        let track = Spicetify.Player.data.track;
+        let album_uri = track.metadata.album_uri;
+        let artist_uri = track.metadata.artist_uri;
+        let bgImage = track.metadata.image_url;
         if (bgImage === undefined) {
             bgImage = "/images/tracklist-row-song-fallback.svg";
         }
@@ -774,14 +775,17 @@ Dribbblish.on("ready", () => {
             const albumLinkElem = /* html */ `
                 <span>
                     <span draggable="true">
-                        <a draggable="false" dir="auto" href="${album_uri}">${Spicetify.Player.data.track.metadata.album_title}</a>
+                        <a draggable="false" dir="auto" href="${album_uri}">${track.metadata.album_title}</a>
                     </span>
                 </span>
             `;
             const albumDateElem = /* html */ `<span> • <span title="${albumDate.format("L")}">${albumDate.format(moment().diff(albumDate, "months") <= 6 ? "MMM YYYY" : "YYYY")}</span></span>`;
             albumInfoSpan.innerHTML = `${albumLinkElem}${albumDateElem}`;
 
-            const genres = await getGenres(artist_uri.replace("spotify:artist:", ""));
+            let genres = "";
+            if (!album_uri.includes("spotify:episode")) {
+                genres = await getGenres(artist_uri.replace("spotify:artist:", ""));
+            }
             genreInfoSpan.innerHTML = `
                 <span>
                     <span draggable="true">
@@ -789,16 +793,16 @@ Dribbblish.on("ready", () => {
                     </span>
                 </span>
             `;
-        } else if (Spicetify.Player.data.track.uri.includes("spotify:episode")) {
+        } else if (track.uri.includes("spotify:episode")) {
             // podcast
             bgImage = bgImage.replace("spotify:image:", "https://i.scdn.co/image/");
-            albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
+            albumInfoSpan.innerHTML = track.metadata.album_title;
             genreInfoSpan.innerHTML = "";
-        } else if (Spicetify.Player.data.track.metadata.is_local == "true") {
+        } else if (track.metadata.is_local == "true") {
             // local file
-            albumInfoSpan.innerHTML = Spicetify.Player.data.track.metadata.album_title;
+            albumInfoSpan.innerHTML = track.metadata.album_title;
             genreInfoSpan.innerHTML = "";
-        } else if (Spicetify.Player.data.track.provider == "ad") {
+        } else if (track.provider == "ad") {
             // ad
             albumInfoSpan.innerHTML = "Advertisement";
             genreInfoSpan.innerHTML = "";
