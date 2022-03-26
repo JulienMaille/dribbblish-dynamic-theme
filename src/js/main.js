@@ -460,8 +460,8 @@ Dribbblish.on("ready", () => {
 
     /* js */
     async function getAlbumRelease(uri) {
-        const info = await Spicetify.CosmosAsync.get(`hm://album/v1/album-app/album/${uri}/desktop`);
-        return { year: info.year, month: (info.month ?? 1) - 1, day: info.day ?? 1 };
+        const info = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/albums/${uri}`);
+        return { year: info.release_date };
     }
 
     async function getGenres(uri) {
