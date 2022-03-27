@@ -754,7 +754,7 @@ Dribbblish.on("ready", () => {
 
         if (!document.getElementById("main-trackInfo-genre")) {
             const el = document.createElement("div");
-            el.classList.add("standalone-ellipsis-one-line", "main-type-finale");
+            el.classList.add("main-trackInfo-release", "standalone-ellipsis-one-line", "main-type-finale");
             el.setAttribute("as", "div");
             el.id = "main-trackInfo-genre";
             document.querySelector(".main-trackInfo-container").append(el);
@@ -786,7 +786,7 @@ Dribbblish.on("ready", () => {
             if (!album_uri.includes("spotify:episode")) {
                 genres = await getGenres(artist_uri.replace("spotify:artist:", ""));
             }
-            genreInfoSpan.innerHTML = `
+            genreInfoSpan.innerHTML = /* html */ `
                 <span>
                     <span draggable="true">
                         <span draggable="false" dir="auto">${genres.join(", ")}</span>
