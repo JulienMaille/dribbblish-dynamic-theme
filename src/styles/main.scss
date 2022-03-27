@@ -150,8 +150,12 @@
     background-color: var(--spice-main);
 }
 
+.main-trackList-active {
+    background-color: spiceColor("selected-row", 0.25) !important;
+}
+
 .main-trackList-trackListRow:hover {
-    background-color: spiceColor("selected-row", 0.2) !important;
+    background-color: spiceColor("selected-row", 0.15) !important;
 }
 
 .main-trackList-trackListRow:focus-within,
