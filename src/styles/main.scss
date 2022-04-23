@@ -1338,7 +1338,7 @@ canvas[width="250"][height="250"] {
 .encore-bright-accent-set {
     --background-highlight: var(--spice-button) !important;
     --background-press: var(--spice-button-active) !important;
-    color: var(--spice-sidebar-text);
+    color: spiceColor("sidebar-text");
 }
 
 // hide the triangle under the connect button
@@ -1348,8 +1348,8 @@ canvas[width="250"][height="250"] {
 
 // fix discography buttons
 .encore-dark-theme .encore-inverted-light-set {
-    --background-highlight: spiceColor("button-active");
-    --text-base: spiceColor("sidebar-text");
+    --background-highlight: var(--spice-subtext);
+    --text-base: var(--spice-sidebar-text);
 }
 
 // fix player bar buttons

@@ -820,12 +820,15 @@ Dribbblish.on("ready", () => {
     Spicetify.Player.addEventListener("songchange", songchange);
     songchange();
 
-    async function pickCoverColor(img) {
-        if (!img.currentSrc.startsWith("spotify:")) return;
+    async function pickCoverColor() {
+        let img = document.querySelector(".main-image-image.cover-art-image");
 
-        $("html").css("--image-brightness", getImageLightness(img) / 255);
+        if (!img || !img.complete) {
+            return setTimeout(pickCoverColor, 50); // Check for complete image in 50msec
+        } else {
+            if (!img.currentSrc.startsWith("spotify:")) return;
+            $("html").css("--image-brightness", getImageLightness(img) / 255);
 
-        if (img.complete) {
             let color = "#1ed760";
             const colorSelectionAlgorithm = Dribbblish.config.get("colorSelectionAlgorithm");
             const colorSelectionMode = Dribbblish.config.get("colorSelectionMode");
@@ -867,7 +870,7 @@ Dribbblish.on("ready", () => {
         const img = document.querySelector(".main-image-image.cover-art-image");
         if (!img) return setTimeout(registerCoverListener, 250); // Check if image exists
         if (!img.complete) return img.addEventListener("load", registerCoverListener); // Check if image is loaded
-        pickCoverColor(img);
+        pickCoverColor();
 
         if (coverListener != null) {
             coverListener.disconnect();
@@ -877,7 +880,7 @@ Dribbblish.on("ready", () => {
         coverListener = new MutationObserver((muts) => {
             const img = document.querySelector(".main-image-image.cover-art-image");
             if (!img) return registerCoverListener();
-            pickCoverColor(img);
+            pickCoverColor();
         });
         coverListener.observe(img, {
             attributes: true,
