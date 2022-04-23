@@ -1350,3 +1350,9 @@ canvas[width="250"][height="250"] {
 .control-button--active::after {
     display: none;
 }
+
+// fix discography buttons
+.encore-dark-theme .encore-inverted-light-set {
+    --background-highlight: spiceColor("button-active");
+    --text-base: spiceColor("sidebar-text");
+}
