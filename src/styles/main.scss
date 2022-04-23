@@ -444,15 +444,6 @@ html {
     html.sidebar-hide-text & {
         left: 0px;
     }
-
-    .main-playButton-button {
-        width: 32px;
-        height: 32px;
-        margin: 0px;
-        color: spiceColor("sidebar");
-        background-color: spiceColor("main", 0.7);
-        border-radius: var(--sidebar-icons-border-radius);
-    }
 }
 
 .main-rootlist-expandArrow {
@@ -1224,8 +1215,12 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
     z-index: 4;
 }
 
-.main-actionBar-ActionBarRow button:not(.main-playButton-primary) {
+.main-actionBar-ActionBarRow button:not(:hover) {
     color: spiceColor("subtext");
+}
+
+.main-actionBar-ActionBarRow button:hover div {
+    background-color: spiceColor("text", 0.7) !important;
 }
 
 /* explicit icon */
@@ -1355,4 +1350,20 @@ canvas[width="250"][height="250"] {
 .encore-dark-theme .encore-inverted-light-set {
     --background-highlight: spiceColor("button-active");
     --text-base: spiceColor("sidebar-text");
+}
+
+// fix player bar buttons
+.main-nowPlayingBar-left button,
+.main-nowPlayingBar-left button[aria-checked=false],
+.main-nowPlayingBar-right button,
+.main-nowPlayingBar-right button:focus:not(:focus-visible):not(:hover),
+.main-nowPlayingBar-center button,
+.main-nowPlayingBar-center button:focus:not(:focus-visible):not(:hover) {
+    color: spiceColor("subtext");
+}
+
+.main-nowPlayingBar-left button:active,
+.main-nowPlayingBar-right button:active,
+.main-nowPlayingBar-center button:active {
+  color: spiceColor("text", 0.7) !important;
 }
