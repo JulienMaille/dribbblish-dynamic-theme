@@ -461,7 +461,9 @@ Dribbblish.on("ready", () => {
     /* js */
     async function getAlbumRelease(uri) {
         const info = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/albums/${uri}`);
-        return { year: info.release_date };
+        let dateArr = info.release_date.split("-").map(Number);
+        while (dateArr.length < 3) dateArr.push(1);
+        return { year: dateArr[0], month: dateArr[1] - 1, day: dateArr[2] };
     }
 
     async function getGenres(uri) {
