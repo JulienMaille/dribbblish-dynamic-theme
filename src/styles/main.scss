@@ -1365,5 +1365,12 @@ canvas[width="250"][height="250"] {
 .main-nowPlayingBar-left button:active,
 .main-nowPlayingBar-right button:active,
 .main-nowPlayingBar-center button:active {
-  color: spiceColor("text", 0.7) !important;
+    color: spiceColor("text", 0.7) !important;
+}
+
+// fix text color in library cards
+.main-heroCard-card,
+.main-heroCard-cardMetadata a,
+.main-heroCard-cardMetadata div {
+    color: spiceColor("sidebar-text") !important;
 }
