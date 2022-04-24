@@ -1369,8 +1369,8 @@ canvas[width="250"][height="250"] {
 }
 
 // fix text color in library cards
-.main-heroCard-card,
-.main-heroCard-cardMetadata a,
-.main-heroCard-cardMetadata div {
-    color: spiceColor("sidebar-text") !important;
+.main-heroCard-card span,
+.main-heroCard-cardMetadata .main-cardHeader-link,
+.main-heroCard-cardMetadata .main-cardSubHeader-root div {
+    color: spiceColor("sidebar-text");
 }
