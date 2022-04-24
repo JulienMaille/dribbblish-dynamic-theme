@@ -1154,7 +1154,7 @@ html.right-expanded-cover.buddyfeed-visible .main-coverSlotExpanded-container {
 
 /** Mini dribbblish */
 .x-categoryCard-CategoryCard > div {
-    background-color: spiceColor("main");
+    color: spiceColor("main");
     width: calc(100% - 14px);
     height: calc(100% - 6px);
     margin: 3px 10px;
@@ -1373,4 +1373,13 @@ canvas[width="250"][height="250"] {
 .main-heroCard-cardMetadata .main-cardHeader-link,
 .main-heroCard-cardMetadata .main-cardSubHeader-root div {
     color: spiceColor("sidebar-text");
+}
+
+#searchPage .main-heroCard-cardMetadata .main-cardHeader-link {
+    color: spiceColor("text");
+}
+
+// fix genre text color in recent search
+#searchPage h3 {
+    color: spiceColor("main");
 }
