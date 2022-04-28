@@ -12,7 +12,7 @@ assignees: ""
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. 
+1.
 
 **Screenshots**
 <!-- If applicable, add screenshots to help explain your problem. -->
@@ -26,7 +26,7 @@ Steps to reproduce the behavior:
 **Logs**
 <!--
     Add logs from console. To do that
-    1. Run `spicetify enable-devtool` in terminal
+    1. Run `spicetify enable-devtools` in terminal
     2. Spotify will be restarted
     3. Hit <kbd>Ctrl + Shift + I</kbd> to open DevTools window
     4. Navigate to tab Console
