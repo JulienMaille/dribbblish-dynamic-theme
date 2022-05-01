@@ -639,7 +639,6 @@ html.sidebar-hide-text .GlueDropTarget span {
 }
 
 .main-trackInfo-container {
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -1326,7 +1325,7 @@ canvas[width="250"][height="250"] {
 // workaround to re-center track-info
 #main:not([player-controls="spotify"]) .main-trackInfo-container > div > div > div {
     display: flex;
-    justify-content: center;
+    justify-content: inherit;
 }
 
 // fix albumn name font size (#171)
