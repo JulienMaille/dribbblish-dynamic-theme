@@ -1382,3 +1382,17 @@ canvas[width="250"][height="250"] {
 #searchPage h3 {
     color: spiceColor("main");
 }
+
+/* hotfix 1.1.84 */
+.Y8edH1Yjo4xrW_58czQj {
+    background: none;
+}
+
+.Root__nav-bar .GlueDropTarget--playlists div a span,
+.Root__nav-bar .GlueDropTarget--folders div a span,
+.Root__nav-bar .GlueDropTarget--albums div,
+.Root__nav-bar .GlueDropTarget--albums button,
+.Root__nav-bar .GlueDropTarget--tracks a,
+.Root__nav-bar .GlueDropTarget--episodes a{
+    color: var(--spice-sidebar-text);
+}
