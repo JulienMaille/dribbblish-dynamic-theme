@@ -1,3 +1,9 @@
+# ❗Dribbblish Dynamic development is on hold❗
+**Due to the many changes made by Spotify, Spicetify's functionality is regularly compromised.
+And when it is restored, this theme requires updates and complete rewrites of certain portions of the code.
+Since I don't have time to do weekly maintenance, I prefer to put this repository on pause.
+If you have the will and the skills to contribute to the patches, you can contact me.**
+
 # Dribbblish Dynamic
 A theme for [Spicetify](https://github.com/khanhas/spicetify-cli)
 
