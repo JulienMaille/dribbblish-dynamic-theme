@@ -1,7 +1,7 @@
 import { waitForElement, htmlToNode } from "./Util";
 import { icons } from "./Icons";
 
-waitForElement([`.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"]`, `.main-rootlist-rootlistPlaylistsScrollNode ul[tabindex="0"] li`], ([root, firstItem]) => {
+waitForElement([`.main-navBar-navBar ul[tabindex="0"]`, `.main-navBar-navBar ul[tabindex="0"] li`], ([root, firstItem]) => {
     const listElem = firstItem.parentElement;
     root.classList.add("dribs-playlist-list");
 
