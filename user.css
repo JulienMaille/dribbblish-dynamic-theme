@@ -920,3 +920,10 @@ img.playlist-picture[src$=".svg"] {
 .Root__main-view-overlay {
     width: 100%;
 }
+
+/* -------------------------------------------------------------------------- */
+.encore-dark-theme .encore-bright-accent-set {
+    --background-highlight: var(--spice-text);
+    --background-press: var(--spice-button-active);
+    --decorative-subdued: var(--spice-text);
+}
