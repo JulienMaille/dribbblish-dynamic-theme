@@ -5,7 +5,7 @@ The main differences are the automated light/dark toggle, the background cover a
 
 ## Preview
 
-![demo-base](./preview.gif)
+![demo-base](./preview.png)
 
 ## Install / Update
 > [!IMPORTANT]
