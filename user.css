@@ -332,8 +332,8 @@ body {
 .x-entityImage-imageContainer {
     border-radius: 50% !important;
     background-color: transparent;
-    width: 40px !important;
-    height: 40px !important;
+    /*width: 40px !important;*/
+    /*height: 40px !important;*/
     align-self: center;
     box-shadow: none !important;
 }
@@ -522,7 +522,7 @@ li>div::after {
 /* add main backshadow */
 #dribbblish-back-shadow {
     z-index: 5;
-    grid-area: main-view / main-view / now-playing-bar / main-view;
+    grid-area: global-nav / main-view / now-playing-bar / now-playing-bar;
     box-shadow: 0 0 10px 3px #0000003b;
     border-radius: var(--corner-radius);
     pointer-events: none;
@@ -922,8 +922,42 @@ img.playlist-picture[src$=".svg"] {
 }
 
 /* -------------------------------------------------------------------------- */
+/* playlist play pause button */
 .encore-dark-theme .encore-bright-accent-set {
     --background-highlight: var(--spice-text);
     --background-press: var(--spice-button-active);
     --decorative-subdued: var(--spice-text);
+}
+
+/* verified badge */
+.artist-artistVerifiedBadge-fillColor {
+    background-color: var(--spice-main);
+}
+
+.artist-artistVerifiedBadge-badge {
+    fill: var(--spice-button);
+}
+
+/* animated equaliser/heart icons */
+img.main-devicePicker-nowPlayingActiveIcon,
+.control-button-heart svg,
+.main-addButton-button,
+.main-trackList-playingIcon,
+.main-trackList-rowMarker img,
+.main-trackList-rowHeartButton svg:not(.Svg-img-16-icon),
+.main-actionBar-ActionBarRow > button:hover,
+.main-nowPlayingView-contextItemInfo > button:hover,
+.main-whatsNewFeed-actions > button:hover,
+.main-trackCreditsModal-closeBtn > svg,
+.x-settings-equalizerPanelCanvas {
+    filter: var(--colormatrix);
+}
+
+/* translucid artist background */
+.main-entityHeader-background.main-entityHeader-gradient {
+    opacity: 0.3;
+}
+
+.main-entityHeader-background.main-entityHeader-overlay:after {
+    background-image: linear-gradient(transparent, transparent), linear-gradient(var(--spice-main), var(--spice-main));
 }
