@@ -1,3 +1,5 @@
+let current = "1.0";
+
 function waitForElement(els, func, timeout = 100) {
     const queries = els.map(el => document.querySelector(el));
     if (queries.every(a => a)) {
