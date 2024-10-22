@@ -1,7 +1,7 @@
 # DribbblishDynamic for [Spicetify](https://github.com/spicetify/cli) <a href="https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest"><img src="https://img.shields.io/github/release/JulienMaille/dribbblish-dynamic-theme/all.svg"></a>
 
 This is a tweaked version of the Dribbblish theme.  
-The main differences are the automated light/dark toggle, the background cover and the dynamic highlight color, ie. it will match the current album art.
+The main differences are the [automated](#follow-system-darklight-theme) light/dark toggle, the background cover and the dynamic highlight color, ie. it will match the current album art.
 
 ## Preview
 
