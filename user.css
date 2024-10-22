@@ -467,12 +467,12 @@ li>div::after {
 /* fix playlist action bar buttons colour */
 .main-actionBar-ActionBarRow button,
 .main-actionBar-ActionBarRow svg:not(.main-playButton-PlayButton svg) {
-    color: rgba(var(--spice-rgb-text), 0.7);
+    color: rgba(var(--spice-rgb-base), 0.7);
 }
 
 .main-actionBar-ActionBarRow button:hover,
 .main-actionBar-ActionBarRow button:hover svg:not(.main-playButton-PlayButton svg) {
-    color: var(--spice-text);
+    color: var(--spice-base);
 }
 
 /* change playing icon from gif to svg */
@@ -960,4 +960,9 @@ img.main-devicePicker-nowPlayingActiveIcon,
 
 .main-entityHeader-background.main-entityHeader-overlay:after {
     background-image: linear-gradient(transparent, transparent), linear-gradient(var(--spice-main), var(--spice-main));
+}
+
+/* Remove weird gradient in right sidebar */
+.main-nowPlayingView-contextItemInfo:before {
+    background: none !important;
 }
