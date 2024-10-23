@@ -350,7 +350,6 @@ function toggleDark(setDark) {
     textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
 
     setRootColor("main", textColorBg);
-    //setRootColor("sidebar", setDark ? "#EAEAEA" : "#3D3D3D");
     setRootColor("player", textColorBg);
     setRootColor("shadow", textColorBg);
     setRootColor("card", setDark ? "#040404" : "#ECECEC");
@@ -443,7 +442,7 @@ async function songchange() {
     let album_uri = Spicetify.Player.data.item.metadata.album_uri;
     let bgImage = Spicetify.Player.data.item.metadata.image_url;
     if (!bgImage) {
-        bgImage = "/images/tracklist-row-song-fallback.svg";
+        bgImage = "https://cdn.jsdelivr.net/gh/JulienMaille/dribbblish-dynamic-theme@main/images/tracklist-row-song-fallback.svg";
         textColor = "#1db954";
         updateColors(textColor);
     }
@@ -508,7 +507,7 @@ songchange();
         return;
     }
     // Check latest release
-    fetch("https://api.github.com/repos/JulienMaille/spicetify-dynamic-theme/releases/latest")
+    fetch("https://api.github.com/repos/JulienMaille/dribbblish-dynamic-theme/releases/latest")
         .then((response) => {
             return response.json();
         })
@@ -518,7 +517,7 @@ songchange();
                 button.classList.remove("main-topBar-buddyFeed");
                 button.classList.add("main-actionButtons-button", "main-noConnection-isNotice");
                 let updateLink = document.createElement("a");
-                updateLink.setAttribute("href", "https://github.com/JulienMaille/spicetify-dynamic-theme/releases/latest");
+                updateLink.setAttribute("href", "https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest");
                 updateLink.innerHTML = `v${data.tag_name} available`;
                 button.append(updateLink);
                 button._tippy.setProps({
