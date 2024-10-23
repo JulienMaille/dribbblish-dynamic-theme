@@ -13,6 +13,9 @@ let DribbblishShared = {};
 
 // back shadow
 waitForElement([".Root__top-container"], ([topContainer]) => {
+    const cover = document.createElement("div");
+    cover.id = "dribbblish-back-cover";
+    topContainer.prepend(cover);
     const shadow = document.createElement("div");
     shadow.id = "dribbblish-back-shadow";
     topContainer.prepend(shadow);
