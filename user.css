@@ -982,3 +982,10 @@ img.main-devicePicker-nowPlayingActiveIcon,
         opacity: calc(var(--is_light) * 0.05 + 0.12);
     }
 }
+
+/* Fix top margin of main container */
+.Root__globalNav {
+    padding-top: calc(-1* var(--panel-gap));
+    margin-top: 0px;
+    margin-right: 0px;
+}
