@@ -484,11 +484,11 @@ li>div::after {
 }
 
 /* full screen artists background */
-.main-entityHeader-container.main-entityHeader-withBackgroundImage,
+/*.main-entityHeader-container.main-entityHeader-withBackgroundImage,
 .main-entityHeader-background,
 .main-entityHeader-background.main-entityHeader-overlay:after {
     height: 100vh;
-}
+}*/
 
 .artist-artistOverview-overview .main-entityHeader-withBackgroundImage h1 {
     font-size: 120px !important;
