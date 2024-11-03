@@ -450,12 +450,22 @@ li>div::after {
     background-image: none !important;
 }
 
+/*
 .main-topBar-background {
     border-radius: var(--corner-radius);
 }
+*/
+.main-topBar-background {
+    border-radius: 0px;
+}
 
+/*
 .main-topBar-overlay,
 .main-trackList-trackListHeader {
+    background-color: var(--spice-main) !important;
+}
+*/
+.main-trackList-trackListHeaderStuck {
     background-color: var(--spice-main) !important;
 }
 
@@ -988,4 +998,17 @@ img.main-devicePicker-nowPlayingActiveIcon,
     padding-top: calc(-1* var(--panel-gap));
     margin-top: 0px;
     margin-right: 0px;
+}
+
+/* Fix some element color */
+.encore-dark-theme .encore-inverted-light-set,
+.encore-dark-theme .encore-bright-accent-set {
+    --text-base: var(--spice-highlight);
+}
+
+/* Tone done gradients */
+.under-main-view,
+[style*="background-color"] {
+    opacity: 0.25;
+}
 }
