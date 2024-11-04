@@ -1023,3 +1023,21 @@ img.main-devicePicker-nowPlayingActiveIcon,
         height: calc(20vh + 64px);
     }
 }
+
+/* Fix notification text color */
+.notistack-SnackbarContainer .encore-internal-color-text-base {
+    color: var(--spice-sidebar-text);
+}
+
+/* Fix spectro extension tooltip */
+.playback-bar .prog-tooltip {
+    color: var(--spice-sidebar-text) !important;
+    background-color: var(--spice-card) !important;
+}
+
+/* Fix marketplace buttons */
+.searchbar-bar,
+.Dropdown-control {
+    background-color: var(--spice-button-disabled) !important;
+    border: none;
+}
