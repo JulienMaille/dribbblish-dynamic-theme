@@ -1006,9 +1006,20 @@ img.main-devicePicker-nowPlayingActiveIcon,
     --text-base: var(--spice-highlight);
 }
 
-/* Tone done gradients */
-.under-main-view,
-[style*="background-color"] {
-    opacity: 0.25;
+@container style(--spice-background: #010101) {
+    /* Tone done gradients */
+    .under-main-view,
+    [style*="background-color"] {
+        opacity: 0.25;
+    }
 }
+@container style(--spice-background: #000000) {
+    /* Remove gradients */
+    .under-main-view,
+    [style*="background-color"] {
+        opacity: 0;
+    }
+    .main-entityHeader-container.main-entityHeader-withBackgroundImage {
+        height: calc(20vh + 64px);
+    }
 }
