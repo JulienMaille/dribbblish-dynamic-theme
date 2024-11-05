@@ -978,7 +978,7 @@ img.main-devicePicker-nowPlayingActiveIcon,
 }
 
 /* cover background if option is on */
-@container style(--spice-background: #010101) {
+@container style(--spice-background: #000001) {
     #dribbblish-back-cover {
         z-index: 7;
         grid-area: global-nav / main-view / now-playing-bar / now-playing-bar;
@@ -1006,14 +1006,14 @@ img.main-devicePicker-nowPlayingActiveIcon,
     --text-base: var(--spice-highlight);
 }
 
-@container style(--spice-background: #010101) {
+@container style(--spice-background: #000000) {
     /* Tone done gradients */
     .under-main-view,
     [style*="background-color"] {
         opacity: 0.25;
     }
 }
-@container style(--spice-background: #000000) {
+@container style(--spice-background: #000001) {
     /* Remove gradients */
     .under-main-view,
     [style*="background-color"] {
