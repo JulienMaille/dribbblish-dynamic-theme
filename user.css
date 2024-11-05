@@ -1009,19 +1009,24 @@ img.main-devicePicker-nowPlayingActiveIcon,
 @container style(--spice-background: #000000) {
     /* Tone done gradients */
     .under-main-view,
-    [style*="background-color"] {
-        opacity: 0.25;
+    [style*="background-color"]:not(.main-shelf-shelfGrid [style*="background-color"]) {
+        opacity: calc(var(--is_light)* -0.15 + 0.3);
     }
 }
 @container style(--spice-background: #000001) {
     /* Remove gradients */
     .under-main-view,
-    [style*="background-color"] {
+    [style*="background-color"]:not(.main-shelf-shelfGrid [style*="background-color"]) {
         opacity: 0;
     }
     .main-entityHeader-container.main-entityHeader-withBackgroundImage {
         height: calc(20vh + 64px);
     }
+}
+
+/* Fix forced subdue */
+[style*="--text-subdued"] {
+    --text-subdued: var(--spice-subtext) !important;
 }
 
 /* Fix notification text color */
@@ -1040,4 +1045,21 @@ img.main-devicePicker-nowPlayingActiveIcon,
 .Dropdown-control {
     background-color: var(--spice-button-disabled) !important;
     border: none;
+}
+
+/* Fix search cards text color */
+.main-shelf-shelfGrid [style*="background-color"] {
+    color: var(--spice-main);
+}
+
+/* Fix play button hover color */
+.encore-dark-theme .encore-bright-accent-set {
+    --background-highlight: var(--background-press);
+    --background-press: var(--background-press);
+}
+
+/* new navbar interface */
+.main-userWidget-box,
+.main-globalNav-link-icon {
+    background-color: transparent !important;
 }
