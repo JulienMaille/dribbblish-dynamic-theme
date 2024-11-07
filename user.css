@@ -252,12 +252,6 @@ body {
     color: var(--spice-text);
 }
 
-/* customise cards hover play button */
-.main-card-PlayButtonContainer .ButtonInner-medium-iconOnly {
-    background-color: var(--background-base);
-    color: var(--spice-text);
-}
-
 /* top welcome box viz. good morning */
 .view-homeShortcutsGrid-PlayButtonContainer .ButtonInner-small-iconOnly,
 .view-homeShortcutsGrid-PlayButtonContainer .ButtonInner-medium-iconOnly,
@@ -932,13 +926,6 @@ img.playlist-picture[src$=".svg"] {
 }
 
 /* -------------------------------------------------------------------------- */
-/* playlist play pause button */
-.encore-dark-theme .encore-bright-accent-set {
-    --background-highlight: var(--spice-text);
-    --background-press: var(--spice-button-active);
-    --decorative-subdued: var(--spice-text);
-}
-
 /* verified badge */
 .artist-artistVerifiedBadge-fillColor {
     background-color: var(--spice-main);
@@ -1000,12 +987,6 @@ img.main-devicePicker-nowPlayingActiveIcon,
     margin-right: 0px;
 }
 
-/* Fix some element color */
-.encore-dark-theme .encore-inverted-light-set,
-.encore-dark-theme .encore-bright-accent-set {
-    --text-base: var(--spice-highlight);
-}
-
 @container style(--spice-background: #000000) {
     /* Tone done gradients */
     .under-main-view,
@@ -1052,14 +1033,22 @@ img.main-devicePicker-nowPlayingActiveIcon,
     color: var(--spice-main);
 }
 
-/* Fix play button hover color */
+/* Fix some element color */
+.encore-dark-theme .encore-inverted-light-set,
 .encore-dark-theme .encore-bright-accent-set {
-    --background-highlight: var(--background-press);
-    --background-press: var(--background-press);
+    --text-base: var(--spice-highlight);
+    --background-highlight: var(--background-press) !important;
+    --background-press: var(--spice-subtext) !important;
+    --decorative-subdued: var(--spice-subtext) !important;
 }
 
 /* new navbar interface */
 .main-userWidget-box,
 .main-globalNav-link-icon {
     background-color: transparent !important;
+}
+
+/* Fix navbar text color */
+.main-yourLibraryX-libraryContainer {
+    --text-subdued: var(--spice-sidebar-text);
 }
