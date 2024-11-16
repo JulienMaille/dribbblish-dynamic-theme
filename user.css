@@ -638,15 +638,6 @@ input {
 
 .Root__top-container {
     padding: 10px 0;
-    background-color: var(--spice-sidebar);
-}
-
-.Root__right-sidebar {
-    background-color: var(--spice-sidebar);
-}
-
-.Root__main-view {
-    background-color: var(--spice-main);
 }
 
 .main-rootlist-rootlistDivider {
@@ -1023,7 +1014,6 @@ img.main-devicePicker-nowPlayingActiveIcon,
 /* Fix spectro extension tooltip */
 .playback-bar .prog-tooltip {
     color: var(--spice-sidebar-text) !important;
-    background-color: var(--spice-card) !important;
 }
 
 /* Fix marketplace buttons */
@@ -1056,4 +1046,11 @@ img.main-devicePicker-nowPlayingActiveIcon,
 /* Fix navbar text color */
 .main-yourLibraryX-libraryContainer {
     --text-subdued: var(--spice-sidebar-text);
+}
+
+/* Spotify connect popups */
+.encore-dark-theme,
+.encore-dark-theme .encore-base-set {
+    --text-announcement: var(--spice-sidebar);
+    --essential-announcement: var(--spice-sidebar);
 }
