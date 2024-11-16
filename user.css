@@ -1005,6 +1005,11 @@ img.main-devicePicker-nowPlayingActiveIcon,
     }
 }
 
+/* Fix avatar icon */
+.main-userWidget-box {
+    opacity: 1 !important;
+}
+
 /* Fix forced subdue */
 [style*="--text-subdued"] {
     --text-subdued: var(--spice-subtext) !important;
