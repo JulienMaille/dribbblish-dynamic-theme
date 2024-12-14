@@ -1054,3 +1054,8 @@ img.main-devicePicker-nowPlayingActiveIcon,
     --text-announcement: var(--spice-sidebar);
     --essential-announcement: var(--spice-sidebar);
 }
+
+/* Fix now playing artist color */
+.main-nowPlayingView-trackInfo.main-trackInfo-container .main-trackInfo-artists {
+    --text-subdued: var(--spice-sidebar-text);
+}
