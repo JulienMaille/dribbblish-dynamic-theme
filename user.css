@@ -87,7 +87,6 @@ body {
 .Root__globalNav {
     background-color: var(--spice-main) !important;
     border-radius: var(--corner-radius) var(--corner-radius) 0 0 !important;
-    margin-left: calc(var(--left-sidebar-width) * 1px);
     z-index: 10;
 }
 
@@ -972,13 +971,6 @@ img.main-devicePicker-nowPlayingActiveIcon,
     }
 }
 
-/* Fix top margin of main container */
-.Root__globalNav {
-    padding-top: calc(-1* var(--panel-gap));
-    margin-top: 0px;
-    margin-right: 0px;
-}
-
 @container style(--spice-background: #000000) {
     /* Tone done gradients */
     .under-main-view,
@@ -1059,4 +1051,10 @@ img.main-devicePicker-nowPlayingActiveIcon,
 /* Fix now playing artist color */
 .main-nowPlayingView-trackInfo.main-trackInfo-container .main-trackInfo-artists {
     --text-subdued: var(--spice-sidebar-text);
+}
+
+/* Fix topbar left margin */
+.Root__globalNav {
+    grid-area: global-nav / main-view / global-nav / global-nav;
+    margin: 0px;
 }
