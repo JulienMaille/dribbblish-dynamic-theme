@@ -1063,3 +1063,8 @@ img.main-devicePicker-nowPlayingActiveIcon,
 .main-yourLibraryX-libraryContainer {
     background-color: var(--spice-sidebar) !important;
 }
+
+/* Fix artist page gradient */
+.main-entityHeader-container.main-entityHeader-withBackgroundImage + div > div {
+    --background-base-70: rgba(var(--spice-rgb-text), 0.2) !important;
+}
