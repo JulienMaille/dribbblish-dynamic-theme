@@ -1058,3 +1058,8 @@ img.main-devicePicker-nowPlayingActiveIcon,
     grid-area: global-nav / main-view / global-nav / global-nav;
     margin: 0px;
 }
+
+/* Fix navbar background color */
+.main-yourLibraryX-libraryContainer {
+    background-color: var(--spice-sidebar) !important;
+}
