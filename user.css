@@ -422,11 +422,6 @@ li>div::after {
     background-color: var(--spice-tab-active) !important;
 }
 
-.main-yourLibraryX-filterArea>div>div:first-child button>span {
-    background-color: var(--spice-tab-active) !important;
-    color: var(--spice-text) !important;
-}
-
 .main-yourLibraryX-libraryFilter .x-sortBox-sortDropdown,
 .main-yourLibraryX-libraryFilter .x-filterBox-expandButton,
 .main-yourLibraryX-libraryFilter .x-filterBox-searchIconContainer,
@@ -1067,4 +1062,11 @@ img.main-devicePicker-nowPlayingActiveIcon,
 /* Fix artist page gradient */
 .main-entityHeader-container.main-entityHeader-withBackgroundImage + div > div {
     --background-base-70: rgba(var(--spice-rgb-text), 0.2) !important;
+}
+
+/* Fix pills background in sidebard */
+.main-yourLibraryX-headerContent div:nth-child(2) button:first-child,
+.search-searchCategory-contentArea .ChipInnerComponent-sm {
+    background-color: rgba(var(--spice-rgb-sidebar-text),.8) !important;
+    color: var(--spice-text) !important;
 }
