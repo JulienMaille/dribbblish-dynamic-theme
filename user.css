@@ -5,7 +5,7 @@
     --scrollbar-horizontal-size: 10px;
     --bar-height: 90px;
     --main-gap: 10px;
-    
+
     --image_url: "";
     --is_light: 0;
     --system_is_dark: 1;
@@ -52,16 +52,15 @@ div.ReactModalPortal:last-of-type::before {
 }
 
 body {
-    --glue-font-family: "Google Sans Display", "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew,
-        Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
-    --info-font-family: "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica,
-        arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
+    --glue-font-family: "Google Sans Display", "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
+    --info-font-family: "Roboto", spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
     font-family: var(--glue-font-family);
     letter-spacing: normal;
 }
 
 .global-nav .Root__top-container {
-    grid-template-areas: "global-nav global-nav global-nav"
+    grid-template-areas:
+        "global-nav global-nav global-nav"
         "left-sidebar main-view right-sidebar"
         "left-sidebar now-playing-bar now-playing-bar" !important;
 }
@@ -195,7 +194,9 @@ body {
     color: var(--spice-text);
     background-color: var(--spice-button);
     opacity: 0;
-    transition: opacity 0.2s linear, left 0.2s linear;
+    transition:
+        opacity 0.2s linear,
+        left 0.2s linear;
 }
 
 .playback-bar:hover .prog-tooltip {
@@ -266,7 +267,6 @@ body {
     color: var(--spice-text);
 }
 
-
 /* customise player cover art */
 .main-nowPlayingWidget-coverArt .cover-art {
     width: var(--bar-cover-art-size) !important;
@@ -283,7 +283,7 @@ body {
     gap: 0 !important;
 }
 
-.main-navBar-mainNav>div {
+.main-navBar-mainNav > div {
     background-color: var(--spice-sidebar);
 }
 
@@ -354,17 +354,17 @@ li div:has(> .main-yourLibraryX-rowCover) {
     border-radius: 50% !important;
 }
 
-.fRZRXRIV2YBCFLYgwDAr>svg {
+.fRZRXRIV2YBCFLYgwDAr > svg {
     width: 15px;
     height: 15px;
 }
 
 /* remove hover effect */
-li>div>div::after {
+li > div > div::after {
     background-color: transparent !important;
 }
 
-li>div::after {
+li > div::after {
     background-color: transparent !important;
 }
 
@@ -392,7 +392,7 @@ li>div::after {
     margin-top: -8px;
 }
 
-.main-yourLibraryX-collapseButton>button {
+.main-yourLibraryX-collapseButton > button {
     gap: 8px;
     color: var(--spice-sidebar-text) !important;
 }
@@ -418,7 +418,7 @@ li>div::after {
     background-color: var(--spice-tab-active);
 }
 
-.main-yourLibraryX-filterArea>div>div:first-child button {
+.main-yourLibraryX-filterArea > div > div:first-child button {
     background-color: var(--spice-tab-active) !important;
 }
 
@@ -568,7 +568,7 @@ input {
 }
 
 /* topbar play button */
-.main-topBar-topbarContent .main-playButton-PlayButton>button>span {
+.main-topBar-topbarContent .main-playButton-PlayButton > button > span {
     inline-size: 32px;
     block-size: 32px;
     min-block-size: auto;
@@ -579,7 +579,7 @@ input {
     height: 18px;
 }
 
-.main-topBar-topbarContent .main-playButton-PlayButton>button>span>span {
+.main-topBar-topbarContent .main-playButton-PlayButton > button > span > span {
     position: initial;
     height: 18px;
 }
@@ -731,7 +731,7 @@ input {
     visibility: hidden;
 }
 
-.buddyFeed-hide-text .main-avatar-avatar>div>div>div {
+.buddyFeed-hide-text .main-avatar-avatar > div > div > div {
     display: flex;
     justify-content: center;
     padding-top: 7px;
@@ -763,7 +763,7 @@ input {
     background: none;
 }
 
-.main-likedSongsButton-likedSongsIcon>svg {
+.main-likedSongsButton-likedSongsIcon > svg {
     height: 20px !important;
     width: 20px !important;
 }
@@ -970,7 +970,7 @@ img.main-devicePicker-nowPlayingActiveIcon,
     /* Tone done gradients */
     .under-main-view,
     [style*="background-color"]:not(.main-shelf-shelfGrid [style*="background-color"]) {
-        opacity: calc(var(--is_light)* -0.15 + 0.3);
+        opacity: calc(var(--is_light) * -0.15 + 0.3);
     }
 }
 @container style(--spice-background: #000001) {
@@ -1067,6 +1067,6 @@ img.main-devicePicker-nowPlayingActiveIcon,
 /* Fix pills background in sidebard */
 .main-yourLibraryX-headerContent div:nth-child(2) button:first-child,
 .search-searchCategory-contentArea .ChipInnerComponent-sm {
-    background-color: rgba(var(--spice-rgb-sidebar-text),.8) !important;
+    background-color: rgba(var(--spice-rgb-sidebar-text), 0.8) !important;
     color: var(--spice-text) !important;
 }
