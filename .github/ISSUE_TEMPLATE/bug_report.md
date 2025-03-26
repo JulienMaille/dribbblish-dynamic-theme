@@ -21,8 +21,8 @@ Steps to reproduce the behavior:
 - Operating System: <!-- [e.g. Windows 10, MacOS 10.14] -->
 - Spotify: <!-- [e.g. 1.1.71.560] from `Menu (Three dots top left) > Help > About` -->
 - Spicetify: <!-- [e.g. 2.4.1] run `spicetify -v` -->
-- Theme: <!-- [e.g. 3.0] -->+
-- Installation method: <!-- [e.g. marketplace, powershell, manual] -->+
+- Theme: <!-- [e.g. 3.0] -->
+- Installation method: <!-- [e.g. marketplace, powershell, manual] -->
 
 **Logs**
 <!--
