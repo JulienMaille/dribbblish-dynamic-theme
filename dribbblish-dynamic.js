@@ -1,8 +1,8 @@
 let current = "1.1";
 
 function waitForElement(els, func, timeout = 100) {
-    const queries = els.map(el => document.querySelector(el));
-    if (queries.every(a => a)) {
+    const queries = els.map((el) => document.querySelector(el));
+    if (queries.every((a) => a)) {
         func(queries);
     } else if (timeout > 0) {
         setTimeout(waitForElement, 300, els, func, --timeout);
@@ -96,7 +96,7 @@ let ylx;
 
         const file = filePickerInput.files[0];
         const reader = new FileReader();
-        reader.onload = event => {
+        reader.onload = (event) => {
             const result = event.target.result;
             const id = Spicetify.URI.from(filePickerInput.uri).id;
             try {
@@ -226,7 +226,7 @@ function legacy() {
                     continue;
                 }
 
-                Spicetify.CosmosAsync.get(`sp://core-playlist/v1/playlist/${uri}/metadata`, { policy: { picture: true } }).then(res => {
+                Spicetify.CosmosAsync.get(`sp://core-playlist/v1/playlist/${uri}/metadata`, { policy: { picture: true } }).then((res) => {
                     const meta = res.metadata;
                     let img = link.querySelector("img");
                     if (!img) {
@@ -245,7 +245,6 @@ function legacy() {
         new MutationObserver(loadPlaylistImage).observe(listElem, { childList: true });
     });
 }
-
 
 /* ----------------------------------------------------------------------------------------- */
 
