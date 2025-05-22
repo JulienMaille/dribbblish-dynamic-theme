@@ -969,10 +969,11 @@ img.main-devicePicker-nowPlayingActiveIcon,
 @container style(--spice-background: #000000) {
     /* Tone done gradients */
     .under-main-view,
-    [style*="background-color"]:not(.main-shelf-shelfGrid [style*="background-color"]) {
+    [style*="background-color"]:not(.e-9911-box):not(.main-shelf-shelfGrid [style*="background-color"]) {
         opacity: calc(var(--is_light) * -0.15 + 0.3);
     }
 }
+
 @container style(--spice-background: #000001) {
     /* Remove gradients */
     .under-main-view,
