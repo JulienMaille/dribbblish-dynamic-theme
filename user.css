@@ -991,9 +991,18 @@ img.main-devicePicker-nowPlayingActiveIcon,
     [style*="background-color"]:not(ul [style*="background-color"]):not(.main-shelf-shelfGrid [style*="background-color"]) {
         opacity: 0;
     }
+
     .main-entityHeader-container.main-entityHeader-withBackgroundImage {
         height: calc(20vh + 64px);
     }
+}
+
+/* Fixed invisible podcast in the home page */
+[class*="card-container"][style*="background-color"],
+[class*="card-container"] [style*="background-color"],
+[class*="shelfGrid"][style*="background-color"],
+[class*="shelfGrid"] [style*="background-color"] {
+    opacity: 1 !important;
 }
 
 /* Fix avatar icon */
