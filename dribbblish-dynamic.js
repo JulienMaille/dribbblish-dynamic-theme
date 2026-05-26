@@ -433,7 +433,7 @@ function updateColors(textColHex) {
 }
 
 async function songchange() {
-    if (!document.querySelector(".main-trackInfo-container")) return setTimeout(songchange, 300);
+    if (!document.querySelector(".main-trackInfo-container") || !Spicetify.Player.data?.item) return setTimeout(songchange, 300);
     try {
         // warning popup
         if (Spicetify.Platform.PlatformData.client_version_triple < "1.1.68") Spicetify.showNotification(`Your version of Spotify ${Spicetify.Platform.PlatformData.client_version_triple}) is un-supported`);
@@ -470,11 +470,15 @@ function getVibrant(image) {
 }
 
 function pickCoverColor() {
+    textColor = "#1db954";
+
     const data = Spicetify?.Player?.data;
     let bgImage = data?.item?.metadata?.image_xlarge_url || data?.item?.metadata?.image_large_url || data?.item?.metadata?.image_url || data?.track?.metadata?.image_xlarge_url || data?.track?.metadata?.image_large_url || data?.track?.metadata?.image_url;
-    if (!bgImage) return;
+    if (!bgImage) {
+        updateColors(textColor);
+        return;
+    }
 
-    textColor = "#1db954";
     let url = bgImage;
     if (url.startsWith("spotify:image:")) {
         url = url.replace("spotify:image:", "https://i.scdn.co/image/");
@@ -486,6 +490,12 @@ function pickCoverColor() {
 
     imgCORS.onload = function () {
         getVibrant(imgCORS);
+        imgCORS = null;
+        updateColors(textColor);
+    };
+
+    imgCORS.onerror = function () {
+        imgCORS = null;
         updateColors(textColor);
     };
 }
