@@ -1,4 +1,4 @@
-let current = "1.3";
+let current = "1.4";
 
 function waitForElement(els, func, timeout = 100) {
     const queries = els.map((el) => document.querySelector(el));
@@ -6,6 +6,18 @@ function waitForElement(els, func, timeout = 100) {
         func(queries);
     } else if (timeout > 0) {
         setTimeout(waitForElement, 300, els, func, --timeout);
+    }
+}
+
+/* Playback item resolver. Spotify 1.3.4 removed `Spicetify.Player.data.track`
+ * (and some builds drop `Player.data` entirely); the live state is
+ * `Spicetify.Platform.PlayerAPI._state.item`, same metadata shape. Old paths
+ * stay first for backward compatibility with older Spotify builds. */
+function getPlaybackItem() {
+    try {
+        return Spicetify.Player?.data?.item ?? Spicetify.Player?.data?.track ?? Spicetify.Platform?.PlayerAPI?._state?.item ?? null;
+    } catch {
+        return null;
     }
 }
 
@@ -335,20 +347,232 @@ function setLightness(hex, lightness) {
     return rgbToHex(hslToRgb(hsl));
 }
 
+/* ------------------------------------------------------------------------- */
+/* Cover / colour extraction (ported from spicetify-dynamic-theme)            */
+/* ------------------------------------------------------------------------- */
+
+const colorCache = new Map();
+const HEX_RE = /^#[0-9a-f]{6}$/i;
+const EXTRACTOR_KEYS = ["VIBRANT", "VIBRANT_NON_ALARMING", "PROMINENT", "LIGHT_VIBRANT", "DESATURATED", "DARK_VIBRANT"];
+const isValidHex = (h) => typeof h === "string" && HEX_RE.test(h.trim());
+
+function isSkippedUri(uri) {
+    if (!uri || uri.startsWith("spotify:local") || uri.startsWith("spotify:ad")) return true;
+    try {
+        const item = getPlaybackItem();
+        if (item?.isLocal || item?.provider === "ad") return true;
+    } catch {
+        /* ignore */
+    }
+    return false;
+}
+
+function setCachedColor(uri, hex) {
+    try {
+        if (colorCache.size >= 200) {
+            const oldest = colorCache.keys().next().value;
+            if (oldest !== undefined) colorCache.delete(oldest);
+        }
+        colorCache.set(uri, hex);
+    } catch {
+        /* ignore */
+    }
+}
+
+function pickFromPalette(pal) {
+    if (!pal) return null;
+    const upper = {};
+    for (const k of Object.keys(pal)) upper[k.toUpperCase()] = pal[k];
+    for (const k of EXTRACTOR_KEYS) {
+        const v = upper[k];
+        if (typeof v === "string" && isValidHex(v.trim())) return v.trim();
+    }
+    return null;
+}
+
+async function tryExtractor(uri) {
+    if (!uri || isSkippedUri(uri)) return null;
+    if (colorCache.has(uri)) {
+        const cached = colorCache.get(uri);
+        if (isValidHex(cached)) return cached;
+        colorCache.delete(uri);
+    }
+    if (!Spicetify.colorExtractor) return null;
+    const pal = await Spicetify.colorExtractor(uri);
+    const hex = pickFromPalette(pal);
+    if (hex) setCachedColor(uri, hex);
+    return hex;
+}
+
+/* Cover metadata URLs are `spotify:image:<hash>`; CSS backgrounds need https. */
+function toHttpCover(u) {
+    if (!u) return u;
+    if (/^spotify:image:/i.test(u)) return u.replace(/^spotify:image:/i, "https://i.scdn.co/image/");
+    return u;
+}
+
+function getCoverUrls() {
+    const d = Spicetify.Player?.data ?? Spicetify.Platform?.PlayerAPI?._state;
+    const md = d?.item?.metadata ?? d?.track?.metadata ?? {};
+    return { uri: d?.item?.uri ?? d?.track?.uri ?? md.album_uri, urls: [md.image_xlarge_url, md.image_large_url, md.image_url].filter(Boolean), meta: md };
+}
+
+/* Inline the cover as a data: URL so it always paints as a CSS background.
+ * Remote https:// URLs intermittently fail to paint from user.css in some
+ * Spotify builds even though <img> loads them fine. The blurred backdrop
+ * (#dribbblish-back-cover, blur(50px)) hides the low resolution. */
+const bgDataCache = new Map();
+function coverToDataURL(httpUrl, trackUri) {
+    try {
+        if (!httpUrl || !/^https?:/i.test(httpUrl)) return;
+        const key = trackUri || httpUrl;
+        if (bgDataCache.has(key)) {
+            const hit = bgDataCache.get(key);
+            if (hit) document.documentElement.style.setProperty("--image_url", `url("${hit}")`);
+            return;
+        }
+        if (bgDataCache.size >= 20) bgDataCache.delete(bgDataCache.keys().next().value);
+        bgDataCache.set(key, null); // mark in-flight so we don't stack loaders
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = function () {
+            try {
+                const S = 256;
+                const cv = document.createElement("canvas");
+                cv.width = S;
+                cv.height = S;
+                const cx = cv.getContext("2d");
+                if (!cx) return;
+                const iw = img.naturalWidth || S,
+                    ih = img.naturalHeight || S;
+                const sc = Math.max(S / iw, S / ih);
+                const dw = iw * sc,
+                    dh = ih * sc;
+                cx.drawImage(img, (S - dw) / 2, (S - dh) / 2, dw, dh);
+                const du = cv.toDataURL("image/jpeg", 0.82);
+                bgDataCache.set(key, du);
+                // Only apply if this track is still current.
+                const now = getCoverUrls();
+                if ((now.uri || now.urls[0]) === key || toHttpCover(now.urls[0]) === httpUrl) document.documentElement.style.setProperty("--image_url", `url("${du}")`);
+            } catch (e) {
+                try {
+                    bgDataCache.delete(key);
+                } catch (_e) {}
+            }
+        };
+        img.onerror = function () {
+            try {
+                bgDataCache.delete(key);
+            } catch (e) {}
+        };
+        img.src = httpUrl;
+    } catch (e) {}
+}
+
+/* ------------------------------------------------------------------------- */
+/* Theme variable writes                                                      */
+/* ------------------------------------------------------------------------- */
+
+/* toggleDark() + updateColors() issue ~30 setProperty calls. Queue them and
+ * apply once in a single rAF. The light-mode gate lives on html[data-theme]
+ * (cheap equality selector) instead of html[style*="--is_light"] (substring
+ * match re-evaluated on every style mutation). It is applied AFTER all color
+ * vars in the same flush so gated selectors restyle once, not twice. */
+let _pendingThemeVars = null;
+let _themeFlushQueued = false;
+let _switchClearTimer = null;
+let _pendingLightGate = null; // "light" | "dark" | null
+let _flushRaf = null;
+let _flushTimer = null;
+
+function flushThemeVars() {
+    if (!_themeFlushQueued) return;
+    _themeFlushQueued = false;
+    if (_flushRaf !== null) {
+        try {
+            cancelAnimationFrame(_flushRaf);
+        } catch (e) {}
+        _flushRaf = null;
+    }
+    if (_flushTimer !== null) {
+        clearTimeout(_flushTimer);
+        _flushTimer = null;
+    }
+    const batch = _pendingThemeVars;
+    _pendingThemeVars = null;
+    const gate = _pendingLightGate;
+    _pendingLightGate = null;
+    if ((!batch || batch.size === 0) && !gate) return;
+    if (!document.documentElement) return;
+    const rootStyle = document.documentElement.style;
+    if (batch) for (const [k, v] of batch) rootStyle.setProperty(k, v);
+    if (gate) {
+        // --is_light drives the existing opacity calc()s in user.css;
+        // data-theme is the new cheap gate for light-only rules.
+        rootStyle.setProperty("--is_light", gate === "light" ? 1 : 0);
+        document.documentElement.dataset.theme = gate;
+    }
+}
+
+function queueThemeVar(name, value) {
+    if (!_pendingThemeVars) _pendingThemeVars = new Map();
+    _pendingThemeVars.set(name, value);
+    if (_themeFlushQueued) return;
+    _themeFlushQueued = true;
+    /* One write pass per frame, but never only rAF: Chromium stops rAF when the
+     * window is hidden (minimized, or fully behind another window), which left
+     * the whole theme unapplied until the user focused Spotify again. The timer
+     * is the safety net; whichever fires first cancels the other. */
+    try {
+        _flushRaf = requestAnimationFrame(flushThemeVars);
+    } catch (e) {
+        _flushRaf = null;
+    }
+    _flushTimer = setTimeout(flushThemeVars, 50);
+}
+
 let textColor = "#1db954";
 let textColorBg = getComputedStyle(document.documentElement).getPropertyValue("--spice-main");
 
 function setRootColor(name, colHex) {
-    let root = document.documentElement;
-    if (root === null) return;
-    root.style.setProperty("--spice-" + name, colHex);
-    root.style.setProperty("--spice-rgb-" + name, hexToRgb(colHex).join(","));
+    if (!document.documentElement) return;
+    queueThemeVar("--spice-" + name, colHex);
+    queueThemeVar("--spice-rgb-" + name, hexToRgb(colHex).join(","));
 }
+
+let _lastToggleAt = 0;
+let _lastToggleDark = null;
 
 function toggleDark(setDark) {
     if (setDark === undefined) setDark = isLight(textColorBg);
 
-    document.documentElement.style.setProperty("--is_light", setDark ? 0 : 1);
+    /* Skip redundant same-mode passes (e.g. the system-preference event firing
+     * right after a moon-button toggle): same mode within 800ms is a no-op —
+     * opposite-mode double-clicks still apply. */
+    try {
+        const now = performance.now();
+        if (setDark === _lastToggleDark && now - _lastToggleAt < 800) return;
+        _lastToggleAt = now;
+        _lastToggleDark = setDark;
+    } catch (e) {}
+
+    /* Switch blackout: every crossfade frame would otherwise repaint the
+     * fullscreen blurred backdrop. Flag the switch synchronously so user.css
+     * drops that transition for ~350ms (0.25s crossfade + margin). */
+    try {
+        document.documentElement.dataset.switching = "1";
+        if (_switchClearTimer) clearTimeout(_switchClearTimer);
+        _switchClearTimer = setTimeout(() => {
+            try {
+                document.documentElement.removeAttribute("data-switching");
+            } catch (e) {}
+            _switchClearTimer = null;
+        }, 350);
+    } catch (e) {}
+
+    // Light-mode gate flips in the rAF flush AFTER all color vars
+    // (see queueThemeVar) so gated selectors restyle once, not twice.
+    _pendingLightGate = setDark ? "dark" : "light";
     textColorBg = setDark ? "#0A0A0A" : "#FAFAFA";
 
     setRootColor("main", textColorBg);
@@ -372,31 +596,110 @@ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e)
     toggleDark(e.matches);
 });
 
-waitForElement([".main-actionButtons"], (queries) => {
-    // Add activator on top bar
-    const buttonContainer = queries[0];
+/* Spotify 1.3.x topbar. `.main-actionButtons` still exists on 1.3.5.3058
+ * (verified live), but the old code cloned the first child's classes, which
+ * are Spotify's own and paint a square behind the icon. The button now gets
+ * its own class and is styled in user.css. Host resolution falls back to the
+ * stable topbar hooks and finally to a structural button-row walk. */
+const MOON_HOST_SELECTORS = [".main-actionButtons", '[data-testid="topbar-content-wrapper"]', '[data-testid="topbar-content"]', '[data-testid="topbar"]'];
 
-    const button = document.createElement("button");
-    Array.from(buttonContainer.firstChild.attributes).forEach((attr) => {
-        button.setAttribute(attr.name, attr.value);
-    });
-    button.id = "main-topBar-moon-button";
-    button.className = buttonContainer.firstChild.className;
-    button.onclick = () => {
-        toggleDark();
+function findMoonHost() {
+    for (const sel of MOON_HOST_SELECTORS) {
+        const el = document.querySelector(sel);
+        if (el) return el;
+    }
+    try {
+        const avatar = document.querySelector('[data-testid="user-widget-link"]');
+        if (avatar) {
+            let p = avatar.parentElement;
+            let depth = 0;
+            while (p && depth < 6) {
+                try {
+                    if (p.querySelectorAll("button").length >= 2) return p;
+                } catch (e) {}
+                p = p.parentElement;
+                depth++;
+            }
+        }
+    } catch (e) {}
+    const header = document.querySelector('[data-testid="topbar"]') || document.querySelector(".Root__globalNav");
+    if (!header) return null;
+    let best = null;
+    for (const btn of header.querySelectorAll('button, [role="button"]')) {
+        const row = btn.parentElement;
+        if (!row || row === header) continue;
+        const count = row.querySelectorAll(':scope > button, :scope > [role="button"]').length;
+        if (count >= 2 && (!best || count > best.count)) best = { el: row, count: count };
+    }
+    return best ? best.el : header;
+}
+
+let moonTippy = null;
+function ensureMoonButton() {
+    try {
+        if (document.getElementById("main-topBar-moon-button")) return true;
+        const host = findMoonHost();
+        if (!host) return false;
+
+        const button = document.createElement("button");
+        button.id = "main-topBar-moon-button";
+        button.type = "button";
+        // Styling hook only (.main-topBar-buddyFeed is ours, not a Spotify class).
+        button.className = "main-topBar-buddyFeed";
+        button.setAttribute("aria-label", "Light/Dark");
+        button.onclick = () => {
+            toggleDark();
+        };
+        button.innerHTML = `<svg role="img" viewBox="0 0 16 16" height="16" width="16"><path fill="currentColor" d="M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z"></path></svg>`;
+
+        try {
+            moonTippy = Spicetify.Tippy(button, {
+                ...Spicetify.TippyProps,
+                content: "Light/Dark"
+            });
+        } catch (e) {}
+
+        host.insertBefore(button, host.firstChild);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+// Bounded retry: the topbar may not be mounted yet at script load.
+function waitForMoonHost(retries = 0) {
+    if (ensureMoonButton()) return;
+    if (retries >= 100) return;
+    setTimeout(() => waitForMoonHost(retries + 1), 300);
+}
+waitForMoonHost();
+
+// React re-renders the topbar on route changes and can drop the button.
+try {
+    ["pushstate", "popstate", "popstateend"].forEach((ev) => document.addEventListener(ev, () => setTimeout(ensureMoonButton, 300)));
+} catch (e) {}
+
+(function watchTopbar() {
+    let retryTimer = null;
+    const attach = (root) => {
+        if (!root || root.__dribbblishMoonObserver) return;
+        try {
+            const mo = new MutationObserver(() => {
+                if (document.getElementById("main-topBar-moon-button") || retryTimer) return;
+                retryTimer = setTimeout(() => {
+                    retryTimer = null;
+                    ensureMoonButton();
+                }, 300);
+            });
+            mo.observe(root, { childList: true, subtree: true });
+            root.__dribbblishMoonObserver = mo;
+        } catch (e) {}
     };
-    button.innerHTML = `<svg role="img" viewBox="0 0 16 16" height="16" width="16"><path fill="currentColor" d="M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z"></path></svg>`;
-
-    const tooltip = Spicetify.Tippy(button, {
-        ...Spicetify.TippyProps,
-        content: "Light/Dark"
-    });
-
-    buttonContainer.insertBefore(button, buttonContainer.firstChild);
-});
+    waitForElement(["#global-nav-bar"], ([nav]) => attach(nav));
+})();
 
 function updateColors(textColHex) {
-    if (textColHex == undefined) return registerCoverListener();
+    if (textColHex == undefined) return;
 
     let isLightBg = isLight(textColorBg);
     if (isLightBg)
@@ -429,39 +732,60 @@ function updateColors(textColHex) {
         </filter>
       </svg>
       #recolor')`;
-    document.documentElement.style.setProperty("--colormatrix", encodeURI(m));
+    // Batched with the rest of the theme vars so toggleDark()+updateColors()
+    // flush in a single rAF (one style recalc instead of ~17 synchronous ones).
+    queueThemeVar("--colormatrix", encodeURI(m));
 }
 
-async function songchange() {
-    if (!document.querySelector(".main-trackInfo-container") || !Spicetify.Player.data?.item) return setTimeout(songchange, 300);
+/* Track change. Spotify 1.3.x dropped `.main-trackInfo-container` (the old
+ * gate) and `.track` on Player.data, so the previous version retried forever
+ * and never recoloured the theme. The background is set before any DOM work
+ * so it can never be blocked by a missing node. */
+async function songchange(event, retries = 0) {
+    const dataItem = event?.data?.item ?? getPlaybackItem();
+    const meta = dataItem?.metadata;
+    if (!dataItem || !meta) {
+        if (retries >= 20) return;
+        return setTimeout(() => songchange(event, retries + 1), 300);
+    }
+
     try {
         // warning popup
-        if (Spicetify.Platform.PlatformData.client_version_triple < "1.1.68") Spicetify.showNotification(`Your version of Spotify ${Spicetify.Platform.PlatformData.client_version_triple}) is un-supported`);
+        if (version < 110680000) Spicetify.showNotification(`Your version of Spotify (${Spicetify.Platform.PlatformData.client_version_triple || version}) is un-supported`);
     } catch (err) {
         console.error(err);
     }
 
-    if (!Spicetify?.Player?.data?.track && !Spicetify?.Player?.data?.item) return setTimeout(songchange, 300);
-    const data = Spicetify.Player.data;
-    let album_uri = data?.item?.metadata?.album_uri || data?.track?.metadata?.album_uri;
-    let bgImage = data?.item?.metadata?.image_xlarge_url || data?.item?.metadata?.image_large_url || data?.item?.metadata?.image_url || data?.track?.metadata?.image_xlarge_url || data?.track?.metadata?.image_large_url || data?.track?.metadata?.image_url;
-    if (!bgImage) {
-        bgImage = "https://cdn.jsdelivr.net/gh/JulienMaille/dribbblish-dynamic-theme@main/images/tracklist-row-song-fallback.svg";
+    const FALLBACK_IMAGE = "https://cdn.jsdelivr.net/gh/JulienMaille/dribbblish-dynamic-theme@main/images/tracklist-row-song-fallback.svg";
+    const trackUri = dataItem.uri ?? meta.album_uri;
+    const albumUri = meta.album_uri;
+    const isAd = dataItem.provider === "ad";
+
+    let bgImage = toHttpCover(meta.image_xlarge_url || meta.image_large_url || meta.image_url);
+
+    // Ads get the neutral fallback; local files keep their generated cover.
+    if (!bgImage || isAd) {
+        document.documentElement.style.setProperty("--image_url", `url("${FALLBACK_IMAGE}")`);
         textColor = "#1db954";
         updateColors(textColor);
+        return;
     }
 
     document.documentElement.style.setProperty("--image_url", `url("${bgImage}")`);
-    pickCoverColor();
+    try {
+        coverToDataURL(bgImage, trackUri);
+    } catch (e) {}
+
+    pickCoverColor(bgImage, trackUri, albumUri);
 }
 
 function getVibrant(image) {
     try {
         var swatches = new Vibrant(image, 12).swatches();
-        cols = isLight(textColorBg) ? ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"] : ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
-        for (var col in cols)
-            if (swatches[cols[col]]) {
-                textColor = swatches[cols[col]].getHex();
+        const cols = isLight(textColorBg) ? ["Vibrant", "DarkVibrant", "Muted", "LightVibrant"] : ["Vibrant", "LightVibrant", "Muted", "DarkVibrant"];
+        for (const col of cols)
+            if (swatches[col]) {
+                textColor = swatches[col].getHex();
                 break;
             }
     } catch (err) {
@@ -469,35 +793,89 @@ function getVibrant(image) {
     }
 }
 
-function pickCoverColor() {
-    textColor = "#1db954";
+/* Colour resolution order: Spotify's CORS-free extractor (track, then album),
+ * GraphQL extracted colour, then Vibrant from the cover bitmap. Every step is
+ * guarded and the theme always ends up recoloured, even on failure. */
+async function pickCoverColor(httpCoverUrl, trackUri, albumUri) {
+    if (!httpCoverUrl || !trackUri) {
+        const cover = getCoverUrls();
+        if (!httpCoverUrl) httpCoverUrl = toHttpCover(cover.urls[0]);
+        if (!trackUri) trackUri = cover.uri;
+        if (!albumUri) albumUri = cover.meta.album_uri;
+    }
 
-    const data = Spicetify?.Player?.data;
-    let bgImage = data?.item?.metadata?.image_xlarge_url || data?.item?.metadata?.image_large_url || data?.item?.metadata?.image_url || data?.track?.metadata?.image_xlarge_url || data?.track?.metadata?.image_large_url || data?.track?.metadata?.image_url;
-    if (!bgImage) {
+    if (!httpCoverUrl && !trackUri) {
         updateColors(textColor);
         return;
     }
 
-    let url = bgImage;
-    if (url.startsWith("spotify:image:")) {
-        url = url.replace("spotify:image:", "https://i.scdn.co/image/");
+    if (trackUri && isSkippedUri(trackUri)) {
+        updateColors(textColor || "#1db954");
+        return;
     }
 
-    var imgCORS = new Image();
+    const prevColor = textColor;
+
+    // Primary: CORS-free extractor via spclient (trackUri, then album_uri)
+    try {
+        if (Spicetify.colorExtractor && trackUri) {
+            const hex = await tryExtractor(trackUri);
+            if (hex) {
+                textColor = hex;
+                updateColors(textColor);
+                return;
+            }
+            if (albumUri && albumUri !== trackUri && !isSkippedUri(albumUri)) {
+                const albumHex = await tryExtractor(albumUri);
+                if (albumHex) {
+                    textColor = albumHex;
+                    updateColors(textColor);
+                    return;
+                }
+            }
+        }
+    } catch (err) {
+        console.error(err);
+    }
+
+    // Secondary: GraphQL extracted colour for the track entity
+    try {
+        if (trackUri && Spicetify.GraphQL?.Request && Spicetify.GraphQL?.Definitions?.fetchExtractedColorForTrackEntity) {
+            const res = await Spicetify.GraphQL.Request(Spicetify.GraphQL.Definitions.fetchExtractedColorForTrackEntity, { uri: trackUri });
+            const hex = res?.data?.trackUnion?.albumOfTrack?.coverArt?.extractedColors?.colorDark?.hex;
+            if (isValidHex(hex)) {
+                textColor = hex.trim();
+                setCachedColor(trackUri, textColor);
+                updateColors(textColor);
+                return;
+            }
+        }
+    } catch (err) {
+        console.error(err);
+    }
+
+    // Tertiary: Vibrant from the cover URL
+    if (typeof Vibrant === "undefined" || !httpCoverUrl) {
+        if (!isValidHex(textColor)) textColor = "#1db954";
+        updateColors(textColor);
+        return;
+    }
+
+    const imgCORS = new Image();
     imgCORS.crossOrigin = "anonymous";
-    imgCORS.src = url;
 
     imgCORS.onload = function () {
         getVibrant(imgCORS);
-        imgCORS = null;
+        if (!isValidHex(textColor)) textColor = isValidHex(prevColor) ? prevColor : "#1db954";
         updateColors(textColor);
     };
 
     imgCORS.onerror = function () {
-        imgCORS = null;
+        if (!isValidHex(textColor)) textColor = isValidHex(prevColor) ? prevColor : "#1db954";
         updateColors(textColor);
     };
+
+    imgCORS.src = httpCoverUrl;
 }
 
 Spicetify.Player.addEventListener("songchange", songchange);
@@ -516,16 +894,20 @@ songchange();
         .then((data) => {
             if (data.tag_name > current) {
                 const button = document.querySelector("#main-topBar-moon-button");
-                button.classList.remove("main-topBar-buddyFeed");
-                button.classList.add("main-actionButtons-button", "main-noConnection-isNotice");
-                let updateLink = document.createElement("a");
-                updateLink.setAttribute("href", "https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest");
-                updateLink.innerHTML = `v${data.tag_name} available`;
-                button.append(updateLink);
-                button._tippy.setProps({
-                    allowHTML: true,
-                    content: `Changes: ${data.name}`
-                });
+                if (button) {
+                    button.classList.remove("main-topBar-buddyFeed");
+                    button.classList.add("main-actionButtons-button", "main-noConnection-isNotice");
+                    let updateLink = document.createElement("a");
+                    updateLink.setAttribute("href", "https://github.com/JulienMaille/dribbblish-dynamic-theme/releases/latest");
+                    updateLink.innerHTML = `v${data.tag_name} available`;
+                    button.append(updateLink);
+                    try {
+                        (moonTippy || button._tippy)?.setProps({
+                            allowHTML: true,
+                            content: `Changes: ${data.name}`
+                        });
+                    } catch (e) {}
+                }
             }
         })
         .catch((err) => {

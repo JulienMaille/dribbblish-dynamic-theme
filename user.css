@@ -59,11 +59,16 @@ body {
 }
 
 .global-nav .Root__top-container {
+    /* Keep the original Dribbblish v2 geometry: the library spans the full
+       window height, the top bar sits above the main view + right sidebar, and
+       the player is only as wide as the main view (right sidebar runs to the
+       bottom). Spotify's own 1.3.x template puts the top bar across all three
+       columns and the player under the right sidebar as well. */
     grid-template-areas:
         "top-banner top-banner top-banner"
-        "global-nav global-nav global-nav"
+        "left-sidebar global-nav global-nav"
         "left-sidebar main-view right-sidebar"
-        "left-sidebar now-playing-bar now-playing-bar" !important;
+        "left-sidebar now-playing-bar right-sidebar" !important;
     grid-template-rows: auto auto 1fr auto;
 }
 
@@ -83,7 +88,8 @@ body {
     border-radius: 0 !important;
 }
 
-.Root__now-playing-bar {
+.Root__now-playing-bar,
+.Root__top-container > div:has(> [data-testid="now-playing-bar"]) {
     background-color: var(--spice-player);
     border-radius: 0 0 var(--corner-radius) var(--corner-radius) !important;
     grid-area: now-playing-bar !important;
@@ -95,7 +101,7 @@ body {
     background-color: var(--spice-main) !important;
     border-radius: var(--corner-radius) var(--corner-radius) 0 0 !important;
     margin: 0 !important;
-    grid-area: top-banner/1/global-nav/-1;
+    grid-area: global-nav !important;
     z-index: 10;
 }
 
@@ -110,11 +116,13 @@ body {
     background-color: var(--spice-main) !important;
 }
 
-.global-nav .Root__main-view {
+.global-nav .Root__main-view,
+.global-nav #main-view {
     border-radius: 0 !important;
 }
 
-.Root__main-view {
+.Root__main-view,
+#main-view {
     border-radius: var(--corner-radius) var(--corner-radius) 0 0 !important;
     grid-area: main-view !important;
 }
@@ -123,15 +131,18 @@ body {
     padding-right: var(--main-gap);
 }
 
-.ylx .Root__top-container:not(:has(> .Root__right-sidebar > aside)) {
+.ylx .Root__top-container:not(:has(> .Root__right-sidebar > aside)),
+.ylx .Root__top-container:not(:has(#Desktop_PanelContainer_Id)) {
     padding-right: var(--main-gap);
 }
 
-.Root__right-sidebar:not(:has(> aside)) {
+.Root__right-sidebar:not(:has(> aside)),
+.Root__top-container > div:has(#Desktop_PanelContainer_Id):not(:has(aside)) {
     padding-left: 0;
 }
 
-.Root__nav-bar {
+.Root__nav-bar,
+#Desktop_LeftSidebar_Id {
     grid-area: left-sidebar !important;
 }
 
@@ -279,9 +290,12 @@ body {
 }
 
 /* customise player cover art */
-.main-nowPlayingWidget-coverArt .cover-art {
+.main-nowPlayingWidget-coverArt .cover-art,
+[data-testid="CoverSlotCollapsed__container"] {
     width: var(--bar-cover-art-size) !important;
     height: var(--bar-cover-art-size) !important;
+    min-width: var(--bar-cover-art-size) !important;
+    min-height: var(--bar-cover-art-size) !important;
     background-color: transparent;
 }
 
@@ -533,6 +547,7 @@ li > div::after {
 #dribbblish-back-shadow {
     z-index: 7;
     grid-area: global-nav / main-view / now-playing-bar / now-playing-bar;
+    grid-column: 2 / 3;
     box-shadow: 0 0 10px 3px #0000003b;
     border-radius: var(--corner-radius);
     pointer-events: none;
@@ -943,7 +958,8 @@ img.main-devicePicker-nowPlayingActiveIcon,
 .main-nowPlayingView-contextItemInfo > button:hover,
 .main-whatsNewFeed-actions > button:hover,
 .main-trackCreditsModal-closeBtn > svg,
-.x-settings-equalizerPanelCanvas {
+.x-settings-equalizerPanelCanvas,
+[data-settings-row] canvas[role="img"] {
     filter: var(--colormatrix);
 }
 
@@ -966,6 +982,7 @@ img.main-devicePicker-nowPlayingActiveIcon,
     #dribbblish-back-cover {
         z-index: 7;
         grid-area: global-nav / main-view / now-playing-bar / now-playing-bar;
+        grid-column: 2 / 3;
         background-image: var(--image_url);
         background-size: 100%;
         background-position: center center;
@@ -1098,4 +1115,85 @@ img.main-devicePicker-nowPlayingActiveIcon,
 .main-nowPlayingView-coverArtContainer > div:has(.canvasVideoContainerNPV)::before,
 .main-nowPlayingView-coverArtContainer > div:has(.canvasVideoContainerNPV)::after {
     background: linear-gradient(180deg, rgba(var(--spice-rgb-main), 63%), rgba(var(--spice-rgb-main), 53%) 30%, rgba(var(--spice-rgb-main), 53%) 70%, var(--spice-main) 95%);
+}
+
+/* ========================================================================== */
+/* Spotify 1.3.x (verified on 1.3.5.3058 and 1.3.6.1921)                      */
+/* ========================================================================== */
+
+/* Light/Dark toggle. The button no longer clones Spotify's classes (they painted
+   a square behind the icon), so it carries its own styling: a transparent 32px
+   circle like the bell / avatar buttons. `.main-noConnection-isNotice` is the
+   "update available" state and is intentionally excluded. */
+#main-topBar-moon-button:not(.main-noConnection-isNotice) {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--spice-selected-row) !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    -webkit-app-region: no-drag !important;
+}
+
+#main-topBar-moon-button:not(.main-noConnection-isNotice) svg {
+    width: 16px !important;
+    height: 16px !important;
+    fill: currentColor !important;
+    display: block !important;
+}
+
+#main-topBar-moon-button:not(.main-noConnection-isNotice):hover {
+    background-color: rgba(var(--spice-rgb-selected-row), 0.15) !important;
+    color: var(--spice-text) !important;
+    transform: none !important;
+}
+
+/* The library container class the theme used is gone; the id is stable. */
+#Desktop_LeftSidebar_Id {
+    /* Keep the library pane the same cover-derived shade as the bezel. */
+    background-color: var(--spice-sidebar) !important;
+    background-image: none !important;
+}
+
+/* Spotify 1.3.x paints opaque dark backgrounds on both the library shell and
+   its YourLibraryX root, covering the stable sidebar id's accent background. */
+#Desktop_LeftSidebar_Id > *,
+#Desktop_LeftSidebar_Id .YourLibraryX {
+    background-color: var(--spice-sidebar) !important;
+    background-image: none !important;
+}
+
+/* Mode switch: don't crossfade the fullscreen blurred backdrop. */
+html[data-switching="1"] #dribbblish-back-cover {
+    transition: none !important;
+}
+
+/* Keep sidebar text high-contrast on the cover-coloured pane in light mode. */
+html[data-theme="light"] {
+    --spice-sidebar-text: #ffffff;
+    --spice-rgb-sidebar-text: 255, 255, 255;
+}
+
+/* Spotify 1.3.x assigns --text-base directly to the library's Encore labels,
+   so changing --spice-sidebar-text alone does not give enough contrast on the
+   cover-coloured pane in light mode. */
+html[data-theme="light"] #Desktop_LeftSidebar_Id .e-10860-text,
+html[data-theme="light"] #Desktop_LeftSidebar_Id .e-10860-line-clamp,
+html[data-theme="light"] #Desktop_LeftSidebar_Id .e-10860-legacy-chip__inner,
+html[data-theme="light"] #Desktop_LeftSidebar_Id a {
+    color: var(--spice-sidebar-text) !important;
 }
